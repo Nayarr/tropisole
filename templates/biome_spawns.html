@@ -289,6 +289,59 @@
     }
 
     /* EV SORT LEGEND */
+    .y-filter-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 220px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
+    }
+    .y-filter-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+    .y-filter-label span { color: #e8ff47; font-weight: 700; }
+    .y-slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .y-slider-row input[type=range] {
+      width: 100%;
+      accent-color: #e8ff47;
+      height: 4px;
+    }
+    #y-reset {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    #y-reset:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    .cond-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      white-space: nowrap;
+    }
+    .cond-tag.water { border-color: #74b9ff44; background: #74b9ff15; }
+    .cond-tag.depth { border-color: #636e7244; background: #2d3436aa; }
+    .cond-tag.fishing { border-color: #00b89444; background: #00b89415; }
+    .cond-tag.slime { border-color: #00b89444; background: #27ae6015; }
+    .cond-tag.dark { border-color: #6c5ce744; background: #6c5ce715; }
+    .cond-tag.height { border-color: #fdcb6e44; background: #fdcb6e15; }
+    .cond-tag.y_range { border-color: #e8ff4744; background: #e8ff4710; }
+    .cond-tags-cell { display: flex; flex-wrap: wrap; gap: 3px; }
     .ev-legend {
       display: flex;
       gap: 1rem;
@@ -546,6 +599,21 @@
     .badge-ctx-surface   { background: rgba(162,155,254,0.1); color: #a29bfe; border-color: rgba(162,155,254,0.25); }
     .badge-ctx-seafloor  { background: rgba(253,121,168,0.1); color: #fd79a8; border-color: rgba(253,121,168,0.25); }
 
+    .badge-time, .badge-weather {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .badge-time    { background: rgba(232,255,71,0.08); color: #e8ff47; border-color: rgba(232,255,71,0.2); }
+    .badge-weather { background: rgba(116,185,255,0.08); color: #74b9ff; border-color: rgba(116,185,255,0.2); }
+    .td-time, .td-weather { white-space: nowrap; }
+
     /* SCROLLBAR */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
@@ -645,6 +713,39 @@
     <option value="seafloor">🪨 Seafloor (fond marin)</option>
   </select>
 
+  <select id="filter-time">
+    <option value="">— Moment —</option>
+    <option value="day">☀️ Jour</option>
+    <option value="dusk">🌆 Crépuscule</option>
+    <option value="night">🌙 Nuit</option>
+  </select>
+
+  <select id="filter-weather">
+    <option value="">— Météo —</option>
+    <option value="clear">☀️ Ensoleillé</option>
+    <option value="rain">🌧️ Pluie</option>
+  </select>
+
+  <select id="filter-special">
+    <option value="">— Conditions spéciales —</option>
+    <option value="water">🌊 Nécessite eau</option>
+    <option value="depth">⛏️ Sous terre</option>
+    <option value="height">🏔️ En hauteur</option>
+    <option value="fishing">🎣 Pêche</option>
+    <option value="slime">🟩 Chunk à Slime</option>
+    <option value="dark">🌑 Obscurité</option>
+    <option value="none">✅ Aucune condition spéciale</option>
+  </select>
+
+  <div class="y-filter-wrap" id="y-filter-section">
+    <label class="y-filter-label">Couche Y accessible <span id="y-range-display">−60 → 320</span></label>
+    <div class="y-slider-row">
+      <input type="range" id="y-min-slider" min="-64" max="320" value="-64" step="1">
+      <input type="range" id="y-max-slider" min="-64" max="320" value="320" step="1">
+    </div>
+    <button id="y-reset" onclick="resetYFilter()">Réinitialiser Y</button>
+  </div>
+
   <select id="filter-ev">
     <option value="">— EV —</option>
     <option value="hp">PV</option>
@@ -679,6 +780,9 @@
           <th data-col="ev_total" class="sorted">EVs lâchés<span class="sort-arrow">↓</span></th>
           <th>Répartition EVs</th>
           <th>Lieu de spawn</th>
+          <th>Conditions</th>
+          <th data-col="time">Moment<span class="sort-arrow"></span></th>
+          <th data-col="weather">Météo<span class="sort-arrow"></span></th>
           <th>Lumière</th>
           <th data-col="poids">Poids spawn<span class="sort-arrow"></span></th>
           <th data-col="niveau">Niveau<span class="sort-arrow"></span></th>
@@ -721,6 +825,8 @@ const RAW_DATA = [
     niveau_min: {{ p.niveau_min or 0 }},
     niveau_max: {{ p.niveau_max or 0 }},
     contextes: {{ p.contextes | tojson }},
+    times: {{ (p.times or []) | tojson }},
+    weathers: {{ (p.weathers or []) | tojson }},
     lumiere_profils: {{ p.lumiere_profils | tojson }},
     ev: {
       hp: {{ p.ev.hp }}, atk: {{ p.ev.atk }}, def: {{ p.ev.def }},
@@ -728,10 +834,18 @@ const RAW_DATA = [
       total: {{ p.ev.total }},
     },
     ev_str: {{ p.ev_str | tojson }},
+    y_min: {{ p.y_min | tojson }},
+    y_max: {{ p.y_max | tojson }},
+    condition_tags: {{ (p.condition_tags or []) | tojson }},
+    is_slime_chunk: {{ p.is_slime_chunk | tojson }},
+    needed_blocks: {{ (p.needed_blocks or []) | tojson }},
+    lune: {{ (p.lune or '') | tojson }},
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 ];
 
+const TIME_ICONS = { day: '☀️ Jour', dusk: '🌆 Crépuscule', night: '🌙 Nuit' };
+const WEATHER_ICONS = { clear: '🌤️ Ensoleillé', rain: '🌧️ Pluie' };
 const CONTEXTE_ICONS = {
   grounded: '🌿', fishing: '🎣', submerged: '🌊', surface: '💧', seafloor: '🪨'
 };
@@ -743,16 +857,60 @@ const CONTEXTE_LABELS = {
 let currentSort = { col: 'ev_total', dir: 'desc' };
 let data = [...RAW_DATA];
 
+let yMinFilter = -64;
+let yMaxFilter = 320;
+
+function resetYFilter() {
+  yMinFilter = -64; yMaxFilter = 320;
+  document.getElementById('y-min-slider').value = -64;
+  document.getElementById('y-max-slider').value = 320;
+  updateYDisplay();
+  renderTable();
+}
+
+function updateYDisplay() {
+  const mn = parseInt(document.getElementById('y-min-slider').value);
+  const mx = parseInt(document.getElementById('y-max-slider').value);
+  yMinFilter = mn; yMaxFilter = mx;
+  document.getElementById('y-range-display').textContent = `${mn} → ${mx}`;
+}
+
 function filteredData() {
   const q = document.getElementById('search').value.toLowerCase();
   const bucket = document.getElementById('filter-bucket').value;
   const evStat = document.getElementById('filter-ev').value;
   const contexte = document.getElementById('filter-contexte').value;
+  const timeFilter = document.getElementById('filter-time').value;
+  const weatherFilter = document.getElementById('filter-weather').value;
+  const special = document.getElementById('filter-special').value;
+  const yFiltered = yMinFilter > -64 || yMaxFilter < 320;
+
   return data.filter(p => {
     if (q && !p.pokemon.toLowerCase().includes(q)) return false;
     if (bucket && p.bucket !== bucket) return false;
     if (evStat && p.ev[evStat] === 0) return false;
     if (contexte && !p.contextes.includes(contexte)) return false;
+    if (timeFilter && !p.times.includes(timeFilter)) return false;
+    if (weatherFilter && !p.weathers.includes(weatherFilter)) return false;
+
+    // Y-level filter: if pokemon has Y constraints, check if they overlap our range
+    if (yFiltered) {
+      const pmin = p.y_min !== null ? p.y_min : -64;
+      const pmax = p.y_max !== null ? p.y_max : 320;
+      // Exclude if no overlap: pokemon range must intersect filter range
+      if (pmax < yMinFilter || pmin > yMaxFilter) return false;
+    }
+
+    // Special conditions filter
+    if (special) {
+      const tags = p.condition_tags.map(t => t.type);
+      if (special === 'none') {
+        if (tags.length > 0) return false;
+      } else {
+        if (!tags.includes(special)) return false;
+      }
+    }
+
     return true;
   });
 }
@@ -768,6 +926,8 @@ function sortData(rows) {
     else if (col === 'pokemon') { va = a.pokemon; vb = b.pokemon; }
     else if (col === 'bucket') { va = a.bucket; vb = b.bucket; }
     else if (col === 'niveau') { va = a.niveau_min; vb = b.niveau_min; }
+    else if (col === 'time') { va = a.times.join(','); vb = b.times.join(','); }
+    else if (col === 'weather') { va = a.weathers.join(','); vb = b.weathers.join(','); }
     else { va = a.numero; vb = b.numero; }
     if (typeof va === 'string') return mult * va.localeCompare(vb);
     return mult * (va - vb);
@@ -823,7 +983,7 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="10" class="empty">Aucun résultat</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="13" class="empty">Aucun résultat</td></tr>`;
     return;
   }
 
@@ -835,6 +995,16 @@ function render() {
     const contextesHtml = p.contextes.length
       ? p.contextes.map(c => `<span class="badge-contexte badge-ctx-${c}" title="${CONTEXTE_LABELS[c] || c}">${CONTEXTE_ICONS[c] || '?'} ${CONTEXTE_LABELS[c] || c}</span>`).join('')
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+    // Condition tags HTML
+    const condTagsHtml = p.condition_tags && p.condition_tags.length > 0
+      ? `<div class="cond-tags-cell">${p.condition_tags.map(t =>
+          `<span class="cond-tag ${t.type}" title="${t.label}">${t.icon} <span style="font-size:0.62rem">${t.label}</span></span>`
+        ).join('')}</div>`
+      : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+    // Y level display
+    const yHtml = (p.y_min !== null || p.y_max !== null)
+      ? `<div style="font-size:0.7rem;color:#e8ff47;font-family:'Space Mono',monospace">Y: ${p.y_min ?? '?'} → ${p.y_max ?? '?'}</div>`
+      : '';
     return `
       <tr class="${isSource ? 'is-source' : ''}" style="animation-delay:${delay}s">
         <td class="rank-num">${i + 1}</td>
@@ -854,6 +1024,9 @@ function render() {
           </div>
         </td>
         <td><div class="contextes-list">${contextesHtml}</div></td>
+        <td style="min-width:130px">${condTagsHtml}${yHtml}</td>
+        <td class="td-time">${p.times.length ? p.times.map(t => `<span class="badge-time">${TIME_ICONS[t] || t}</span>`).join(' ') : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}</td>
+        <td class="td-weather">${p.weathers.length ? p.weathers.map(w => `<span class="badge-weather">${WEATHER_ICONS[w] || w}</span>`).join(' ') : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}</td>
         <td><div class="lumiere-col">${renderLumiere(p.lumiere_profils)}</div></td>
         <td class="td-poids">${p.poids || '—'}</td>
         <td class="td-level">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</td>
@@ -885,11 +1058,14 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
 });
 
 let debounce;
-['search','filter-bucket','filter-ev','filter-contexte'].forEach(id => {
+['search','filter-bucket','filter-ev','filter-contexte','filter-time','filter-weather','filter-special'].forEach(id => {
   const el = document.getElementById(id);
+  if (!el) return;
   el.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(render, 200); });
   el.addEventListener('change', () => render());
 });
+document.getElementById('y-min-slider').addEventListener('input', () => { updateYDisplay(); render(); });
+document.getElementById('y-max-slider').addEventListener('input', () => { updateYDisplay(); render(); });
 
 render();
 

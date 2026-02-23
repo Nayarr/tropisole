@@ -830,57 +830,151 @@ def expand_biomes_by_mod(biomes_str):
 # Ex: is_ocean inclut is_coast, is_warm_ocean, is_tropical_island, etc.
 # Source: documentation officielle Cobblemon + wiki
 COBBLEMON_TAG_HIERARCHY = {
+    # Source : wiki officiel Cobblemon (Biome Tags page) — version complète
+
+    # OVERWORLD : inclut tous les grands groupes Cobblemon
     "#cobblemon:is_overworld": [
-        "#cobblemon:is_arid", "#cobblemon:is_badlands", "#cobblemon:is_bamboo",
-        "#cobblemon:is_beach", "#cobblemon:is_cherry_blossom", "#cobblemon:is_coast",
-        "#cobblemon:is_cold", "#cobblemon:is_cold_ocean", "#cobblemon:is_deep_dark",
-        "#cobblemon:is_desert", "#cobblemon:is_dripstone", "#cobblemon:is_end",
-        "#cobblemon:is_floral", "#cobblemon:is_forest", "#cobblemon:is_freezing",
-        "#cobblemon:is_freshwater", "#cobblemon:is_frozen_ocean", "#cobblemon:is_glacial",
-        "#cobblemon:is_grassland", "#cobblemon:is_highlands", "#cobblemon:is_hills",
-        "#cobblemon:is_island", "#cobblemon:is_jungle", "#cobblemon:is_lukewarm_ocean",
-        "#cobblemon:is_lush", "#cobblemon:is_magical", "#cobblemon:is_mountain",
-        "#cobblemon:is_mushroom", "#cobblemon:is_ocean", "#cobblemon:is_peak",
-        "#cobblemon:is_plains", "#cobblemon:is_plateau", "#cobblemon:is_river",
-        "#cobblemon:is_sandy", "#cobblemon:is_savanna", "#cobblemon:is_shrubland",
-        "#cobblemon:is_sky", "#cobblemon:is_snowy", "#cobblemon:is_snowy_forest",
-        "#cobblemon:is_snowy_taiga", "#cobblemon:is_spooky", "#cobblemon:is_swamp",
-        "#cobblemon:is_taiga", "#cobblemon:is_temperate", "#cobblemon:is_temperate_ocean",
-        "#cobblemon:is_thermal", "#cobblemon:is_tropical_island", "#cobblemon:is_tundra",
-        "#cobblemon:is_volcanic", "#cobblemon:is_warm_ocean",
+        "#cobblemon:is_arid", "#cobblemon:is_bamboo", "#cobblemon:is_cave",
+        "#cobblemon:is_coast", "#cobblemon:is_cold", "#cobblemon:is_deep_dark",
+        "#cobblemon:is_floral", "#cobblemon:is_forest", "#cobblemon:is_freshwater",
+        "#cobblemon:is_grassland", "#cobblemon:is_highlands", "#cobblemon:is_island",
+        "#cobblemon:is_jungle", "#cobblemon:is_magical", "#cobblemon:is_mountain",
+        "#cobblemon:is_mushroom", "#cobblemon:is_ocean", "#cobblemon:is_sky",
+        "#cobblemon:is_spooky", "#cobblemon:is_temperate", "#cobblemon:is_thermal",
+        "#cobblemon:is_volcanic",
     ],
+
+    # ARID = All Sandy + All Savanna  (← c'est un PARENT, pas une feuille !)
+    "#cobblemon:is_arid": [
+        "#cobblemon:is_sandy",
+        "#cobblemon:is_savanna",
+    ],
+
+    # OCEAN = vanilla + All Coast + All Cold Ocean + All Deep Ocean
+    #       + All Frozen Ocean + All Lukewarm Ocean + All Warm Ocean
     "#cobblemon:is_ocean": [
-        "#cobblemon:is_coast", "#cobblemon:is_cold_ocean", "#cobblemon:is_deep_ocean",
-        "#cobblemon:is_frozen_ocean", "#cobblemon:is_lukewarm_ocean",
-        "#cobblemon:is_temperate_ocean", "#cobblemon:is_tropical_island",
+        "#cobblemon:is_coast",
+        "#cobblemon:is_cold_ocean",
+        "#cobblemon:is_deep_ocean",
+        "#cobblemon:is_frozen_ocean",
+        "#cobblemon:is_lukewarm_ocean",
+        "#cobblemon:is_temperate_ocean",
         "#cobblemon:is_warm_ocean",
     ],
+
+    # COAST = Stony Shore + All Beach biomes + biomes côtiers Wythers/Terralith
     "#cobblemon:is_coast": [
-        "#cobblemon:is_beach", "#cobblemon:is_tropical_island",
+        "#cobblemon:is_beach",
     ],
+
+    # COLD = All Cold Ocean + All Freezing + All Peak + All Taiga + All Tundra
     "#cobblemon:is_cold": [
-        "#cobblemon:is_cold_ocean", "#cobblemon:is_freezing", "#cobblemon:is_peak",
-        "#cobblemon:is_tundra", "#cobblemon:is_snowy_taiga", "#cobblemon:is_snowy_forest",
-        "#cobblemon:is_snowy",
+        "#cobblemon:is_cold_ocean",
+        "#cobblemon:is_freezing",
+        "#cobblemon:is_peak",
+        "#cobblemon:is_taiga",
+        "#cobblemon:is_tundra",
     ],
+
+    # FREEZING = vanilla snowy + All Frozen Ocean + All Glacial + All Snowy Forest
+    "#cobblemon:is_freezing": [
+        "#cobblemon:is_frozen_ocean",
+        "#cobblemon:is_glacial",
+        "#cobblemon:is_snowy_forest",
+    ],
+
+    # FRESHWATER = All River + All Swamp
     "#cobblemon:is_freshwater": [
-        "#cobblemon:is_river", "#cobblemon:is_swamp",
+        "#cobblemon:is_river",
+        "#cobblemon:is_swamp",
     ],
+
+    # GRASSLAND = All Plains + All Savanna
     "#cobblemon:is_grassland": [
-        "#cobblemon:is_plains", "#cobblemon:is_savanna",
+        "#cobblemon:is_plains",
+        "#cobblemon:is_savanna",
     ],
+
+    # TEMPERATE = All Forest + All Plains
     "#cobblemon:is_temperate": [
-        "#cobblemon:is_forest", "#cobblemon:is_plains",
+        "#cobblemon:is_forest",
+        "#cobblemon:is_plains",
     ],
+
+    # SANDY = All Badlands + All Desert
     "#cobblemon:is_sandy": [
-        "#cobblemon:is_badlands", "#cobblemon:is_desert", "#cobblemon:is_arid",
+        "#cobblemon:is_badlands",
+        "#cobblemon:is_desert",
     ],
+
+    # MOUNTAIN = vanilla Mountain + All Hill biomes (qui inclut lui-même All Highlands)
     "#cobblemon:is_mountain": [
-        "#cobblemon:is_hills", "#cobblemon:is_peak", "#cobblemon:is_highlands",
+        "#cobblemon:is_hills",
+        "#cobblemon:is_peak",
     ],
+
+    # HILLS inclut All Highlands (selon le wiki : "All Highlands biomes")
+    "#cobblemon:is_hills": [
+        "#cobblemon:is_highlands",
+    ],
+
+    # PLAINS inclut All Highlands (selon le wiki : "All Highlands biomes")
+    "#cobblemon:is_plains": [
+        "#cobblemon:is_highlands",
+    ],
+
+    # ISLAND = Mushroom Fields + All Tropical Island + divers îles
+    "#cobblemon:is_island": [
+        "#cobblemon:is_tropical_island",
+    ],
+
+    # TAIGA = vanilla Taiga + Grove + biomes Terralith/Wythers taïga
+    # (pas de sous-tags Cobblemon, juste des biomes réels)
+    "#cobblemon:is_taiga": [
+        "#cobblemon:is_snowy_taiga",   # snowy_taiga ⊂ taiga
+    ],
+
+    # SAISONS (tags Cobblemon saisonniers)
+    "#cobblemon:is_autumn": [
+        "#cobblemon:is_arid",
+        "#cobblemon:is_cold_ocean",
+        "#cobblemon:is_mountain",
+        "#cobblemon:is_mushroom",
+        "#cobblemon:is_taiga",
+    ],
+    "#cobblemon:is_spring": [
+        "#cobblemon:is_floral",
+        "#cobblemon:is_lukewarm_ocean",
+        "#cobblemon:is_magical",
+        "#cobblemon:is_plains",
+    ],
+    "#cobblemon:is_summer": [
+        "#cobblemon:is_forest",
+        "#cobblemon:is_jungle",
+        "#cobblemon:is_lush",
+        "#cobblemon:is_warm_ocean",
+        "#cobblemon:is_swamp",
+    ],
+    "#cobblemon:is_winter": [
+        "#cobblemon:is_freezing",
+    ],
+
+    # SPARSE = All Arid + All Grassland + All Tundra
+    "#cobblemon:is_sparse": [
+        "#cobblemon:is_arid",
+        "#cobblemon:is_grassland",
+        "#cobblemon:is_tundra",
+    ],
+
+    # DENSE = Dark Forest + Mangrove Swamp + All Jungle
+    "#cobblemon:is_dense": [
+        "#cobblemon:is_jungle",
+    ],
+
+    # Feuilles (pas de sous-tags Cobblemon)
     "#cobblemon:is_cold_ocean": [],
     "#cobblemon:is_deep_ocean": [],
-    "#cobblemon:is_frozen_ocean": ["#cobblemon:is_glacial"],
+    "#cobblemon:is_frozen_ocean": [],
     "#cobblemon:is_lukewarm_ocean": [],
     "#cobblemon:is_temperate_ocean": [],
     "#cobblemon:is_warm_ocean": [],
@@ -888,22 +982,33 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_beach": [],
     "#cobblemon:is_river": [],
     "#cobblemon:is_swamp": [],
-    "#cobblemon:is_plains": [],
     "#cobblemon:is_savanna": [],
     "#cobblemon:is_forest": [],
-    "#cobblemon:is_taiga": [],
     "#cobblemon:is_snowy_taiga": [],
     "#cobblemon:is_snowy_forest": [],
     "#cobblemon:is_snowy": [],
-    "#cobblemon:is_tundra": [],
     "#cobblemon:is_peak": [],
-    "#cobblemon:is_hills": [],
     "#cobblemon:is_highlands": [],
     "#cobblemon:is_glacial": [],
-    "#cobblemon:is_freezing": [],
-    "#cobblemon:is_arid": [],
     "#cobblemon:is_badlands": [],
     "#cobblemon:is_desert": [],
+    "#cobblemon:is_bamboo": [],
+    "#cobblemon:is_cave": [],
+    "#cobblemon:is_deep_dark": [],
+    "#cobblemon:is_floral": [],
+    "#cobblemon:is_jungle": [],
+    "#cobblemon:is_lush": [],
+    "#cobblemon:is_magical": [],
+    "#cobblemon:is_mushroom": [],
+    "#cobblemon:is_sky": [],
+    "#cobblemon:is_spooky": [],
+    "#cobblemon:is_thermal": [],
+    "#cobblemon:is_volcanic": [],
+    "#cobblemon:is_tundra": [],
+    "#cobblemon:is_cherry_blossom": [],
+    "#cobblemon:is_shrubland": [],
+    "#cobblemon:is_plateau": [],
+    "#cobblemon:is_dripstone": [],
 }
 
 # ── Mapping tag FR -> tag Cobblemon brut ──────────────────────────────────────

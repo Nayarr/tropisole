@@ -438,10 +438,17 @@
     {% endfor %}
   </select>
 
-  <select id="filter-moment">
+  <select id="filter-time">
     <option value="">— Moment —</option>
-    {% for m in moments %}
-    <option value="{{ m }}">{{ moment_fr.get(m, m) }}</option>
+    {% for t in times %}
+    <option value="{{ t }}">{{ time_fr.get(t, t) }}</option>
+    {% endfor %}
+  </select>
+
+  <select id="filter-weather">
+    <option value="">— Météo —</option>
+    {% for w in weathers %}
+    <option value="{{ w }}">{{ weather_fr.get(w, w) }}</option>
     {% endfor %}
   </select>
 
@@ -494,9 +501,10 @@
   function getParams() {
     return new URLSearchParams({
       q: document.getElementById('search').value,
-      bucket: document.getElementById('filter-bucket').value,
-      moment: document.getElementById('filter-moment').value,
-      biome: document.getElementById('filter-biome').value,
+      bucket:  document.getElementById('filter-bucket').value,
+      time:    document.getElementById('filter-time').value,
+      weather: document.getElementById('filter-weather').value,
+      biome:   document.getElementById('filter-biome').value,
       sort: document.getElementById('sort').value,
       order: currentOrder,
       page: currentPage,
@@ -600,7 +608,7 @@
     currentPage = 1;
   }
 
-  ['filter-bucket', 'filter-moment', 'filter-biome', 'sort'].forEach(id => {
+  ['filter-bucket', 'filter-time', 'filter-weather', 'filter-biome', 'sort'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => { resetPage(); loadPokemon(); });
   });
 
