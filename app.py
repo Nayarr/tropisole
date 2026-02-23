@@ -217,32 +217,41 @@ def spawns_by_biome():
     params = [f"%{b}%" for b in biomes_list]
 
     rows = conn.execute(f"""
-        SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, moment, contexte
+        SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, moment,
+               contexte, lumiere_min, lumiere_max, peut_voir_ciel
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero
     """, params).fetchall()
     conn.close()
 
-    # Group by numero : garder le poids max, collecter tous les contextes uniques
+    # Group by numero : garder le poids max, collecter tous les contextes et profils de lumière uniques
     seen = {}
     for r in rows:
         key = r["numero"]
         if key not in seen:
             seen[key] = dict(r)
             seen[key]["contextes"] = set()
+            seen[key]["lumiere_profils"] = set()
         else:
             if (r["poids"] or 0) > (seen[key]["poids"] or 0):
                 d = dict(r)
                 d["contextes"] = seen[key]["contextes"]
+                d["lumiere_profils"] = seen[key]["lumiere_profils"]
                 seen[key] = d
         if r["contexte"]:
             seen[key]["contextes"].add(r["contexte"])
+        # Enregistrer ce profil lumière si non-trivial
+        lmin = r["lumiere_min"]
+        lmax = r["lumiere_max"]
+        sky  = r["peut_voir_ciel"]
+        if lmin is not None or lmax is not None or (sky and sky not in ("any", None)):
+            seen[key]["lumiere_profils"].add((lmin, lmax, sky))
 
     pokemon_list = list(seen.values())
-    # Convertir set → list triée
     for p in pokemon_list:
         p["contextes"] = sorted(p["contextes"])
+        p["lumiere_profils"] = sorted(p["lumiere_profils"], key=lambda x: (x[0] or 0))
 
     # Enrich with EV data
     for p in pokemon_list:
@@ -310,31 +319,40 @@ def spawns_by_real_biome():
     params = [f"%{t}%" for t in tags_fr]
 
     rows = conn.execute(f"""
-        SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, moment, contexte
+        SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, moment,
+               contexte, lumiere_min, lumiere_max, peut_voir_ciel
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero
     """, params).fetchall()
     conn.close()
 
-    # Dédoublonner par numero, garder le poids le plus élevé, collecter tous les contextes
+    # Dédoublonner par numero, garder le poids le plus élevé, collecter contextes + profils lumière
     seen = {}
     for r in rows:
         key = r["numero"]
         if key not in seen:
             seen[key] = dict(r)
             seen[key]["contextes"] = set()
+            seen[key]["lumiere_profils"] = set()
         else:
             if (r["poids"] or 0) > (seen[key]["poids"] or 0):
                 d = dict(r)
                 d["contextes"] = seen[key]["contextes"]
+                d["lumiere_profils"] = seen[key]["lumiere_profils"]
                 seen[key] = d
         if r["contexte"]:
             seen[key]["contextes"].add(r["contexte"])
+        lmin = r["lumiere_min"]
+        lmax = r["lumiere_max"]
+        sky  = r["peut_voir_ciel"]
+        if lmin is not None or lmax is not None or (sky and sky not in ("any", None)):
+            seen[key]["lumiere_profils"].add((lmin, lmax, sky))
 
     pokemon_list = list(seen.values())
     for p in pokemon_list:
         p["contextes"] = sorted(p["contextes"])
+        p["lumiere_profils"] = sorted(p["lumiere_profils"], key=lambda x: (x[0] or 0))
 
     # Enrichir avec les EVs
     for p in pokemon_list:

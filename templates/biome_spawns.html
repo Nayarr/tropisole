@@ -488,6 +488,39 @@
     tr.is-source td { border-left: 2px solid var(--accent); }
     tr.is-source:first-child td:first-child { border-radius: 0; }
 
+    /* LUMIERE BADGES */
+    .lumiere-col {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 110px;
+    }
+
+    .lum-profil {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      align-items: center;
+    }
+
+    .lum-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      padding: 0.18rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    .lum-sky-yes  { background: rgba(232,255,71,0.08);  color: #e8ff47; border-color: rgba(232,255,71,0.25); }
+    .lum-sky-no   { background: rgba(106,106,136,0.12); color: var(--muted); border-color: rgba(106,106,136,0.25); }
+    .lum-bright   { background: rgba(253,203,110,0.1);  color: #fdcb6e; border-color: rgba(253,203,110,0.3); }
+    .lum-dark     { background: rgba(99,110,255,0.1);   color: #8e9bff; border-color: rgba(99,110,255,0.25); }
+    .lum-mixed    { background: rgba(162,155,254,0.1);  color: #a29bfe; border-color: rgba(162,155,254,0.25); }
+
     /* CONTEXTE BADGES */
     .contextes-list {
       display: flex;
@@ -646,6 +679,7 @@
           <th data-col="ev_total" class="sorted">EVs lâchés<span class="sort-arrow">↓</span></th>
           <th>Répartition EVs</th>
           <th>Lieu de spawn</th>
+          <th>Lumière</th>
           <th data-col="poids">Poids spawn<span class="sort-arrow"></span></th>
           <th data-col="niveau">Niveau<span class="sort-arrow"></span></th>
         </tr>
@@ -687,6 +721,7 @@ const RAW_DATA = [
     niveau_min: {{ p.niveau_min or 0 }},
     niveau_max: {{ p.niveau_max or 0 }},
     contextes: {{ p.contextes | tojson }},
+    lumiere_profils: {{ p.lumiere_profils | tojson }},
     ev: {
       hp: {{ p.ev.hp }}, atk: {{ p.ev.atk }}, def: {{ p.ev.def }},
       spa: {{ p.ev.spa }}, spd: {{ p.ev.spd }}, spe: {{ p.ev.spe }},
@@ -739,6 +774,34 @@ function sortData(rows) {
   });
 }
 
+function renderLumiere(profils) {
+  if (!profils || profils.length === 0) return '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+
+  return profils.map(([lmin, lmax, sky]) => {
+    const parts = [];
+
+    // Skylight
+    if (sky === 'True') {
+      parts.push('<span class="lum-badge lum-sky-yes" title="Doit voir le ciel">☀️ Ciel requis</span>');
+    } else if (sky === 'False') {
+      parts.push('<span class="lum-badge lum-sky-no" title="Ne doit PAS voir le ciel">🚫 Sans ciel</span>');
+    }
+
+    // Niveau de lumière
+    if (lmin !== null || lmax !== null) {
+      const mn = lmin !== null ? Math.round(lmin) : '?';
+      const mx = lmax !== null ? Math.round(lmax) : '?';
+      const isDark = (lmax !== null && lmax <= 7);
+      const isBright = (lmin !== null && lmin >= 8);
+      const cls = isDark ? 'lum-dark' : isBright ? 'lum-bright' : 'lum-mixed';
+      const icon = isDark ? '🌑' : isBright ? '🌕' : '🌗';
+      parts.push(`<span class="lum-badge ${cls}" title="Niveau de lumière du ciel requis">${icon} ${mn}–${mx}</span>`);
+    }
+
+    return `<div class="lum-profil">${parts.join('')}</div>`;
+  }).join('');
+}
+
 function renderEVBars(ev) {
   const stats = ['hp','atk','def','spa','spd','spe'];
   return stats.map(s => {
@@ -760,7 +823,7 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="9" class="empty">Aucun résultat</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="10" class="empty">Aucun résultat</td></tr>`;
     return;
   }
 
@@ -791,6 +854,7 @@ function render() {
           </div>
         </td>
         <td><div class="contextes-list">${contextesHtml}</div></td>
+        <td><div class="lumiere-col">${renderLumiere(p.lumiere_profils)}</div></td>
         <td class="td-poids">${p.poids || '—'}</td>
         <td class="td-level">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</td>
       </tr>`;
