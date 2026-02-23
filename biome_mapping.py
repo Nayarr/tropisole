@@ -824,3 +824,188 @@ def expand_biomes_by_mod(biomes_str):
             by_mod.setdefault(mod, []).append(b["biome"])
         result.append({"tag": t, "by_mod": by_mod})
     return result
+
+# ── Hiérarchie des tags Cobblemon ─────────────────────────────────────────────
+# Définit quels tags "parents" incluent quels tags "enfants".
+# Ex: is_ocean inclut is_coast, is_warm_ocean, is_tropical_island, etc.
+# Source: documentation officielle Cobblemon + wiki
+COBBLEMON_TAG_HIERARCHY = {
+    "#cobblemon:is_overworld": [
+        "#cobblemon:is_arid", "#cobblemon:is_badlands", "#cobblemon:is_bamboo",
+        "#cobblemon:is_beach", "#cobblemon:is_cherry_blossom", "#cobblemon:is_coast",
+        "#cobblemon:is_cold", "#cobblemon:is_cold_ocean", "#cobblemon:is_deep_dark",
+        "#cobblemon:is_desert", "#cobblemon:is_dripstone", "#cobblemon:is_end",
+        "#cobblemon:is_floral", "#cobblemon:is_forest", "#cobblemon:is_freezing",
+        "#cobblemon:is_freshwater", "#cobblemon:is_frozen_ocean", "#cobblemon:is_glacial",
+        "#cobblemon:is_grassland", "#cobblemon:is_highlands", "#cobblemon:is_hills",
+        "#cobblemon:is_island", "#cobblemon:is_jungle", "#cobblemon:is_lukewarm_ocean",
+        "#cobblemon:is_lush", "#cobblemon:is_magical", "#cobblemon:is_mountain",
+        "#cobblemon:is_mushroom", "#cobblemon:is_ocean", "#cobblemon:is_peak",
+        "#cobblemon:is_plains", "#cobblemon:is_plateau", "#cobblemon:is_river",
+        "#cobblemon:is_sandy", "#cobblemon:is_savanna", "#cobblemon:is_shrubland",
+        "#cobblemon:is_sky", "#cobblemon:is_snowy", "#cobblemon:is_snowy_forest",
+        "#cobblemon:is_snowy_taiga", "#cobblemon:is_spooky", "#cobblemon:is_swamp",
+        "#cobblemon:is_taiga", "#cobblemon:is_temperate", "#cobblemon:is_temperate_ocean",
+        "#cobblemon:is_thermal", "#cobblemon:is_tropical_island", "#cobblemon:is_tundra",
+        "#cobblemon:is_volcanic", "#cobblemon:is_warm_ocean",
+    ],
+    "#cobblemon:is_ocean": [
+        "#cobblemon:is_coast", "#cobblemon:is_cold_ocean", "#cobblemon:is_deep_ocean",
+        "#cobblemon:is_frozen_ocean", "#cobblemon:is_lukewarm_ocean",
+        "#cobblemon:is_temperate_ocean", "#cobblemon:is_tropical_island",
+        "#cobblemon:is_warm_ocean",
+    ],
+    "#cobblemon:is_coast": [
+        "#cobblemon:is_beach", "#cobblemon:is_tropical_island",
+    ],
+    "#cobblemon:is_cold": [
+        "#cobblemon:is_cold_ocean", "#cobblemon:is_freezing", "#cobblemon:is_peak",
+        "#cobblemon:is_tundra", "#cobblemon:is_snowy_taiga", "#cobblemon:is_snowy_forest",
+        "#cobblemon:is_snowy",
+    ],
+    "#cobblemon:is_freshwater": [
+        "#cobblemon:is_river", "#cobblemon:is_swamp",
+    ],
+    "#cobblemon:is_grassland": [
+        "#cobblemon:is_plains", "#cobblemon:is_savanna",
+    ],
+    "#cobblemon:is_temperate": [
+        "#cobblemon:is_forest", "#cobblemon:is_plains",
+    ],
+    "#cobblemon:is_sandy": [
+        "#cobblemon:is_badlands", "#cobblemon:is_desert", "#cobblemon:is_arid",
+    ],
+    "#cobblemon:is_mountain": [
+        "#cobblemon:is_hills", "#cobblemon:is_peak", "#cobblemon:is_highlands",
+    ],
+    "#cobblemon:is_cold_ocean": [],
+    "#cobblemon:is_deep_ocean": [],
+    "#cobblemon:is_frozen_ocean": ["#cobblemon:is_glacial"],
+    "#cobblemon:is_lukewarm_ocean": [],
+    "#cobblemon:is_temperate_ocean": [],
+    "#cobblemon:is_warm_ocean": [],
+    "#cobblemon:is_tropical_island": [],
+    "#cobblemon:is_beach": [],
+    "#cobblemon:is_river": [],
+    "#cobblemon:is_swamp": [],
+    "#cobblemon:is_plains": [],
+    "#cobblemon:is_savanna": [],
+    "#cobblemon:is_forest": [],
+    "#cobblemon:is_taiga": [],
+    "#cobblemon:is_snowy_taiga": [],
+    "#cobblemon:is_snowy_forest": [],
+    "#cobblemon:is_snowy": [],
+    "#cobblemon:is_tundra": [],
+    "#cobblemon:is_peak": [],
+    "#cobblemon:is_hills": [],
+    "#cobblemon:is_highlands": [],
+    "#cobblemon:is_glacial": [],
+    "#cobblemon:is_freezing": [],
+    "#cobblemon:is_arid": [],
+    "#cobblemon:is_badlands": [],
+    "#cobblemon:is_desert": [],
+}
+
+# ── Mapping tag FR -> tag Cobblemon brut ──────────────────────────────────────
+FR_TAG_TO_COBBLEMON = {
+    "Monde de surface":           "#cobblemon:is_overworld",
+    "Océan":                      "#cobblemon:is_ocean",
+    "Côte":                       "#cobblemon:is_coast",
+    "Plage":                      "#cobblemon:is_beach",
+    "Île tropicale":              "#cobblemon:is_tropical_island",
+    "Océan chaud":                "#cobblemon:is_warm_ocean",
+    "Océan tiède":                "#cobblemon:is_lukewarm_ocean",
+    "Océan froid":                "#cobblemon:is_cold_ocean",
+    "Océan gelé":                 "#cobblemon:is_frozen_ocean",
+    "Grand océan":                "#cobblemon:is_deep_ocean",
+    "Eau douce":                  "#cobblemon:is_freshwater",
+    "Rivière":                    "#cobblemon:is_river",
+    "Marais":                     "#cobblemon:is_swamp",
+    "Prairie":                    "#cobblemon:is_grassland",
+    "Plaines":                    "#cobblemon:is_plains",
+    "Savane":                     "#cobblemon:is_savanna",
+    "Forêt":                      "#cobblemon:is_forest",
+    "Jungle":                     "#cobblemon:is_jungle",
+    "Taïga":                      "#cobblemon:is_taiga",
+    "Taïga enneigée":             "#cobblemon:is_snowy_taiga",
+    "Forêt enneigée":             "#cobblemon:is_snowy_forest",
+    "Enneigé":                    "#cobblemon:is_snowy",
+    "Toundra":                    "#cobblemon:is_tundra",
+    "Montagne":                   "#cobblemon:is_mountain",
+    "Collines":                   "#cobblemon:is_hills",
+    "Hautes terres":              "#cobblemon:is_highlands",
+    "Sommet":                     "#cobblemon:is_peak",
+    "Glaciaire":                  "#cobblemon:is_glacial",
+    "Glacial":                    "#cobblemon:is_freezing",
+    "Aride":                      "#cobblemon:is_arid",
+    "Désert":                     "#cobblemon:is_desert",
+    "Terres arides":              "#cobblemon:is_badlands",
+    "Bambou":                     "#cobblemon:is_bamboo",
+    "Fleurs de cerisier":         "#cobblemon:is_cherry_blossom",
+    "Froid":                      "#cobblemon:is_cold",
+    "Abysses sombres":            "#cobblemon:is_deep_dark",
+    "Stalactites":                "#cobblemon:is_dripstone",
+    "Floral":                     "#cobblemon:is_floral",
+    "Luxuriant":                  "#cobblemon:is_lush",
+    "Magique":                    "#cobblemon:is_magical",
+    "Champignon":                 "#cobblemon:is_mushroom",
+    "Ciel":                       "#cobblemon:is_sky",
+    "Maquis":                     "#cobblemon:is_shrubland",
+    "Île":                        "#cobblemon:is_island",
+    "Plateau":                    "#cobblemon:is_plateau",
+    "Tempéré":                    "#cobblemon:is_temperate",
+    "Thermal":                    "#cobblemon:is_thermal",
+    "Volcanique":                 "#cobblemon:is_volcanic",
+    "Effrayant":                  "#cobblemon:is_spooky",
+    "Nether":                     "#minecraft:is_nether",
+    "Nether basaltique":          "#cobblemon:nether/is_basalt",
+    "Nether cramoisi":            "#cobblemon:nether/is_crimson",
+    "Désert du Nether":           "#cobblemon:nether/is_desert",
+    "Forêt du Nether":            "#cobblemon:nether/is_forest",
+    "Nether gelé":                "#cobblemon:nether/is_frozen",
+    "Nether fongique":            "#cobblemon:nether/is_fungus",
+    "Montagne du Nether":         "#cobblemon:nether/is_mountain",
+    "Végétation du Nether":       "#cobblemon:nether/is_overgrowth",
+    "Quartz du Nether":           "#cobblemon:nether/is_quartz",
+    "Nether feu de l'Âme":        "#cobblemon:nether/is_soul_fire",
+    "Nether sable de l'Âme":      "#cobblemon:nether/is_soul_sand",
+    "Nether toxique":             "#cobblemon:nether/is_toxic",
+    "Nether distordu":            "#cobblemon:nether/is_warped",
+    "Terres dévastées du Nether": "#cobblemon:nether/is_wasteland",
+    "Éther":                      "#aether:is_aether",
+    "Bumblezone":                 "#the_bumblezone:the_bumblezone",
+}
+
+def get_parent_cobblemon_tags(cobblemon_tag):
+    """
+    Retourne tous les tags parents Cobblemon qui incluent cobblemon_tag (récursivement).
+    Ex: get_parent_cobblemon_tags('#cobblemon:is_tropical_island')
+        -> {'#cobblemon:is_coast', '#cobblemon:is_ocean', '#cobblemon:is_overworld'}
+    """
+    parents = set()
+    for parent, children in COBBLEMON_TAG_HIERARCHY.items():
+        if cobblemon_tag in children:
+            parents.add(parent)
+            parents |= get_parent_cobblemon_tags(parent)
+    return parents
+
+
+def get_cobblemon_tags_for_fr_biomes(fr_biomes_list):
+    """
+    Convertit une liste de tags FR en ensemble de tags Cobblemon bruts,
+    en incluant TOUS les tags parents (hiérarchie).
+    Utilisé pour la requête /spawns/biome afin de ne rater aucun pokemon.
+
+    Ex: ['Île tropicale'] -> {'#cobblemon:is_tropical_island',
+                               '#cobblemon:is_coast', '#cobblemon:is_ocean',
+                               '#cobblemon:is_overworld'}
+    """
+    all_cobblemon_tags = set()
+    for fr_tag in fr_biomes_list:
+        cobblemon_tag = FR_TAG_TO_COBBLEMON.get(fr_tag)
+        if cobblemon_tag:
+            # Le tag lui-même
+            all_cobblemon_tags.add(cobblemon_tag)
+            # Tous ses parents (pokemon qui spawent dans un biome plus large)
+            all_cobblemon_tags |= get_parent_cobblemon_tags(cobblemon_tag)
+    return all_cobblemon_tags

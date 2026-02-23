@@ -4,7 +4,8 @@ import os
 import math
 from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, get_mod_color,
-                           BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted, get_tags_for_biome)
+                           BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted, get_tags_for_biome,
+                           get_cobblemon_tags_for_fr_biomes)
 
 app = Flask(__name__)
 DB_PATH = os.path.join(os.path.dirname(__file__), "cobbledex.db")
@@ -211,10 +212,20 @@ def spawns_by_biome():
         if row:
             source_pokemon = dict(row)
 
-    # Find all pokemon that spawn in ANY of the given biomes
-    # Build LIKE conditions
-    where_parts = " OR ".join(["biomes LIKE ?" for _ in biomes_list])
-    params = [f"%{b}%" for b in biomes_list]
+    # ── Résolution hiérarchique des tags Cobblemon ────────────────────────────
+    # Pour chaque tag FR reçu, on remonte tous les tags parents Cobblemon.
+    # Ex: 'Île tropicale' -> is_tropical_island + is_coast + is_ocean + is_overworld
+    # Ainsi un pokemon tagué 'is_ocean' apparaît bien en 'Île tropicale'.
+    cobblemon_tags = get_cobblemon_tags_for_fr_biomes(biomes_list)
+
+    # Fallback : si aucun tag cobblemon connu, on reste sur le LIKE FR classique
+    if cobblemon_tags:
+        where_parts = " OR ".join(["biomes_tags LIKE ?" for _ in cobblemon_tags])
+        params = [f"%{t}%" for t in cobblemon_tags]
+    else:
+        where_parts = " OR ".join(["biomes LIKE ?" for _ in biomes_list])
+        params = [f"%{b}%" for b in biomes_list]
+    # ─────────────────────────────────────────────────────────────────────────
 
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, moment,
@@ -314,9 +325,14 @@ def spawns_by_real_biome():
         if row:
             source_pokemon = dict(row)
 
-    # Chercher tous les pokémon dont le champ biomes contient AU MOINS UN des tags FR
-    where_parts = " OR ".join(["biomes LIKE ?" for _ in tags_fr])
-    params = [f"%{t}%" for t in tags_fr]
+    # Résolution hiérarchique : tags FR -> tags Cobblemon bruts + parents
+    cobblemon_tags_reel = get_cobblemon_tags_for_fr_biomes(tags_fr)
+    if cobblemon_tags_reel:
+        where_parts = " OR ".join(["biomes_tags LIKE ?" for _ in cobblemon_tags_reel])
+        params = [f"%{t}%" for t in cobblemon_tags_reel]
+    else:
+        where_parts = " OR ".join(["biomes LIKE ?" for _ in tags_fr])
+        params = [f"%{t}%" for t in tags_fr]
 
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, moment,
