@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ name }} — Cobbledex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: #2a2a3a;
+      --accent: #e8ff47;
+      --accent2: #47ffe8;
+      --text: #e8e8f0;
+      --muted: #6a6a88;
+      --common: #74b9ff;
+      --uncommon: #55efc4;
+      --rare: #fd79a8;
+      --ultra: #e84393;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,15,0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      transition: color 0.15s;
+    }
+
+    .nav-back:hover { color: var(--accent); }
+
+    .nav-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-left: 0.5rem;
+    }
+
+    .nav-arrows {
+      margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .nav-arrow {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.4rem 0.8rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-arrow:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .nav-arrow.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 5;
+      padding: 3rem 2rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      gap: 3rem;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, rgba(232,255,71,0.03) 0%, transparent 60%);
+    }
+
+    .hero-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-name {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .hero-right {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .big-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 5rem;
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--border);
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* BADGES */
+    .badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-common    { background: rgba(116,185,255,0.15); color: var(--common);   border: 1px solid rgba(116,185,255,0.3); }
+    .badge-uncommon  { background: rgba(85,239,196,0.15);  color: var(--uncommon); border: 1px solid rgba(85,239,196,0.3); }
+    .badge-rare      { background: rgba(253,121,168,0.15); color: var(--rare);     border: 1px solid rgba(253,121,168,0.3); }
+    .badge-ultra-rare{ background: rgba(232,67,147,0.15);  color: var(--ultra);    border: 1px solid rgba(232,67,147,0.3); }
+    .badge-grey      { background: rgba(106,106,136,0.15); color: var(--muted);    border: 1px solid rgba(106,106,136,0.3); }
+    .badge-moment    { background: rgba(71,255,232,0.1);   color: var(--accent2);  border: 1px solid rgba(71,255,232,0.25); }
+    .badge-biome     { background: rgba(232,255,71,0.08);  color: var(--accent);   border: 1px solid rgba(232,255,71,0.2); }
+
+    /* CONTENT */
+    .content {
+      position: relative;
+      z-index: 5;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem;
+    }
+
+    .section-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* SPAWN CARDS */
+    .spawns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 3rem;
+    }
+
+    .spawn-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      position: relative;
+      transition: border-color 0.2s, transform 0.18s, box-shadow 0.18s;
+      animation: fadeIn 0.35s ease both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .spawn-card:hover {
+      border-color: rgba(232,255,71,0.3);
+    }
+
+    /* CO-SPAWN BUTTON */
+    .cospawn-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.2rem;
+      padding: 0.5rem 0.9rem;
+      background: rgba(71,255,232,0.07);
+      border: 1px solid rgba(71,255,232,0.2);
+      border-radius: 6px;
+      color: var(--accent2);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      cursor: pointer;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .cospawn-btn:hover {
+      background: rgba(71,255,232,0.15);
+      border-color: var(--accent2);
+      transform: translateY(-1px);
+    }
+
+    .cospawn-btn .icon { font-size: 0.9rem; }
+
+    .spawn-entry-num {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    .spawn-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .spawn-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .spawn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .spawn-key {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .spawn-val {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .spawn-val.accent { color: var(--accent); }
+    .spawn-val.accent2 { color: var(--accent2); }
+
+    .biomes-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      justify-content: flex-end;
+    }
+
+    /* SEPARATOR */
+    .separator {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0.8rem 0;
+    }
+
+    /* LEVEL BAR */
+    .level-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.2rem;
+    }
+
+    .level-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .level-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 2px;
+    }
+
+    .level-nums {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* BIOME EXPANDED */
+    .biome-group {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      text-align: left;
+      max-width: 340px;
+    }
+
+    .biome-group-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      margin-bottom: 0.1rem;
+    }
+
+    .biome-mod-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .biome-mod-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .biome-mod-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+
+    .biome-mod-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .biome-chip {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      border: 1px solid;
+      background: rgba(255,255,255,0.03);
+      line-height: 1.5;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+      transition: filter 0.15s, transform 0.12s;
+      cursor: pointer;
+    }
+
+    .biome-chip:hover {
+      filter: brightness(1.4);
+      transform: translateY(-1px);
+    }
+
+    .biome-chip::after {
+      content: ' ↗';
+      opacity: 0.5;
+      font-size: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-back">← Cobbledex</a>
+  <span class="nav-title">{{ name }}</span>
+  <div class="nav-arrows">
+    {% if prev_num %}
+    <a href="/pokemon/{{ prev_num }}" class="nav-arrow">← Précédent</a>
+    {% else %}
+    <span class="nav-arrow disabled">← Précédent</span>
+    {% endif %}
+
+    {% if next_num %}
+    <a href="/pokemon/{{ next_num }}" class="nav-arrow">Suivant →</a>
+    {% else %}
+    <span class="nav-arrow disabled">Suivant →</span>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="hero">
+  <div>
+    <div class="hero-num">#{{ '%04d' % numero }}</div>
+    <div class="hero-name">{{ name }}</div>
+    <div class="hero-meta">
+      {% set buckets_seen = [] %}
+      {% for s in spawns %}
+        {% if s.bucket and s.bucket not in buckets_seen %}
+          {% set _ = buckets_seen.append(s.bucket) %}
+          {% if s.bucket == 'common' %}
+            <span class="badge badge-common">{{ bucket_fr.get(s.bucket, s.bucket) }}</span>
+          {% elif s.bucket == 'uncommon' %}
+            <span class="badge badge-uncommon">{{ bucket_fr.get(s.bucket, s.bucket) }}</span>
+          {% elif s.bucket == 'rare' %}
+            <span class="badge badge-rare">{{ bucket_fr.get(s.bucket, s.bucket) }}</span>
+          {% elif s.bucket == 'ultra-rare' %}
+            <span class="badge badge-ultra-rare">{{ bucket_fr.get(s.bucket, s.bucket) }}</span>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      <span class="badge badge-grey">{{ spawns|length }} spawn{{ 's' if spawns|length > 1 }}</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="big-num">{{ '%04d' % numero }}</div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="section-title">Entrées de spawn ({{ spawns|length }})</div>
+
+  <div class="spawns-grid">
+    {% for s in spawns %}
+    {% set delay = loop.index0 * 0.05 %}
+    <div class="spawn-card" style="animation-delay: {{ delay }}s">
+      <div class="spawn-entry-num">Entrée {{ s.entree }}</div>
+
+      <div class="spawn-header">
+        {% if s.bucket == 'common' %}
+          <span class="badge badge-common">{{ bucket_fr.get(s.bucket, s.bucket or '—') }}</span>
+        {% elif s.bucket == 'uncommon' %}
+          <span class="badge badge-uncommon">{{ bucket_fr.get(s.bucket, s.bucket or '—') }}</span>
+        {% elif s.bucket == 'rare' %}
+          <span class="badge badge-rare">{{ bucket_fr.get(s.bucket, s.bucket or '—') }}</span>
+        {% elif s.bucket == 'ultra-rare' %}
+          <span class="badge badge-ultra-rare">{{ bucket_fr.get(s.bucket, s.bucket or '—') }}</span>
+        {% else %}
+          <span class="badge badge-grey">—</span>
+        {% endif %}
+        {% if s.moment and s.moment != 'any' %}
+          <span class="badge badge-moment">{{ moment_fr.get(s.moment, s.moment) }}</span>
+        {% endif %}
+        {% if s.meteo and s.meteo != 'any' %}
+          <span class="badge badge-grey">{{ meteo_fr.get(s.meteo, s.meteo) }}</span>
+        {% endif %}
+      </div>
+
+      <div class="spawn-rows">
+
+        <!-- Niveau -->
+        <div class="spawn-row">
+          <span class="spawn-key">Niveau</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <span class="level-nums">{{ s.niveau_min or '?' }} – {{ s.niveau_max or '?' }}</span>
+            <div class="level-bar" style="width:120px">
+              <div class="level-bar-fill" style="width:{{ ((s.niveau_min or 0) / 100 * 100) | int }}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Poids de spawn -->
+        <div class="spawn-row">
+          <span class="spawn-key">Poids</span>
+          <span class="spawn-val accent">{{ s.poids or '—' }}</span>
+        </div>
+
+        <!-- Contexte -->
+        {% if s.contexte %}
+        <div class="spawn-row">
+          <span class="spawn-key">Contexte</span>
+          <span class="spawn-val">{{ s.contexte }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Moment -->
+        <div class="spawn-row">
+          <span class="spawn-key">Moment</span>
+          <span class="spawn-val">{{ moment_fr.get(s.moment, s.moment or '—') }}</span>
+        </div>
+
+        <!-- Météo -->
+        <div class="spawn-row">
+          <span class="spawn-key">Météo</span>
+          <span class="spawn-val">{{ meteo_fr.get(s.meteo, s.meteo or '—') }}</span>
+        </div>
+
+        <hr class="separator" />
+
+        <!-- Biomes -->
+        {% if s.biomes_by_mod %}
+        <div class="spawn-row" style="align-items:flex-start">
+          <span class="spawn-key" style="padding-top:4px">Biomes</span>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end">
+            {% for group in s.biomes_by_mod %}
+            <div class="biome-group">
+              <span class="biome-group-tag">{{ group.tag }}</span>
+              {% for mod, blist in group.by_mod.items() %}
+              <div class="biome-mod-row">
+                <span class="biome-mod-dot" style="background:{{ get_mod_color(mod) }}"></span>
+                <span class="biome-mod-name" style="color:{{ get_mod_color(mod) }}">{{ mod }}</span>
+                <div class="biome-mod-chips">
+                  {% for b in blist %}
+                  {% if b.startswith('All ') %}
+                  <span class="biome-chip" style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }};opacity:0.6;cursor:default" title="Tag groupé — non cliquable">{{ b }}</span>
+                  {% else %}
+                  <a class="biome-chip"
+                     href="/spawns/biome-reel?biome={{ b | urlencode }}&mod={{ mod | urlencode }}&from={{ numero }}&entry={{ s.entree }}"
+                     style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }}"
+                     title="Voir tous les Pokémon de {{ b }}">{{ b }}</a>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Biomes exclus -->
+        {% if s.biomes_exclus_by_mod %}
+        <div class="spawn-row" style="align-items:flex-start">
+          <span class="spawn-key" style="padding-top:4px">Exclus</span>
+          <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end">
+            {% for group in s.biomes_exclus_by_mod %}
+            <div class="biome-group">
+              <span class="biome-group-tag" style="color:var(--muted)">{{ group.tag }}</span>
+              {% for mod, blist in group.by_mod.items() %}
+              <div class="biome-mod-row">
+                <span class="biome-mod-dot" style="background:var(--muted)"></span>
+                <span class="biome-mod-name" style="color:var(--muted)">{{ mod }}</span>
+                <div class="biome-mod-chips">
+                  {% for b in blist %}
+                  <span class="biome-chip" style="border-color:rgba(106,106,136,0.3);color:var(--muted)">{{ b }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Presets -->
+        {% if s.presets %}
+        <div class="spawn-row">
+          <span class="spawn-key">Presets</span>
+          <span class="spawn-val">{{ s.presets }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Lumière -->
+        {% if s.lumiere_min is not none or s.lumiere_max is not none %}
+        <hr class="separator" />
+        <div class="spawn-row">
+          <span class="spawn-key">Lumière ciel</span>
+          <span class="spawn-val accent2">{{ s.lumiere_min | int if s.lumiere_min is not none else '?' }} – {{ s.lumiere_max | int if s.lumiere_max is not none else '?' }}</span>
+        </div>
+        {% endif %}
+
+        {% if s.peut_voir_ciel %}
+        <div class="spawn-row">
+          <span class="spawn-key">Voit le ciel</span>
+          <span class="spawn-val">{{ s.peut_voir_ciel }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Conditions spéciales -->
+        {% if s.conditions %}
+        <hr class="separator" />
+        <div class="spawn-row">
+          <span class="spawn-key">Conditions</span>
+          <span class="spawn-val" style="font-size:0.75rem;color:var(--muted)">{{ s.conditions }}</span>
+        </div>
+        {% endif %}
+
+        {% if s.anticonditions %}
+        <div class="spawn-row">
+          <span class="spawn-key">Anticonditions</span>
+          <span class="spawn-val" style="font-size:0.75rem;color:var(--muted)">{{ s.anticonditions }}</span>
+        </div>
+        {% endif %}
+
+        {% if s.multiplicateurs %}
+        <div class="spawn-row">
+          <span class="spawn-key">Multiplicateurs</span>
+          <span class="spawn-val" style="font-size:0.75rem;color:var(--muted)">{{ s.multiplicateurs }}</span>
+        </div>
+        {% endif %}
+
+        {% if s.pattern %}
+        <div class="spawn-row">
+          <span class="spawn-key">Pattern</span>
+          <span class="spawn-val" style="font-size:0.75rem;color:var(--muted)">{{ s.pattern }}</span>
+        </div>
+        {% endif %}
+
+      </div>
+
+      {% if s.biomes %}
+      {% set biomes_encoded = s.biomes | replace(', ', ',') %}
+      <a class="cospawn-btn"
+         href="/spawns/biome?biomes={{ biomes_encoded | urlencode }}&from={{ numero }}&entry={{ s.entree }}">
+        <span class="icon">⊕</span>
+        Voir tous les Pokémon de ce spawn
+      </a>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+</body>
+</html>

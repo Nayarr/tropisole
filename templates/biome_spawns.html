@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Co-spawns — Cobbledex</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --card: #16161f;
+      --border: #2a2a3a;
+      --accent: #e8ff47;
+      --accent2: #47ffe8;
+      --text: #e8e8f0;
+      --muted: #6a6a88;
+      --hp:  #ff6b81;
+      --atk: #ffa07a;
+      --def: #74b9ff;
+      --spa: #a29bfe;
+      --spd: #55efc4;
+      --spe: #e8ff47;
+      --common: #74b9ff;
+      --uncommon: #55efc4;
+      --rare: #fd79a8;
+      --ultra: #e84393;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.2;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,15,0.9);
+      backdrop-filter: blur(12px);
+      flex-wrap: wrap;
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      transition: color 0.15s;
+    }
+    .nav-back:hover { color: var(--accent); }
+
+    .nav-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      z-index: 5;
+      padding: 2.5rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(71,255,232,0.04) 0%, transparent 60%);
+    }
+
+    .hero-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-title {
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title span { color: var(--accent2); }
+
+    .biomes-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .biome-expand-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(71,255,232,0.04);
+      border: 1px solid rgba(71,255,232,0.12);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .biome-expand-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--accent2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      margin-right: 0.3rem;
+      white-space: nowrap;
+    }
+
+    .biome-expand-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .biome-expand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Mode biome réel : tags FR "via" */
+    .tags-via {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.45rem 0.75rem;
+    }
+
+    .tags-via-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 0.2rem;
+    }
+
+    .tags-via-chip {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--accent);
+      background: rgba(232,255,71,0.07);
+      border: 1px solid rgba(232,255,71,0.2);
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+    }
+
+    {% if source_pokemon %}
+    .source-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(232,255,71,0.06);
+      border: 1px solid rgba(232,255,71,0.15);
+      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      margin-top: 0.5rem;
+      width: fit-content;
+    }
+
+    .source-info .src-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .source-info .src-name {
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 1rem;
+    }
+    {% endif %}
+
+    /* CONTROLS */
+    .controls {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(17,17,24,0.7);
+      backdrop-filter: blur(10px);
+      align-items: center;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 180px;
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      padding: 0.55rem 1rem 0.55rem 2.4rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus { border-color: var(--accent2); }
+    .search-wrap::before {
+      content: '⌕';
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.55rem 2rem 0.55rem 0.85rem;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M5 7L0 0h10z' fill='%236a6a88'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.7rem center;
+    }
+    select:focus { border-color: var(--accent2); }
+
+    .results-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    /* EV SORT LEGEND */
+    .ev-legend {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .ev-dot {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .ev-dot-circle {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* TABLE */
+    .content {
+      position: relative;
+      z-index: 5;
+      padding: 1.5rem 2rem 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead tr {
+      border-bottom: 2px solid var(--border);
+    }
+
+    thead th {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding: 0.8rem 0.8rem;
+      text-align: left;
+      cursor: pointer;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    thead th:hover { color: var(--text); }
+    thead th.sorted { color: var(--accent); }
+    thead th .sort-arrow { margin-left: 4px; opacity: 0.5; }
+    thead th.sorted .sort-arrow { opacity: 1; }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(42,42,58,0.5);
+      transition: background 0.12s;
+      animation: fadeRow 0.25s ease both;
+    }
+
+    @keyframes fadeRow {
+      from { opacity: 0; transform: translateX(-4px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    tbody tr:hover { background: rgba(232,255,71,0.03); }
+
+    td {
+      padding: 0.7rem 0.8rem;
+      vertical-align: middle;
+    }
+
+    .td-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .td-name a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: color 0.15s;
+    }
+    .td-name a:hover { color: var(--accent); }
+
+    .badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .badge-common    { background: rgba(116,185,255,0.15); color: var(--common);   border: 1px solid rgba(116,185,255,0.3); }
+    .badge-uncommon  { background: rgba(85,239,196,0.15);  color: var(--uncommon); border: 1px solid rgba(85,239,196,0.3); }
+    .badge-rare      { background: rgba(253,121,168,0.15); color: var(--rare);     border: 1px solid rgba(253,121,168,0.3); }
+    .badge-ultra-rare{ background: rgba(232,67,147,0.15);  color: var(--ultra);    border: 1px solid rgba(232,67,147,0.3); }
+    .badge-grey      { background: rgba(106,106,136,0.15); color: var(--muted);    border: 1px solid rgba(106,106,136,0.3); }
+
+    .ev-total {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .ev-total.zero { color: var(--muted); opacity: 0.4; }
+
+    .ev-bars {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .ev-bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .ev-bar-bg {
+      width: 18px;
+      height: 28px;
+      background: var(--border);
+      border-radius: 3px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .ev-bar-fill {
+      width: 100%;
+      border-radius: 3px;
+      transition: height 0.3s;
+    }
+
+    .ev-bar-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--muted);
+    }
+
+    .ev-str {
+      font-size: 0.8rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .ev-str.none { color: var(--muted); opacity: 0.4; font-size: 0.75rem; }
+
+    .td-level {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .td-poids {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent2);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+
+    .rank-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    /* HIGHLIGHT current pokemon */
+    tr.is-source { background: rgba(232,255,71,0.04); }
+    tr.is-source td { border-left: 2px solid var(--accent); }
+    tr.is-source:first-child td:first-child { border-radius: 0; }
+
+    /* CONTEXTE BADGES */
+    .contextes-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .badge-contexte {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .badge-ctx-grounded  { background: rgba(85,239,196,0.1);  color: #55efc4; border-color: rgba(85,239,196,0.25); }
+    .badge-ctx-fishing   { background: rgba(116,185,255,0.1); color: #74b9ff; border-color: rgba(116,185,255,0.25); }
+    .badge-ctx-submerged { background: rgba(71,255,232,0.1);  color: #47ffe8; border-color: rgba(71,255,232,0.25); }
+    .badge-ctx-surface   { background: rgba(162,155,254,0.1); color: #a29bfe; border-color: rgba(162,155,254,0.25); }
+    .badge-ctx-seafloor  { background: rgba(253,121,168,0.1); color: #fd79a8; border-color: rgba(253,121,168,0.25); }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  {% if source_pokemon %}
+  <a href="/pokemon/{{ source_pokemon.numero }}" class="nav-back">← {{ source_pokemon.pokemon }}</a>
+  {% else %}
+  <a href="/" class="nav-back">← Cobbledex</a>
+  {% endif %}
+  <span class="nav-title">Pokémon du même spawn</span>
+</nav>
+
+<div class="hero">
+  <div class="hero-label">
+    {% if real_biome_name is defined and real_biome_name %}
+      Biome spécifique
+    {% else %}
+      Biomes communs
+    {% endif %}
+  </div>
+
+  {% if real_biome_name is defined and real_biome_name %}
+  <div class="hero-title">
+    Pokémon qui spawnent dans<br>
+    <span>{{ real_biome_name }}</span>
+  </div>
+  <div class="biomes-row">
+    <div class="biome-expand-group" style="border-color:{{ get_mod_color(real_biome_mod) }}44">
+      <span class="biome-expand-dot" style="background:{{ get_mod_color(real_biome_mod) }}"></span>
+      <span class="biome-expand-tag" style="color:{{ get_mod_color(real_biome_mod) }}">{{ real_biome_mod }}</span>
+      <span class="biome-expand-chip" style="border-color:{{ get_mod_color(real_biome_mod) }}66;color:{{ get_mod_color(real_biome_mod) }};background:{{ get_mod_color(real_biome_mod) }}11;font-size:0.75rem;padding:0.3rem 0.8rem;">
+        {{ real_biome_name }}
+      </span>
+    </div>
+    <div class="tags-via">
+      <span class="tags-via-label">Via les tags :</span>
+      {% for t in biomes %}
+      <span class="tags-via-chip">{{ t }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% else %}
+  <div class="hero-title">
+    Tous les Pokémon qui spawn dans<br>
+    <span>{{ biomes | join(', ') }}</span>
+  </div>
+  <div class="biomes-row">
+    {% for group in biomes_expanded %}
+    <div class="biome-expand-group">
+      <span class="biome-expand-tag">{{ group.tag }}</span>
+      {% for bm in group.biomes %}
+      <span class="biome-expand-chip" style="border-color:{{ get_mod_color(bm.mod) }}44;color:{{ get_mod_color(bm.mod) }};background:{{ get_mod_color(bm.mod) }}11">
+        <span class="biome-expand-dot" style="background:{{ get_mod_color(bm.mod) }}"></span>
+        {{ bm.biome }}
+      </span>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if source_pokemon %}
+  <div class="source-info">
+    <div>
+      <div class="src-label">Spawn sélectionné</div>
+      <div class="src-name">{{ source_pokemon.pokemon }} — Entrée {{ source_pokemon.entree }}</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Filtrer par nom…" autocomplete="off" />
+  </div>
+
+  <select id="filter-bucket">
+    <option value="">— Rareté —</option>
+    <option value="common">Commun</option>
+    <option value="uncommon">Peu commun</option>
+    <option value="rare">Rare</option>
+    <option value="ultra-rare">Ultra-rare</option>
+  </select>
+
+  <select id="filter-contexte">
+    <option value="">— Lieu de spawn —</option>
+    <option value="grounded">🌿 Grounded (sol)</option>
+    <option value="fishing">🎣 Fishing (pêche)</option>
+    <option value="submerged">🌊 Submerged (sous l'eau)</option>
+    <option value="surface">💧 Surface (surface eau)</option>
+    <option value="seafloor">🪨 Seafloor (fond marin)</option>
+  </select>
+
+  <select id="filter-ev">
+    <option value="">— EV —</option>
+    <option value="hp">PV</option>
+    <option value="atk">Attaque</option>
+    <option value="def">Défense</option>
+    <option value="spa">Att. Spé</option>
+    <option value="spd">Déf. Spé</option>
+    <option value="spe">Vitesse</option>
+  </select>
+
+  <div class="ev-legend">
+    <div class="ev-dot"><div class="ev-dot-circle" style="background:#ff6b81"></div>PV</div>
+    <div class="ev-dot"><div class="ev-dot-circle" style="background:#ffa07a"></div>Atk</div>
+    <div class="ev-dot"><div class="ev-dot-circle" style="background:#74b9ff"></div>Déf</div>
+    <div class="ev-dot"><div class="ev-dot-circle" style="background:#a29bfe"></div>Att.S</div>
+    <div class="ev-dot"><div class="ev-dot-circle" style="background:#55efc4"></div>Déf.S</div>
+    <div class="ev-dot"><div class="ev-dot-circle" style="background:#e8ff47"></div>Vit</div>
+  </div>
+
+  <span class="results-count" id="results-count"></span>
+</div>
+
+<div class="content">
+  <div class="table-wrap">
+    <table id="main-table">
+      <thead>
+        <tr>
+          <th data-col="rank">#<span class="sort-arrow">↓</span></th>
+          <th data-col="numero">N°<span class="sort-arrow"></span></th>
+          <th data-col="pokemon">Pokémon<span class="sort-arrow"></span></th>
+          <th data-col="bucket">Rareté<span class="sort-arrow"></span></th>
+          <th data-col="ev_total" class="sorted">EVs lâchés<span class="sort-arrow">↓</span></th>
+          <th>Répartition EVs</th>
+          <th>Lieu de spawn</th>
+          <th data-col="poids">Poids spawn<span class="sort-arrow"></span></th>
+          <th data-col="niveau">Niveau<span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const SOURCE_NUM = {{ source_pokemon.numero if source_pokemon else 'null' }};
+const BUCKET_FR = {
+  'common': 'Commun',
+  'uncommon': 'Peu commun',
+  'rare': 'Rare',
+  'ultra-rare': 'Ultra-rare',
+};
+const BUCKET_CLASS = {
+  'common': 'badge-common',
+  'uncommon': 'badge-uncommon',
+  'rare': 'badge-rare',
+  'ultra-rare': 'badge-ultra-rare',
+};
+const EV_COLORS = {
+  hp: '#ff6b81', atk: '#ffa07a', def: '#74b9ff',
+  spa: '#a29bfe', spd: '#55efc4', spe: '#e8ff47',
+};
+const EV_LABELS = {
+  hp: 'PV', atk: 'Atk', def: 'Déf', spa: 'A.S', spd: 'D.S', spe: 'Vit',
+};
+
+const RAW_DATA = [
+  {% for p in pokemon_list %}
+  {
+    numero: {{ p.numero }},
+    pokemon: {{ p.pokemon | tojson }},
+    bucket: {{ (p.bucket or '') | tojson }},
+    poids: {{ p.poids or 0 }},
+    niveau_min: {{ p.niveau_min or 0 }},
+    niveau_max: {{ p.niveau_max or 0 }},
+    contextes: {{ p.contextes | tojson }},
+    ev: {
+      hp: {{ p.ev.hp }}, atk: {{ p.ev.atk }}, def: {{ p.ev.def }},
+      spa: {{ p.ev.spa }}, spd: {{ p.ev.spd }}, spe: {{ p.ev.spe }},
+      total: {{ p.ev.total }},
+    },
+    ev_str: {{ p.ev_str | tojson }},
+  }{% if not loop.last %},{% endif %}
+  {% endfor %}
+];
+
+const CONTEXTE_ICONS = {
+  grounded: '🌿', fishing: '🎣', submerged: '🌊', surface: '💧', seafloor: '🪨'
+};
+const CONTEXTE_LABELS = {
+  grounded: 'Grounded', fishing: 'Fishing', submerged: 'Submerged',
+  surface: 'Surface', seafloor: 'Seafloor'
+};
+
+let currentSort = { col: 'ev_total', dir: 'desc' };
+let data = [...RAW_DATA];
+
+function filteredData() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const bucket = document.getElementById('filter-bucket').value;
+  const evStat = document.getElementById('filter-ev').value;
+  const contexte = document.getElementById('filter-contexte').value;
+  return data.filter(p => {
+    if (q && !p.pokemon.toLowerCase().includes(q)) return false;
+    if (bucket && p.bucket !== bucket) return false;
+    if (evStat && p.ev[evStat] === 0) return false;
+    if (contexte && !p.contextes.includes(contexte)) return false;
+    return true;
+  });
+}
+
+function sortData(rows) {
+  const { col, dir } = currentSort;
+  const mult = dir === 'asc' ? 1 : -1;
+  return [...rows].sort((a, b) => {
+    let va, vb;
+    if (col === 'ev_total') { va = a.ev.total; vb = b.ev.total; }
+    else if (col === 'poids') { va = a.poids; vb = b.poids; }
+    else if (col === 'numero') { va = a.numero; vb = b.numero; }
+    else if (col === 'pokemon') { va = a.pokemon; vb = b.pokemon; }
+    else if (col === 'bucket') { va = a.bucket; vb = b.bucket; }
+    else if (col === 'niveau') { va = a.niveau_min; vb = b.niveau_min; }
+    else { va = a.numero; vb = b.numero; }
+    if (typeof va === 'string') return mult * va.localeCompare(vb);
+    return mult * (va - vb);
+  });
+}
+
+function renderEVBars(ev) {
+  const stats = ['hp','atk','def','spa','spd','spe'];
+  return stats.map(s => {
+    const val = ev[s];
+    const h = val === 0 ? '0%' : (val / 3 * 100) + '%';
+    const color = val === 0 ? 'rgba(42,42,58,0.4)' : EV_COLORS[s];
+    return `<div class="ev-bar-item">
+      <div class="ev-bar-bg">
+        <div class="ev-bar-fill" style="height:${h};background:${color}"></div>
+      </div>
+      <div class="ev-bar-num" style="color:${val > 0 ? EV_COLORS[s] : 'var(--muted)'}">${EV_LABELS[s]}</div>
+    </div>`;
+  }).join('');
+}
+
+function render() {
+  const filtered = sortData(filteredData());
+  document.getElementById('results-count').textContent = `${filtered.length.toLocaleString('fr')} Pokémon`;
+
+  const tbody = document.getElementById('tbody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" class="empty">Aucun résultat</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((p, i) => {
+    const bClass = BUCKET_CLASS[p.bucket] || 'badge-grey';
+    const bLabel = BUCKET_FR[p.bucket] || '—';
+    const isSource = p.numero === SOURCE_NUM;
+    const delay = Math.min(i * 0.015, 0.4);
+    const contextesHtml = p.contextes.length
+      ? p.contextes.map(c => `<span class="badge-contexte badge-ctx-${c}" title="${CONTEXTE_LABELS[c] || c}">${CONTEXTE_ICONS[c] || '?'} ${CONTEXTE_LABELS[c] || c}</span>`).join('')
+      : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+    return `
+      <tr class="${isSource ? 'is-source' : ''}" style="animation-delay:${delay}s">
+        <td class="rank-num">${i + 1}</td>
+        <td class="td-num">#${String(p.numero).padStart(4,'0')}</td>
+        <td class="td-name">
+          <a href="/pokemon/${p.numero}">${p.pokemon}</a>
+          ${isSource ? '<span class="badge badge-grey" style="margin-left:6px">source</span>' : ''}
+        </td>
+        <td><span class="badge ${bClass}">${bLabel}</span></td>
+        <td>
+          <span class="ev-total ${p.ev.total === 0 ? 'zero' : ''}">${p.ev.total}</span>
+        </td>
+        <td>
+          <div style="display:flex;align-items:flex-end;gap:4px">
+            <div class="ev-bars">${renderEVBars(p.ev)}</div>
+            <span class="ev-str ${p.ev.total === 0 ? 'none' : ''}" style="margin-left:6px">${p.ev_str}</span>
+          </div>
+        </td>
+        <td><div class="contextes-list">${contextesHtml}</div></td>
+        <td class="td-poids">${p.poids || '—'}</td>
+        <td class="td-level">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</td>
+      </tr>`;
+  }).join('');
+}
+
+// Sort on column header click
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (currentSort.col === col) {
+      currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+      currentSort.col = col;
+      currentSort.dir = col === 'ev_total' || col === 'poids' ? 'desc' : 'asc';
+    }
+    // Update headers
+    document.querySelectorAll('thead th').forEach(h => {
+      h.classList.remove('sorted');
+      const arrow = h.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = '';
+    });
+    th.classList.add('sorted');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = currentSort.dir === 'asc' ? '↑' : '↓';
+    render();
+  });
+});
+
+let debounce;
+['search','filter-bucket','filter-ev','filter-contexte'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(render, 200); });
+  el.addEventListener('change', () => render());
+});
+
+render();
+
+// Scroll to source pokemon after render
+setTimeout(() => {
+  const sourceRow = document.querySelector('tr.is-source');
+  if (sourceRow) sourceRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}, 300);
+</script>
+</body>
+</html>
