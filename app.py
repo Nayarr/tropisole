@@ -45,13 +45,273 @@ def parse_conditions(conditions_str):
     except Exception:
         return {}
 
+STRUCTURE_NAMES_FR = {
+    "minecraft:shipwreck":          ("🚢", "Épave"),
+    "minecraft:village":            ("🏘️", "Village"),
+    "minecraft:pillager_outpost":   ("🗼", "Avant-poste pillard"),
+    "minecraft:ocean_monument":     ("🏛️", "Monument océanique"),
+    "minecraft:ocean_ruin":         ("🏚️", "Ruines océaniques"),
+    "minecraft:stronghold":         ("🏰", "Forteresse"),
+    "minecraft:mineshaft":          ("⛏️", "Mineshaft"),
+    "minecraft:jungle_pyramid":     ("🛕", "Temple jungle"),
+    "minecraft:desert_pyramid":     ("🏜️", "Pyramide désert"),
+    "minecraft:igloo":              ("🏔️", "Igloo"),
+    "minecraft:woodland_mansion":   ("🏚️", "Manoir forestier"),
+    "minecraft:nether_fortress":    ("🔥", "Forteresse Nether"),
+    "minecraft:nether_fossil":      ("🦴", "Fossile Nether"),
+    "minecraft:bastion_remnant":    ("🏯", "Vestige bastion"),
+    "minecraft:end_city":           ("🌆", "Cité de l'End"),
+    "minecraft:buried_treasure":    ("💎", "Trésor enfoui"),
+    "minecraft:swamp_hut":          ("🧙", "Cabane sorcière"),
+    "minecraft:ruined_portal":      ("🌀", "Portail en ruine"),
+    "minecraft:ancient_city":       ("🏛️", "Cité ancienne"),
+    "minecraft:trail_ruins":        ("🪨", "Ruines de piste"),
+    "minecraft:trial_chambers":     ("⚔️", "Chambres d'épreuve"),
+    "cobblemon:shrine":             ("⛩️", "Sanctuaire"),
+    "cobblemon:fossil_site":        ("🦴", "Site fossile"),
+}
+
+def _structure_label(sid):
+    if sid in STRUCTURE_NAMES_FR:
+        return STRUCTURE_NAMES_FR[sid]
+    clean = sid.replace("minecraft:", "").replace("cobblemon:", "").replace("_", " ").title()
+    return ("🏗️", clean)
+
+def _parse_structures(raw):
+    """Parse structure JSON (string/list/dict) → list of string IDs."""
+    if not raw:
+        return []
+    if isinstance(raw, str):
+        try:
+            raw = json.loads(raw)
+        except Exception:
+            return []
+    if isinstance(raw, list):
+        ids = []
+        for item in raw:
+            if isinstance(item, str):
+                ids.append(item)
+            elif isinstance(item, dict):
+                sid = item.get("identifier") or item.get("id") or item.get("structure")
+                if sid:
+                    ids.append(sid)
+        return ids
+    if isinstance(raw, dict):
+        sid = raw.get("identifier") or raw.get("id")
+        return [sid] if sid else []
+    return []
+
+def _clean_block(b):
+    return (b.replace("minecraft:", "").replace("cobblemon:", "")
+             .replace("#cobblemon:", "").replace("#minecraft:", "")
+             .replace("#", "").replace("_", " ").strip())
+
+MOON_PHASE_FR = {
+    0: "Pleine lune", 1: "Lune décroissante", 2: "Dernier quartier",
+    3: "Lune gibbeuse décroissante", 4: "Nouvelle lune",
+    5: "Lune gibbeuse croissante", 6: "Premier quartier", 7: "Lune croissante",
+}
+
+def _make_condition_tags(cond, structures_raw, spawn_dict):
+    """Génère la liste complète des tags de condition à partir du dict parsé."""
+    tags = []
+
+    # ── Y level ──────────────────────────────────────────────────────────────
+    y_min = spawn_dict.get("y_min")
+    y_max = spawn_dict.get("y_max")
+    if y_max is not None and y_max <= 0:
+        tags.append({"icon": "⛏️", "label": f"Sous terre (Y ≤ {y_max})", "type": "depth"})
+    elif y_min is not None and y_min > 50:
+        tags.append({"icon": "🏔️", "label": f"En hauteur (Y ≥ {y_min})", "type": "height"})
+    elif y_min is not None or y_max is not None:
+        lo = y_min if y_min is not None else "?"
+        hi = y_max if y_max is not None else "?"
+        tags.append({"icon": "📍", "label": f"Y : {lo} → {hi}", "type": "y_range"})
+
+    # ── Ciel / Lumière ────────────────────────────────────────────────────────
+    # canSeeSky vient de la colonne peut_voir_ciel (déjà dans spawn_dict)
+    sky = spawn_dict.get("peut_voir_ciel")
+    if sky == "true":
+        tags.append({"icon": "☀️", "label": "Doit voir le ciel", "type": "sky"})
+    elif sky == "false":
+        tags.append({"icon": "🏠", "label": "Ne doit PAS voir le ciel", "type": "no_sky"})
+
+    lmin = spawn_dict.get("lumiere_min")
+    lmax = spawn_dict.get("lumiere_max")
+    if lmin is not None or lmax is not None:
+        lo = int(lmin) if lmin is not None else "?"
+        hi = int(lmax) if lmax is not None else "?"
+        if lmax is not None and lmax <= 7:
+            tags.append({"icon": "🌑", "label": f"Obscurité (lumière {lo}–{hi})", "type": "dark"})
+        elif lmin is not None and lmin >= 8:
+            tags.append({"icon": "🌕", "label": f"Lumineux (lumière {lo}–{hi})", "type": "bright"})
+        else:
+            tags.append({"icon": "🌗", "label": f"Lumière {lo}–{hi}", "type": "light"})
+
+    max_light = cond.get("maxLight")
+    if max_light is not None:
+        tags.append({"icon": "🌑", "label": f"Lumière bloc ≤ {max_light}", "type": "dark"})
+
+    # ── Météo (dans conditions JSON pour les anticond, pas besoin ici car colonne) ──
+    # isRaining dans la colonne `weather` mais peut aussi être dans conditions
+    is_raining = cond.get("isRaining")
+    if is_raining is True:
+        tags.append({"icon": "🌧️", "label": "Pluie requise", "type": "weather_rain"})
+    elif is_raining is False:
+        tags.append({"icon": "🌤️", "label": "Beau temps requis", "type": "weather_clear"})
+
+    # ── Blocs à proximité ─────────────────────────────────────────────────────
+    blocks = cond.get("neededNearbyBlocks", [])
+    water_blocks = {"minecraft:water", "minecraft:water_source"}
+    if blocks:
+        if any(b in water_blocks for b in blocks):
+            tags.append({"icon": "🌊", "label": "Eau à proximité requise", "type": "water"})
+        else:
+            clean = [_clean_block(b) for b in blocks[:3]]
+            tags.append({"icon": "🧱", "label": f"Blocs requis : {', '.join(clean)}", "type": "block"})
+
+    # ── Sol ───────────────────────────────────────────────────────────────────
+    base_blocks = cond.get("neededBaseBlocks", [])
+    if base_blocks:
+        clean = [_clean_block(b) for b in base_blocks[:3]]
+        tags.append({"icon": "🪨", "label": f"Sol requis : {', '.join(clean)}", "type": "base_block"})
+
+    # ── Slime chunk ───────────────────────────────────────────────────────────
+    if cond.get("isSlimeChunk"):
+        tags.append({"icon": "🟩", "label": "Chunk à Slime requis", "type": "slime"})
+
+    # ── Pêche ─────────────────────────────────────────────────────────────────
+    rod_type = cond.get("rodType")
+    if rod_type:
+        rod_name = rod_type.replace("cobblemon:", "").replace("_rod", " rod").replace("_", " ")
+        tags.append({"icon": "🎣", "label": f"Canne : {rod_name}", "type": "fishing"})
+    elif cond.get("minLureLevel") is not None:
+        tags.append({"icon": "🎣", "label": f"Leurre Niv.{cond['minLureLevel']}+", "type": "fishing"})
+
+    bait = cond.get("bait")
+    if bait:
+        bait_name = bait.replace("cobblemon:", "").replace("_", " ")
+        tags.append({"icon": "🪱", "label": f"Appât : {bait_name}", "type": "bait"})
+
+    # ── Lune ─────────────────────────────────────────────────────────────────
+    moon = cond.get("moonPhase")
+    if moon is not None:
+        moon_name = MOON_PHASE_FR.get(int(moon), f"Phase {moon}")
+        tags.append({"icon": "🌙", "label": f"Lune : {moon_name}", "type": "moon"})
+    # Aussi depuis la colonne `lune`
+    lune_col = spawn_dict.get("lune")
+    if lune_col and moon is None:
+        phases = [p.strip() for p in str(lune_col).split(",") if p.strip()]
+        if len(phases) == 1:
+            moon_name = MOON_PHASE_FR.get(int(phases[0]), f"Phase {phases[0]}")
+            tags.append({"icon": "🌙", "label": f"Lune : {moon_name}", "type": "moon"})
+        else:
+            names = [MOON_PHASE_FR.get(int(p), f"Phase {p}") for p in phases]
+            tags.append({"icon": "🌙", "label": f"Lune : {', '.join(names)}", "type": "moon"})
+
+    # ── Zone X ───────────────────────────────────────────────────────────────
+    min_x = cond.get("minX")
+    max_x = cond.get("maxX")
+    if min_x == 0 and max_x == 0:
+        tags.append({"icon": "🗺️", "label": "Centre du monde uniquement", "type": "x_zone"})
+    elif min_x is not None or max_x is not None:
+        lo = min_x if min_x is not None else "?"
+        hi = max_x if max_x is not None else "?"
+        tags.append({"icon": "🗺️", "label": f"Zone X : {lo} → {hi}", "type": "x_zone"})
+
+    # ── Structures requises ───────────────────────────────────────────────────
+    for sid in _parse_structures(structures_raw):
+        icon, label_fr = _structure_label(sid)
+        tags.append({"icon": icon, "label": f"Structure : {label_fr}", "type": "structure"})
+
+    return tags
+
+
+def _make_anticondition_tags(anticond, structures_exclu_raw):
+    """Génère la liste complète des tags d'anti-condition."""
+    tags = []
+
+    # ── Y exclu ───────────────────────────────────────────────────────────────
+    ay_min = anticond.get("minY")
+    ay_max = anticond.get("maxY")
+    if ay_min is not None or ay_max is not None:
+        lo = ay_min if ay_min is not None else "?"
+        hi = ay_max if ay_max is not None else "?"
+        tags.append({"icon": "🚫", "label": f"Y exclu : {lo} → {hi}", "type": "anti_y"})
+
+    # ── Ciel / Lumière exclu ──────────────────────────────────────────────────
+    asky = anticond.get("canSeeSky")
+    if asky is True:
+        tags.append({"icon": "🚫", "label": "Pas de ciel visible", "type": "anti_sky"})
+    elif asky is False:
+        tags.append({"icon": "🚫", "label": "Doit être à ciel ouvert (anticond)", "type": "anti_sky"})
+
+    almin = anticond.get("minSkyLight")
+    almax = anticond.get("maxSkyLight")
+    if almin is not None or almax is not None:
+        lo = int(almin) if almin is not None else "?"
+        hi = int(almax) if almax is not None else "?"
+        tags.append({"icon": "🚫", "label": f"Lumière exclue : {lo}–{hi}", "type": "anti_light"})
+
+    aml = anticond.get("maxLight")
+    if aml is not None:
+        tags.append({"icon": "🚫", "label": f"Lumière bloc > {aml} requis", "type": "anti_light"})
+
+    # ── Météo exclue ──────────────────────────────────────────────────────────
+    ais_raining = anticond.get("isRaining")
+    if ais_raining is True:
+        tags.append({"icon": "🚫", "label": "Pas de pluie", "type": "anti_weather"})
+    elif ais_raining is False:
+        tags.append({"icon": "🚫", "label": "Pas de beau temps", "type": "anti_weather"})
+
+    # ── Blocs interdits à proximité ───────────────────────────────────────────
+    ablocks = anticond.get("neededNearbyBlocks", [])
+    water_blocks = {"minecraft:water", "minecraft:water_source"}
+    if ablocks:
+        if any(b in water_blocks for b in ablocks):
+            tags.append({"icon": "🚫", "label": "Pas d'eau à proximité", "type": "anti_water"})
+        else:
+            clean = [_clean_block(b) for b in ablocks[:3]]
+            tags.append({"icon": "🚫", "label": f"Blocs interdits : {', '.join(clean)}", "type": "anti_block"})
+
+    # ── Sol interdit ──────────────────────────────────────────────────────────
+    abase = anticond.get("neededBaseBlocks", [])
+    if abase:
+        clean = [_clean_block(b) for b in abase[:3]]
+        tags.append({"icon": "🚫", "label": f"Sol interdit : {', '.join(clean)}", "type": "anti_base"})
+
+    # ── Slime chunk exclu ─────────────────────────────────────────────────────
+    if anticond.get("isSlimeChunk"):
+        tags.append({"icon": "🚫", "label": "Pas dans chunk à Slime", "type": "anti_slime"})
+
+    # ── Lune exclue ───────────────────────────────────────────────────────────
+    amoon = anticond.get("moonPhase")
+    if amoon is not None:
+        moon_name = MOON_PHASE_FR.get(int(amoon), f"Phase {amoon}")
+        tags.append({"icon": "🚫", "label": f"Lune exclue : {moon_name}", "type": "anti_moon"})
+
+    # ── Zone X exclue ─────────────────────────────────────────────────────────
+    amin_x = anticond.get("minX")
+    amax_x = anticond.get("maxX")
+    if amin_x is not None or amax_x is not None:
+        lo = amin_x if amin_x is not None else "?"
+        hi = amax_x if amax_x is not None else "?"
+        tags.append({"icon": "🚫", "label": f"Zone X exclue : {lo} → {hi}", "type": "anti_x"})
+
+    # ── Structures exclues ────────────────────────────────────────────────────
+    for sid in _parse_structures(structures_exclu_raw):
+        _, label_fr = _structure_label(sid)
+        tags.append({"icon": "🚫", "label": f"Hors structure : {label_fr}", "type": "no_structure"})
+
+    return tags
+
+
 def enrich_spawn_conditions(spawn_dict):
     """Add parsed condition fields to a spawn dict for easy template use."""
     cond = parse_conditions(spawn_dict.get("conditions"))
     anticond = parse_conditions(spawn_dict.get("anticonditions"))
     spawn_dict["cond_parsed"] = cond
     spawn_dict["anticond_parsed"] = anticond
-    # Ne pas écraser y_min/y_max s'ils ont déjà été calculés par agrégation
     if "y_min" not in spawn_dict:
         spawn_dict["y_min"] = cond.get("minY")
     if "y_max" not in spawn_dict:
@@ -59,47 +319,49 @@ def enrich_spawn_conditions(spawn_dict):
     spawn_dict["needed_blocks"] = cond.get("neededNearbyBlocks", [])
     spawn_dict["base_blocks"] = cond.get("neededBaseBlocks", [])
     spawn_dict["min_lure"] = cond.get("minLureLevel")
-    spawn_dict["max_lure"] = cond.get("maxLureLevel")
     spawn_dict["rod_type"] = cond.get("rodType")
     spawn_dict["bait"] = cond.get("bait")
     spawn_dict["is_slime_chunk"] = cond.get("isSlimeChunk", False)
-    spawn_dict["max_light"] = cond.get("maxLight")
-    spawn_dict["min_x"] = cond.get("minX")
-    spawn_dict["max_x"] = cond.get("maxX")
-    tags = []
-    blocks = spawn_dict["needed_blocks"]
-    if spawn_dict["y_max"] is not None and spawn_dict["y_max"] <= 0:
-        tags.append({"icon": "⛏️", "label": f"Sous terre (Y ≤ {spawn_dict['y_max']})", "type": "depth"})
-    elif spawn_dict["y_min"] is not None and spawn_dict["y_min"] > 50:
-        tags.append({"icon": "🏔️", "label": f"En hauteur (Y ≥ {spawn_dict['y_min']})", "type": "height"})
-    elif spawn_dict["y_min"] is not None or spawn_dict["y_max"] is not None:
-        label = f"Y : {spawn_dict['y_min'] if spawn_dict['y_min'] is not None else '?'} → {spawn_dict['y_max'] if spawn_dict['y_max'] is not None else '?'}"
-        tags.append({"icon": "📍", "label": label, "type": "y_range"})
-    water_blocks = ["minecraft:water", "minecraft:water_source"]
-    if any(b in water_blocks for b in blocks):
-        tags.append({"icon": "🌊", "label": "Nécessite eau à proximité", "type": "water"})
-    elif blocks:
-        clean = [b.replace("minecraft:", "").replace("cobblemon:", "").replace("#", "").replace("_", " ") for b in blocks[:2]]
-        tags.append({"icon": "🧱", "label": f"Blocs requis : {', '.join(clean)}", "type": "block"})
-    if spawn_dict["base_blocks"]:
-        clean = [b.replace("minecraft:", "").replace("#", "").replace("_", " ") for b in spawn_dict["base_blocks"][:2]]
-        tags.append({"icon": "🪨", "label": f"Sol requis : {', '.join(clean)}", "type": "base_block"})
-    if spawn_dict.get("is_slime_chunk"):
-        tags.append({"icon": "🟩", "label": "Chunk à Slime requis", "type": "slime"})
-    if spawn_dict.get("rod_type"):
-        rod_name = spawn_dict["rod_type"].replace("cobblemon:", "").replace("_rod", " rod").replace("_", " ")
-        tags.append({"icon": "🎣", "label": f"Canne : {rod_name}", "type": "fishing"})
-    elif spawn_dict.get("min_lure") is not None:
-        tags.append({"icon": "🎣", "label": f"Appât Niv.{spawn_dict['min_lure']}+ requis", "type": "fishing"})
-    if spawn_dict.get("bait"):
-        bait_name = spawn_dict["bait"].replace("cobblemon:", "").replace("_", " ")
-        tags.append({"icon": "🪱", "label": f"Appât : {bait_name}", "type": "bait"})
-    if spawn_dict.get("max_light") is not None:
-        tags.append({"icon": "🌑", "label": f"Lumière ≤ {spawn_dict['max_light']}", "type": "dark"})
-    if spawn_dict.get("min_x") == 0 and spawn_dict.get("max_x") == 0:
-        tags.append({"icon": "🗺️", "label": "Centre du monde uniquement", "type": "x_zone"})
-    spawn_dict["condition_tags"] = tags
+    spawn_dict["condition_tags"] = _make_condition_tags(cond, spawn_dict.get("structures"), spawn_dict)
+    spawn_dict["anticondition_tags"] = _make_anticondition_tags(anticond, spawn_dict.get("structures_exclu"))
     return spawn_dict
+
+
+def _build_spawn_list(filtered_rows):
+    """Une ligne DB = une entrée de spawn dans la liste (pas d'agrégation)."""
+    ev_cache = {}
+    pokemon_list = []
+    for r in filtered_rows:
+        p = dict(r)
+        cond = parse_conditions(p.get("conditions"))
+        p["y_min"] = cond.get("minY")
+        p["y_max"] = cond.get("maxY")
+        p["contextes"] = [p["contexte"]] if p.get("contexte") else []
+        # times = [] signifie "spawn toujours" (pas de contrainte horaire)
+        p["times"]     = [p["time"]]     if p.get("time")     else []
+        # weathers = [] signifie "toute météo"
+        p["weathers"]  = [p["weather"]]  if p.get("weather")  else []
+        lmin = p.get("lumiere_min")
+        lmax = p.get("lumiere_max")
+        sky  = p.get("peut_voir_ciel")
+        if lmin is not None or lmax is not None or (sky and sky not in ("any", None)):
+            p["lumiere_profils"] = [(lmin, lmax, sky)]
+        else:
+            p["lumiere_profils"] = []
+        enrich_spawn_conditions(p)
+        num = p["numero"]
+        if num not in ev_cache:
+            ev = get_ev(num)
+            parts = []
+            for stat in ["hp","atk","def","spa","spd","spe"]:
+                if ev[stat] > 0:
+                    parts.append(f"{ev[stat]} {EV_STAT_LABELS[stat]}")
+            ev_cache[num] = (ev, " + ".join(parts) if parts else "—")
+        p["ev"], p["ev_str"] = ev_cache[num]
+        p["ev_total"] = p["ev"]["total"]
+        pokemon_list.append(p)
+    pokemon_list.sort(key=lambda x: (-x["ev_total"], x["numero"]))
+    return pokemon_list
 
 
 @app.route("/")
@@ -271,10 +533,8 @@ def spawns_by_biome():
         abort(400)
 
     biomes_list = [b.strip() for b in biomes_param.split(",") if b.strip()]
-
     conn = get_db()
 
-    # Source pokemon info
     source_pokemon = None
     if source_num:
         row = conn.execute(
@@ -286,124 +546,58 @@ def spawns_by_biome():
         if row:
             source_pokemon = dict(row)
 
-    # ── Résolution hiérarchique des tags Cobblemon ────────────────────────────
-    # Pour chaque tag FR reçu, on remonte tous les tags parents Cobblemon.
-    # Ex: 'Île tropicale' -> is_tropical_island + is_coast + is_ocean + is_overworld
-    # Ainsi un pokemon tagué 'is_ocean' apparaît bien en 'Île tropicale'.
     cobblemon_tags = get_cobblemon_tags_for_fr_biomes(biomes_list)
-
-    # Fallback : si aucun tag cobblemon connu, on reste sur le LIKE FR classique
     if cobblemon_tags:
-        where_parts = " OR ".join(["biomes_tags LIKE ?" for _ in cobblemon_tags])
-        params = [f"%{t}%" for t in cobblemon_tags]
+        # On entoure le champ avec des virgules pour éviter les faux positifs de substring
+        # (ex: is_cold ne doit pas matcher is_cold_ocean)
+        where_parts = " OR ".join(
+            ["(',' || biomes_tags || ',') LIKE ?" for _ in cobblemon_tags]
+        )
+        params = [f"%,{t},%" for t in cobblemon_tags]
     else:
         where_parts = " OR ".join(["biomes LIKE ?" for _ in biomes_list])
         params = [f"%{b}%" for b in biomes_list]
-    # ─────────────────────────────────────────────────────────────────────────
 
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
         FROM pokemon_spawns
         WHERE {where_parts}
-        ORDER BY numero
+        ORDER BY numero, entree
     """, params).fetchall()
     conn.close()
 
-    # ── FILTRE biomes_exclus ──────────────────────────────────────────────────
-    # On retire les Pokémon dont l'entrée exclut TOUS les biomes recherchés.
-    # Ex: Carapuce en Eau douce EXCLU Glacial → on l'enlève si on cherche Glacial.
     def is_excluded_by_biomes(row, searched_tags, searched_biomes_fr):
-        excl_tags = row["biomes_exclus_tags"] or ""
-        excl_fr   = row["biomes_exclus"] or ""
+        # Découpe en ensembles pour éviter les faux positifs de substring
+        excl_tags_set = {t.strip() for t in (row["biomes_exclus_tags"] or "").split(",") if t.strip()}
+        excl_fr_set   = {b.strip() for b in (row["biomes_exclus"] or "").split(",") if b.strip()}
         for tag in searched_tags:
-            if tag and tag in excl_tags:
+            if tag and tag in excl_tags_set:
                 return True
         for bio in searched_biomes_fr:
-            if bio and bio in excl_fr:
+            if bio and bio in excl_fr_set:
                 return True
+
+        # Les entrées avec une structure requise spawnent uniquement dans cette structure,
+        # pas dans n'importe quel biome portant le tag (ex: is_overworld + mansion ≠ partout).
+        # On les exclut ici : la page /spawns/biome liste les co-spawns d'un même biome,
+        # et les Pokémon de structure n'y apparaissent que s'ils partagent le même biome
+        # ET la même structure (géré via la page détail).
+        structures_raw = row["structures"]
+        if structures_raw:
+            import json as _json
+            try:
+                structs = _json.loads(structures_raw)
+            except Exception:
+                structs = []
+            if structs:
+                return True
+
         return False
 
-    filtered_rows = [r for r in rows
-                     if not is_excluded_by_biomes(r, cobblemon_tags, biomes_list)]
-    # ─────────────────────────────────────────────────────────────────────────
-
-    # Group by numero : garder le poids max, collecter contextes, time, weather, Y, conditions
-    seen = {}
-    for r in filtered_rows:
-        key = r["numero"]
-        cond = parse_conditions(r["conditions"])
-        if key not in seen:
-            seen[key] = dict(r)
-            seen[key]["contextes"] = set()
-            seen[key]["times"] = set()
-            seen[key]["weathers"] = set()
-            seen[key]["lumiere_profils"] = set()
-            seen[key]["y_min_vals"] = []
-            seen[key]["y_max_vals"] = []
-            seen[key]["has_unrestricted_y"] = False
-        else:
-            if (r["poids"] or 0) > (seen[key]["poids"] or 0):
-                d = dict(r)
-                d["contextes"] = seen[key]["contextes"]
-                d["times"] = seen[key]["times"]
-                d["weathers"] = seen[key]["weathers"]
-                d["lumiere_profils"] = seen[key]["lumiere_profils"]
-                d["y_min_vals"] = seen[key]["y_min_vals"]
-                d["y_max_vals"] = seen[key]["y_max_vals"]
-                d["has_unrestricted_y"] = seen[key]["has_unrestricted_y"]
-                seen[key] = d
-        if r["contexte"]:
-            seen[key]["contextes"].add(r["contexte"])
-        if r["time"]:
-            seen[key]["times"].add(r["time"])
-        if r["weather"]:
-            seen[key]["weathers"].add(r["weather"])
-        lmin = r["lumiere_min"]
-        lmax = r["lumiere_max"]
-        sky  = r["peut_voir_ciel"]
-        if lmin is not None or lmax is not None or (sky and sky not in ("any", None)):
-            seen[key]["lumiere_profils"].add((lmin, lmax, sky))
-        if "minY" in cond or "maxY" in cond:
-            if "minY" in cond:
-                seen[key]["y_min_vals"].append(cond["minY"])
-            if "maxY" in cond:
-                seen[key]["y_max_vals"].append(cond["maxY"])
-        else:
-            # Cette entrée n'a aucune contrainte Y → Pokémon accessible partout
-            seen[key]["has_unrestricted_y"] = True
-
-    pokemon_list = list(seen.values())
-    for p in pokemon_list:
-        p["contextes"] = sorted(p["contextes"])
-        p["times"] = sorted(p["times"])
-        p["weathers"] = sorted(p["weathers"])
-        p["lumiere_profils"] = sorted(p["lumiere_profils"], key=lambda x: (x[0] or 0))
-        # Si au moins une entrée n'a pas de contrainte Y → accessible à toute hauteur
-        if p.get("has_unrestricted_y"):
-            p["y_min"] = None
-            p["y_max"] = None
-        else:
-            # Toutes les entrées ont des contraintes Y → range le plus permissif
-            p["y_min"] = min(p["y_min_vals"]) if p["y_min_vals"] else None
-            p["y_max"] = max(p["y_max_vals"]) if p["y_max_vals"] else None
-        # Enrich conditions for display
-        enrich_spawn_conditions(p)
-
-    # Enrich with EV data
-    for p in pokemon_list:
-        ev = get_ev(p["numero"])
-        p["ev"] = ev
-        p["ev_total"] = ev["total"]
-        parts = []
-        for stat in ["hp","atk","def","spa","spd","spe"]:
-            if ev[stat] > 0:
-                parts.append(f"{ev[stat]} {EV_STAT_LABELS[stat]}")
-        p["ev_str"] = " + ".join(parts) if parts else "—"
-
-    # Sort by total EV descending
-    pokemon_list.sort(key=lambda x: (-x["ev_total"], x["numero"]))
+    filtered_rows = [r for r in rows if not is_excluded_by_biomes(r, cobblemon_tags, biomes_list)]
+    pokemon_list = _build_spawn_list(filtered_rows)
 
     return render_template("biome_spawns.html",
                            biomes=biomes_list,
@@ -419,10 +613,6 @@ def spawns_by_biome():
 
 @app.route("/spawns/biome-reel")
 def spawns_by_real_biome():
-    """
-    Filtre par biome réel (ex: 'Frozen Cliffs' de Terralith).
-    Utilise REVERSE_BIOME_MAP pour retrouver les tags FR, puis filtre en BDD.
-    """
     real_biome = request.args.get("biome", "").strip()
     mod = request.args.get("mod", "").strip()
     source_num = request.args.get("from", type=int)
@@ -431,15 +621,12 @@ def spawns_by_real_biome():
     if not real_biome:
         abort(400)
 
-    # Retrouver les tags FR qui contiennent ce biome réel
     tags_fr = get_tags_for_biome(real_biome)
     if not tags_fr:
-        # Biome inconnu → on essaie quand même un LIKE direct sur le nom
         tags_fr = [real_biome]
 
     conn = get_db()
 
-    # Source pokemon info
     source_pokemon = None
     if source_num:
         row = conn.execute(
@@ -451,11 +638,22 @@ def spawns_by_real_biome():
         if row:
             source_pokemon = dict(row)
 
-    # Résolution hiérarchique : tags FR -> tags Cobblemon bruts + parents
     cobblemon_tags_reel = get_cobblemon_tags_for_fr_biomes(tags_fr)
+
+    # Dériver l'ID Minecraft littéral (ex: "Frozen River" → "minecraft:frozen_river")
+    # pour trouver les Pokémon qui l'ont en dur dans leurs biomes_tags
+    minecraft_id = "minecraft:" + real_biome.lower().replace(" ", "_")
+
     if cobblemon_tags_reel:
-        where_parts = " OR ".join(["biomes_tags LIKE ?" for _ in cobblemon_tags_reel])
-        params = [f"%{t}%" for t in cobblemon_tags_reel]
+        # On entoure le champ avec des virgules pour éviter les faux positifs de substring
+        # (ex: is_cold ne doit pas matcher is_cold_ocean)
+        tag_conditions = " OR ".join(
+            ["(',' || biomes_tags || ',') LIKE ?" for _ in cobblemon_tags_reel]
+        )
+        params = [f"%,{t},%" for t in cobblemon_tags_reel]
+        # On cherche aussi l'ID littéral minecraft au cas où il est présent directement
+        where_parts = f"({tag_conditions}) OR (',' || biomes_tags || ',') LIKE ?"
+        params.append(f"%,{minecraft_id},%")
     else:
         where_parts = " OR ".join(["biomes LIKE ?" for _ in tags_fr])
         params = [f"%{t}%" for t in tags_fr]
@@ -463,98 +661,45 @@ def spawns_by_real_biome():
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
         FROM pokemon_spawns
         WHERE {where_parts}
-        ORDER BY numero
+        ORDER BY numero, entree
     """, params).fetchall()
     conn.close()
 
-    # ── FILTRE biomes_exclus ──────────────────────────────────────────────────
     def is_excluded_by_biomes(row, searched_tags, searched_biomes_fr):
-        excl_tags = row["biomes_exclus_tags"] or ""
-        excl_fr   = row["biomes_exclus"] or ""
+        # Découpe en ensembles pour éviter les faux positifs de substring
+        excl_tags_set = {t.strip() for t in (row["biomes_exclus_tags"] or "").split(",") if t.strip()}
+        excl_fr_set   = {b.strip() for b in (row["biomes_exclus"] or "").split(",") if b.strip()}
         for tag in searched_tags:
-            if tag and tag in excl_tags:
+            if tag and tag in excl_tags_set:
                 return True
         for bio in searched_biomes_fr:
-            if bio and bio in excl_fr:
+            if bio and bio in excl_fr_set:
                 return True
+
+        # Exclure les entrées qui requièrent une structure spécifique :
+        # ces Pokémon ne peuvent pas spawner dans un biome quelconque,
+        # sauf si le biome réel est directement dans leurs biomes_tags (ex: minecraft:frozen_river).
+        structures_raw = row["structures"]
+        if structures_raw:
+            import json as _json
+            try:
+                structs = _json.loads(structures_raw)
+            except Exception:
+                structs = []
+            if structs:
+                # Si l'entrée a une structure requise, elle n'est valide pour ce biome réel
+                # QUE si le biome ID minecraft littéral figure explicitement dans biomes_tags
+                biomes_tags_str = row["biomes_tags"] or ""
+                if minecraft_id not in biomes_tags_str:
+                    return True
+
         return False
 
-    filtered_rows = [r for r in rows
-                     if not is_excluded_by_biomes(r, cobblemon_tags_reel, tags_fr)]
-    # ─────────────────────────────────────────────────────────────────────────
-
-    seen = {}
-    for r in filtered_rows:
-        key = r["numero"]
-        cond = parse_conditions(r["conditions"])
-        if key not in seen:
-            seen[key] = dict(r)
-            seen[key]["contextes"] = set()
-            seen[key]["times"] = set()
-            seen[key]["weathers"] = set()
-            seen[key]["lumiere_profils"] = set()
-            seen[key]["y_min_vals"] = []
-            seen[key]["y_max_vals"] = []
-            seen[key]["has_unrestricted_y"] = False
-        else:
-            if (r["poids"] or 0) > (seen[key]["poids"] or 0):
-                d = dict(r)
-                d["contextes"] = seen[key]["contextes"]
-                d["times"] = seen[key]["times"]
-                d["weathers"] = seen[key]["weathers"]
-                d["lumiere_profils"] = seen[key]["lumiere_profils"]
-                d["y_min_vals"] = seen[key]["y_min_vals"]
-                d["y_max_vals"] = seen[key]["y_max_vals"]
-                d["has_unrestricted_y"] = seen[key]["has_unrestricted_y"]
-                seen[key] = d
-        if r["contexte"]:
-            seen[key]["contextes"].add(r["contexte"])
-        if r["time"]:
-            seen[key]["times"].add(r["time"])
-        if r["weather"]:
-            seen[key]["weathers"].add(r["weather"])
-        lmin = r["lumiere_min"]
-        lmax = r["lumiere_max"]
-        sky  = r["peut_voir_ciel"]
-        if lmin is not None or lmax is not None or (sky and sky not in ("any", None)):
-            seen[key]["lumiere_profils"].add((lmin, lmax, sky))
-        if "minY" in cond or "maxY" in cond:
-            if "minY" in cond:
-                seen[key]["y_min_vals"].append(cond["minY"])
-            if "maxY" in cond:
-                seen[key]["y_max_vals"].append(cond["maxY"])
-        else:
-            seen[key]["has_unrestricted_y"] = True
-
-    pokemon_list = list(seen.values())
-    for p in pokemon_list:
-        p["contextes"] = sorted(p["contextes"])
-        p["times"] = sorted(p["times"])
-        p["weathers"] = sorted(p["weathers"])
-        p["lumiere_profils"] = sorted(p["lumiere_profils"], key=lambda x: (x[0] or 0))
-        if p.get("has_unrestricted_y"):
-            p["y_min"] = None
-            p["y_max"] = None
-        else:
-            p["y_min"] = min(p["y_min_vals"]) if p["y_min_vals"] else None
-            p["y_max"] = max(p["y_max_vals"]) if p["y_max_vals"] else None
-        enrich_spawn_conditions(p)
-
-    # Enrichir avec les EVs
-    for p in pokemon_list:
-        ev = get_ev(p["numero"])
-        p["ev"] = ev
-        p["ev_total"] = ev["total"]
-        parts = []
-        for stat in ["hp", "atk", "def", "spa", "spd", "spe"]:
-            if ev[stat] > 0:
-                parts.append(f"{ev[stat]} {EV_STAT_LABELS[stat]}")
-        p["ev_str"] = " + ".join(parts) if parts else "—"
-
-    pokemon_list.sort(key=lambda x: (-x["ev_total"], x["numero"]))
+    filtered_rows = [r for r in rows if not is_excluded_by_biomes(r, cobblemon_tags_reel, tags_fr)]
+    pokemon_list = _build_spawn_list(filtered_rows)
 
     return render_template("biome_spawns.html",
                            biomes=tags_fr,

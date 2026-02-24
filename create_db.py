@@ -282,6 +282,45 @@ def create_database():
             cond   = s.get("condition", {})
             acond  = s.get("anticondition", {})
 
+            # ── Résolution des presets → structures ──────────────────────────
+            # Les presets Cobblemon injectent des conditions supplémentaires
+            # (notamment la structure requise) qui ne figurent PAS dans le JSON spawn.
+            # On les applique ici manuellement d'après la définition officielle du mod.
+            PRESET_STRUCTURES = {
+                "mansion":          ["minecraft:woodland_mansion"],
+                "mansion_bedrooms": ["minecraft:woodland_mansion"],
+                "mansion_dining":   ["minecraft:woodland_mansion"],
+                "ancient_city":     ["minecraft:ancient_city"],
+                "desert_pyramid":   ["minecraft:desert_pyramid"],
+                "jungle_pyramid":   ["minecraft:jungle_pyramid"],
+                "pillager_outpost": ["minecraft:pillager_outpost"],
+                "illager_structures": ["minecraft:pillager_outpost", "minecraft:woodland_mansion"],
+                "stronghold":       ["minecraft:stronghold"],
+                "trail_ruins":      ["minecraft:trail_ruins"],
+                "ruined_portal":    ["minecraft:ruined_portal"],
+                "ocean_monument":   ["minecraft:ocean_monument"],
+                "ocean_ruins":      ["minecraft:ocean_ruin"],
+                "nether_fossil":    ["minecraft:nether_fossil"],
+                "nether_structures":["minecraft:nether_fortress", "minecraft:bastion_remnant"],
+                "derelict":         ["minecraft:shipwreck", "minecraft:ocean_ruin"],
+                "urban":            ["minecraft:village"],
+                "redstone":         ["minecraft:mineshaft"],
+                "webs":             ["minecraft:mineshaft"],
+                "salt":             ["minecraft:mineshaft"],
+            }
+            presets = s.get("presets", [])
+            # Fusionner les structures injectées par les presets avec celles déjà présentes
+            preset_structures = []
+            for preset in presets:
+                preset_structures.extend(PRESET_STRUCTURES.get(preset, []))
+            if preset_structures:
+                existing = cond.get("structures") or []
+                if isinstance(existing, str):
+                    existing = [existing]
+                merged = list({s2 for s2 in (existing + preset_structures)})
+                cond = dict(cond)
+                cond["structures"] = merged
+
             niveau_min, niveau_max = parse_level(s.get("level"))
 
             biomes_fr       = biomes_to_fr(cond.get("biomes", []))
@@ -301,8 +340,6 @@ def create_database():
             mult = s.get("weightMultipliers") or s.get("weightMultiplier")
             mult_str = json.dumps(mult, ensure_ascii=False) if mult else None
 
-            # presets
-            presets = s.get("presets", [])
             presets_str = ", ".join(presets) if presets else None
 
             # Conditions supplémentaires (blocs, Y, lure...)

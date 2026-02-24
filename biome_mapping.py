@@ -188,6 +188,7 @@ BIOME_MAP = {
     ],
     "Glaciaire": [  # Glacial (pics et glaces spécifiques)
         {"biome": "Frozen Peaks", "mod": "Vanilla Minecraft"},
+        {"biome": "Frozen River", "mod": "Vanilla Minecraft"},  # cobblemon:is_glacial tag
         {"biome": "Ice Spikes", "mod": "Vanilla Minecraft"},
         {"biome": "All BYG Icy biomes", "mod": "Oh The Biomes You'll Go"},
         {"biome": "Frostfire Caves", "mod": "Terralith"},
@@ -498,6 +499,7 @@ BIOME_MAP = {
         {"biome": "Tropical Volcano", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Toundra": [  # Tundra
+        {"biome": "Frozen River", "mod": "Vanilla Minecraft"},  # cobblemon:is_tundra tag
         {"biome": "Ice Spikes", "mod": "Vanilla Minecraft"},
         {"biome": "Snowy Plains", "mod": "Vanilla Minecraft"},
         {"biome": "Cardinal Tundra", "mod": "Oh The Biomes You'll Go"},

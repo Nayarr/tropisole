@@ -225,13 +225,172 @@
       z-index: 10;
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.75rem;
       padding: 1rem 2rem;
       border-bottom: 1px solid var(--border);
       background: rgba(17,17,24,0.7);
       backdrop-filter: blur(10px);
       align-items: center;
     }
+
+    /* ── Multi-select dropdown ── */
+    .ms-wrap {
+      position: relative;
+    }
+
+    .ms-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem;
+      padding: 0.55rem 0.85rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color 0.2s;
+      user-select: none;
+    }
+    .ms-btn:hover { border-color: rgba(255,255,255,0.25); }
+    .ms-btn.has-filter { border-color: var(--accent2); color: var(--accent2); }
+    .ms-btn.has-exclude { border-color: #fd79a8; }
+    .ms-btn.has-filter.has-exclude { border-color: var(--accent2); }
+
+    .ms-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent2);
+      color: #0a0a0f;
+      border-radius: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+    }
+    .ms-badge.excl { background: #fd79a8; }
+
+    .ms-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      min-width: 260px;
+      background: #1a1a26;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      z-index: 999;
+      overflow: hidden;
+    }
+    .ms-dropdown.open { display: block; }
+
+    .ms-dropdown-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+    }
+    .ms-dropdown-header span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .ms-clear-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .ms-clear-btn:hover { color: #fd79a8; background: rgba(253,121,168,0.1); }
+
+    .ms-legend {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 0;
+      padding: 0.3rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .ms-legend span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+    .ms-legend span:first-child { text-align: left; }
+
+    .ms-options { max-height: 300px; overflow-y: auto; }
+
+    .ms-option {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.75rem;
+      cursor: default;
+      transition: background 0.1s;
+    }
+    .ms-option:hover { background: rgba(255,255,255,0.04); }
+
+    .ms-option-label {
+      font-size: 0.82rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .ms-toggle {
+      width: 28px;
+      height: 22px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* Include toggle */
+    .ms-toggle.incl:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(71,255,232,0.08); }
+    .ms-toggle.incl.active {
+      border-color: var(--accent2);
+      background: rgba(71,255,232,0.15);
+      color: var(--accent2);
+      font-weight: 700;
+    }
+
+    /* Exclude toggle */
+    .ms-toggle.excl:hover { border-color: #fd79a8; color: #fd79a8; background: rgba(253,121,168,0.08); }
+    .ms-toggle.excl.active {
+      border-color: #fd79a8;
+      background: rgba(253,121,168,0.15);
+      color: #fd79a8;
+      font-weight: 700;
+    }
+
+    /* Option row highlights when active */
+    .ms-option.incl-active { background: rgba(71,255,232,0.04); }
+    .ms-option.excl-active { background: rgba(253,121,168,0.04); }
 
     .search-wrap {
       flex: 1;
@@ -342,6 +501,33 @@
     .cond-tag.height { border-color: #fdcb6e44; background: #fdcb6e15; }
     .cond-tag.y_range { border-color: #e8ff4744; background: #e8ff4710; }
     .cond-tags-cell { display: flex; flex-wrap: wrap; gap: 3px; }
+
+    /* Anti-conditions : rose/rouge */
+    .anti-tag {
+      border-color: rgba(253,121,168,0.4) !important;
+      background: rgba(253,121,168,0.08) !important;
+      color: #fd79a8 !important;
+    }
+
+    /* Types de conditions spécifiques */
+    .cond-tag.sky         { border-color: #fdcb6e44; background: #fdcb6e15; color: #fdcb6e; }
+    .cond-tag.no_sky      { border-color: #6a6a8844; background: #6a6a8815; color: var(--muted); }
+    .cond-tag.bright      { border-color: #fdcb6e44; background: #fdcb6e15; color: #fdcb6e; }
+    .cond-tag.light       { border-color: #a29bfe44; background: #a29bfe15; color: #a29bfe; }
+    .cond-tag.moon        { border-color: #a29bfe44; background: #a29bfe15; color: #a29bfe; }
+    .cond-tag.structure   { border-color: #fdcb6e44; background: #fdcb6e15; color: #fdcb6e; }
+    .cond-tag.no_structure{ border-color: #fd79a844; background: #fd79a815; color: #fd79a8; }
+    .cond-tag.weather_rain  { border-color: #74b9ff44; background: #74b9ff15; color: #74b9ff; }
+    .cond-tag.weather_clear { border-color: #fdcb6e44; background: #fdcb6e15; color: #fdcb6e; }
+    .cond-tag.x_zone      { border-color: #55efc444; background: #55efc415; color: #55efc4; }
+
+    /* Badge Toujours */
+    .badge-time-always {
+      background: rgba(106,106,136,0.1);
+      color: var(--muted);
+      border-color: rgba(106,106,136,0.2);
+      font-style: italic;
+    }
     .ev-legend {
       display: flex;
       gap: 1rem;
@@ -696,45 +882,297 @@
     <input type="text" id="search" placeholder="Filtrer par nom…" autocomplete="off" />
   </div>
 
-  <select id="filter-bucket">
-    <option value="">— Rareté —</option>
-    <option value="common">Commun</option>
-    <option value="uncommon">Peu commun</option>
-    <option value="rare">Rare</option>
-    <option value="ultra-rare">Ultra-rare</option>
-  </select>
+  <!-- Rareté -->
+  <div class="ms-wrap" id="ms-bucket">
+    <button class="ms-btn" onclick="toggleDropdown('bucket')">
+      Rareté <span class="ms-badge" id="ms-badge-incl-bucket" style="display:none"></span>
+              <span class="ms-badge excl" id="ms-badge-excl-bucket" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-bucket">
+      <div class="ms-dropdown-header">
+        <span>Rareté</span>
+        <button class="ms-clear-btn" onclick="clearFilter('bucket')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Option</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options">
+        <div class="ms-option" id="opt-bucket-common">
+          <span class="ms-option-label">Commun</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('bucket','common','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('bucket','common','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-bucket-uncommon">
+          <span class="ms-option-label">Peu commun</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('bucket','uncommon','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('bucket','uncommon','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-bucket-rare">
+          <span class="ms-option-label">Rare</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('bucket','rare','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('bucket','rare','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-bucket-ultra-rare">
+          <span class="ms-option-label">Ultra-rare</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('bucket','ultra-rare','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('bucket','ultra-rare','excl')">−</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <select id="filter-contexte">
-    <option value="">— Lieu de spawn —</option>
-    <option value="grounded">🌿 Grounded (sol)</option>
-    <option value="fishing">🎣 Fishing (pêche)</option>
-    <option value="submerged">🌊 Submerged (sous l'eau)</option>
-    <option value="surface">💧 Surface (surface eau)</option>
-    <option value="seafloor">🪨 Seafloor (fond marin)</option>
-  </select>
+  <!-- Lieu de spawn -->
+  <div class="ms-wrap" id="ms-contexte">
+    <button class="ms-btn" onclick="toggleDropdown('contexte')">
+      Lieu de spawn <span class="ms-badge" id="ms-badge-incl-contexte" style="display:none"></span>
+                    <span class="ms-badge excl" id="ms-badge-excl-contexte" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-contexte">
+      <div class="ms-dropdown-header">
+        <span>Lieu de spawn</span>
+        <button class="ms-clear-btn" onclick="clearFilter('contexte')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Option</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options">
+        <div class="ms-option" id="opt-contexte-grounded">
+          <span class="ms-option-label">🌿 Grounded (sol)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('contexte','grounded','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('contexte','grounded','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-contexte-fishing">
+          <span class="ms-option-label">🎣 Fishing (pêche)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('contexte','fishing','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('contexte','fishing','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-contexte-submerged">
+          <span class="ms-option-label">🌊 Submerged (sous l'eau)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('contexte','submerged','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('contexte','submerged','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-contexte-surface">
+          <span class="ms-option-label">💧 Surface (surface eau)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('contexte','surface','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('contexte','surface','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-contexte-seafloor">
+          <span class="ms-option-label">🪨 Seafloor (fond marin)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('contexte','seafloor','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('contexte','seafloor','excl')">−</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <select id="filter-time">
-    <option value="">— Moment —</option>
-    <option value="day">☀️ Jour</option>
-    <option value="dusk">🌆 Crépuscule</option>
-    <option value="night">🌙 Nuit</option>
-  </select>
+  <!-- Moment -->
+  <div class="ms-wrap" id="ms-time">
+    <button class="ms-btn" onclick="toggleDropdown('time')">
+      Moment <span class="ms-badge" id="ms-badge-incl-time" style="display:none"></span>
+              <span class="ms-badge excl" id="ms-badge-excl-time" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-time">
+      <div class="ms-dropdown-header">
+        <span>Moment</span>
+        <button class="ms-clear-btn" onclick="clearFilter('time')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Option</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options">
+        <div class="ms-option" id="opt-time-day">
+          <span class="ms-option-label">☀️ Jour</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('time','day','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('time','day','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-time-dusk">
+          <span class="ms-option-label">🌆 Crépuscule</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('time','dusk','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('time','dusk','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-time-night">
+          <span class="ms-option-label">🌙 Nuit</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('time','night','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('time','night','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-time-always">
+          <span class="ms-option-label">🕐 Toujours (sans contrainte)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('time','always','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('time','always','excl')">−</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <select id="filter-weather">
-    <option value="">— Météo —</option>
-    <option value="clear">☀️ Ensoleillé</option>
-    <option value="rain">🌧️ Pluie</option>
-  </select>
+  <!-- Météo -->
+  <div class="ms-wrap" id="ms-weather">
+    <button class="ms-btn" onclick="toggleDropdown('weather')">
+      Météo <span class="ms-badge" id="ms-badge-incl-weather" style="display:none"></span>
+             <span class="ms-badge excl" id="ms-badge-excl-weather" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-weather">
+      <div class="ms-dropdown-header">
+        <span>Météo</span>
+        <button class="ms-clear-btn" onclick="clearFilter('weather')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Option</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options">
+        <div class="ms-option" id="opt-weather-clear">
+          <span class="ms-option-label">🌤️ Ensoleillé</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('weather','clear','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('weather','clear','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-weather-rain">
+          <span class="ms-option-label">🌧️ Pluie</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('weather','rain','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('weather','rain','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-weather-any">
+          <span class="ms-option-label">— Toute météo</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('weather','any','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('weather','any','excl')">−</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <select id="filter-special">
-    <option value="">— Conditions spéciales —</option>
-    <option value="water">🌊 Nécessite eau</option>
-    <option value="depth">⛏️ Sous terre</option>
-    <option value="height">🏔️ En hauteur</option>
-    <option value="slime">🟩 Chunk à Slime</option>
-    <option value="dark">🌑 Obscurité</option>
-    <option value="none">✅ Aucune condition spéciale</option>
-  </select>
+  <!-- Conditions spéciales -->
+  <div class="ms-wrap" id="ms-special">
+    <button class="ms-btn" onclick="toggleDropdown('special')">
+      Conditions <span class="ms-badge" id="ms-badge-incl-special" style="display:none"></span>
+                 <span class="ms-badge excl" id="ms-badge-excl-special" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-special">
+      <div class="ms-dropdown-header">
+        <span>Conditions spéciales</span>
+        <button class="ms-clear-btn" onclick="clearFilter('special')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Option</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options">
+        <div class="ms-option" id="opt-special-none">
+          <span class="ms-option-label">✅ Aucune condition</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','none','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','none','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-water">
+          <span class="ms-option-label">🌊 Nécessite eau</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','water','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','water','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-block">
+          <span class="ms-option-label">🧱 Blocs requis</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','block','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','block','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-base_block">
+          <span class="ms-option-label">🪨 Sol spécifique</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','base_block','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','base_block','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-depth">
+          <span class="ms-option-label">⛏️ Sous terre</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','depth','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','depth','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-height">
+          <span class="ms-option-label">🏔️ En hauteur</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','height','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','height','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-slime">
+          <span class="ms-option-label">🟩 Chunk à Slime</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','slime','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','slime','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-dark">
+          <span class="ms-option-label">🌑 Obscurité</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','dark','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','dark','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-bright">
+          <span class="ms-option-label">🌕 Lumineux</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','bright','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','bright','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-sky">
+          <span class="ms-option-label">☀️ Doit voir le ciel</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','sky','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','sky','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-no_sky">
+          <span class="ms-option-label">🏠 Sans ciel visible</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','no_sky','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','no_sky','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-fishing">
+          <span class="ms-option-label">🎣 Pêche</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','fishing','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','fishing','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-bait">
+          <span class="ms-option-label">🪱 Appât requis</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','bait','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','bait','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-moon">
+          <span class="ms-option-label">🌙 Phase de lune</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','moon','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','moon','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-structure">
+          <span class="ms-option-label">🏗️ Requiert une structure</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','structure','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','structure','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-special-no_structure">
+          <span class="ms-option-label">🚫 Hors structure</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','no_structure','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','no_structure','excl')">−</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EV -->
+  <div class="ms-wrap" id="ms-ev">
+    <button class="ms-btn" onclick="toggleDropdown('ev')">
+      EVs <span class="ms-badge" id="ms-badge-incl-ev" style="display:none"></span>
+           <span class="ms-badge excl" id="ms-badge-excl-ev" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-ev">
+      <div class="ms-dropdown-header">
+        <span>EV lâchés</span>
+        <button class="ms-clear-btn" onclick="clearFilter('ev')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Statistique</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options">
+        <div class="ms-option" id="opt-ev-hp">
+          <span class="ms-option-label" style="color:#ff6b81">❤️ PV</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('ev','hp','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('ev','hp','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-ev-atk">
+          <span class="ms-option-label" style="color:#ffa07a">⚔️ Attaque</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('ev','atk','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('ev','atk','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-ev-def">
+          <span class="ms-option-label" style="color:#74b9ff">🛡️ Défense</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('ev','def','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('ev','def','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-ev-spa">
+          <span class="ms-option-label" style="color:#a29bfe">✨ Att. Spé</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('ev','spa','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('ev','spa','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-ev-spd">
+          <span class="ms-option-label" style="color:#55efc4">💠 Déf. Spé</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('ev','spd','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('ev','spd','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-ev-spe">
+          <span class="ms-option-label" style="color:#e8ff47">⚡ Vitesse</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('ev','spe','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('ev','spe','excl')">−</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="y-filter-wrap" id="y-filter-section">
     <label class="y-filter-label">Couche Y accessible <span id="y-range-display">−60 → 320</span></label>
@@ -744,16 +1182,6 @@
     </div>
     <button id="y-reset" onclick="resetYFilter()">Réinitialiser Y</button>
   </div>
-
-  <select id="filter-ev">
-    <option value="">— EV —</option>
-    <option value="hp">PV</option>
-    <option value="atk">Attaque</option>
-    <option value="def">Défense</option>
-    <option value="spa">Att. Spé</option>
-    <option value="spd">Déf. Spé</option>
-    <option value="spe">Vitesse</option>
-  </select>
 
   <div class="ev-legend">
     <div class="ev-dot"><div class="ev-dot-circle" style="background:#ff6b81"></div>PV</div>
@@ -780,6 +1208,7 @@
           <th>Répartition EVs</th>
           <th>Lieu de spawn</th>
           <th>Conditions</th>
+          <th>Anti-conditions</th>
           <th data-col="time">Moment<span class="sort-arrow"></span></th>
           <th data-col="weather">Météo<span class="sort-arrow"></span></th>
           <th>Lumière</th>
@@ -836,6 +1265,7 @@ const RAW_DATA = [
     y_min: {{ p.y_min | tojson }},
     y_max: {{ p.y_max | tojson }},
     condition_tags: {{ (p.condition_tags or []) | tojson }},
+    anticondition_tags: {{ (p.anticondition_tags or []) | tojson }},
     is_slime_chunk: {{ p.is_slime_chunk | tojson }},
     needed_blocks: {{ (p.needed_blocks or []) | tojson }},
     lune: {{ (p.lune or '') | tojson }},
@@ -864,7 +1294,7 @@ function resetYFilter() {
   document.getElementById('y-min-slider').value = -64;
   document.getElementById('y-max-slider').value = 320;
   updateYDisplay();
-  renderTable();
+  render();
 }
 
 function updateYDisplay() {
@@ -874,41 +1304,146 @@ function updateYDisplay() {
   document.getElementById('y-range-display').textContent = `${mn} → ${mx}`;
 }
 
+// ── Multi-select filter state ─────────────────────────────────────────────────
+const FILTERS = ['bucket', 'contexte', 'time', 'weather', 'special', 'ev'];
+const filterState = {};
+FILTERS.forEach(f => filterState[f] = { include: new Set(), exclude: new Set() });
+
+function toggleDropdown(name) {
+  FILTERS.forEach(f => {
+    if (f !== name) document.getElementById(`ms-dropdown-${f}`).classList.remove('open');
+  });
+  document.getElementById(`ms-dropdown-${name}`).classList.toggle('open');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', e => {
+  if (!e.target.closest('.ms-wrap')) {
+    FILTERS.forEach(f => document.getElementById(`ms-dropdown-${f}`).classList.remove('open'));
+  }
+});
+
+function toggleOpt(filter, value, mode) {
+  const state = filterState[filter];
+  const opposite = mode === 'incl' ? 'exclude' : 'include';
+  const current  = mode === 'incl' ? 'include' : 'exclude';
+
+  // Remove from opposite set if present
+  state[opposite].delete(value);
+
+  // Toggle in current set
+  if (state[current].has(value)) {
+    state[current].delete(value);
+  } else {
+    state[current].add(value);
+  }
+
+  updateFilterUI(filter);
+  render();
+}
+
+function clearFilter(filter) {
+  filterState[filter].include.clear();
+  filterState[filter].exclude.clear();
+  updateFilterUI(filter);
+  render();
+}
+
+function updateFilterUI(filter) {
+  const state = filterState[filter];
+  const btn = document.querySelector(`#ms-${filter} .ms-btn`);
+  const badgeIncl = document.getElementById(`ms-badge-incl-${filter}`);
+  const badgeExcl = document.getElementById(`ms-badge-excl-${filter}`);
+
+  const ni = state.include.size;
+  const ne = state.exclude.size;
+
+  badgeIncl.style.display = ni > 0 ? 'inline-flex' : 'none';
+  badgeIncl.textContent = `+${ni}`;
+  badgeExcl.style.display = ne > 0 ? 'inline-flex' : 'none';
+  badgeExcl.textContent = `−${ne}`;
+
+  btn.classList.toggle('has-filter', ni > 0);
+  btn.classList.toggle('has-exclude', ne > 0);
+
+  // Update individual option rows
+  const allOptions = document.querySelectorAll(`#ms-dropdown-${filter} .ms-option`);
+  allOptions.forEach(optEl => {
+    const idParts = optEl.id.split(`opt-${filter}-`);
+    if (idParts.length < 2) return;
+    const val = idParts[1];
+
+    optEl.classList.remove('incl-active', 'excl-active');
+    if (state.include.has(val)) optEl.classList.add('incl-active');
+    else if (state.exclude.has(val)) optEl.classList.add('excl-active');
+
+    const inclBtn = optEl.querySelector('.ms-toggle.incl');
+    const exclBtn = optEl.querySelector('.ms-toggle.excl');
+    if (inclBtn) inclBtn.classList.toggle('active', state.include.has(val));
+    if (exclBtn) exclBtn.classList.toggle('active', state.exclude.has(val));
+  });
+}
+
+// ── Filter logic ──────────────────────────────────────────────────────────────
+function matchFilter(filter, getValues, p) {
+  // getValues(p) → array of values the entry has for this filter dimension
+  const { include, exclude } = filterState[filter];
+  const vals = getValues(p);
+
+  // Exclude: if ANY excluded value matches → hide
+  for (const v of exclude) {
+    if (vals.includes(v)) return false;
+  }
+
+  // Include: if ANY included values set → entry must match at least one
+  if (include.size > 0) {
+    let matched = false;
+    for (const v of include) {
+      if (vals.includes(v)) { matched = true; break; }
+    }
+    if (!matched) return false;
+  }
+
+  return true;
+}
+
 function filteredData() {
   const q = document.getElementById('search').value.toLowerCase();
-  const bucket = document.getElementById('filter-bucket').value;
-  const evStat = document.getElementById('filter-ev').value;
-  const contexte = document.getElementById('filter-contexte').value;
-  const timeFilter = document.getElementById('filter-time').value;
-  const weatherFilter = document.getElementById('filter-weather').value;
-  const special = document.getElementById('filter-special').value;
   const yFiltered = yMinFilter > -64 || yMaxFilter < 320;
 
   return data.filter(p => {
     if (q && !p.pokemon.toLowerCase().includes(q)) return false;
-    if (bucket && p.bucket !== bucket) return false;
-    if (evStat && p.ev[evStat] === 0) return false;
-    if (contexte && !p.contextes.includes(contexte)) return false;
-    if (timeFilter && !p.times.includes(timeFilter)) return false;
-    if (weatherFilter && !p.weathers.includes(weatherFilter)) return false;
 
-    // Y-level filter: if pokemon has Y constraints, check if they overlap our range
+    // Y range
     if (yFiltered) {
       const pmin = p.y_min !== null ? p.y_min : -64;
       const pmax = p.y_max !== null ? p.y_max : 320;
-      // Exclude if no overlap: pokemon range must intersect filter range
       if (pmax < yMinFilter || pmin > yMaxFilter) return false;
     }
 
-    // Special conditions filter
-    if (special) {
-      const tags = p.condition_tags.map(t => t.type);
-      if (special === 'none') {
-        if (tags.length > 0) return false;
-      } else {
-        if (!tags.includes(special)) return false;
-      }
-    }
+    // bucket
+    if (!matchFilter('bucket', p => [p.bucket], p)) return false;
+
+    // contexte
+    if (!matchFilter('contexte', p => p.contextes, p)) return false;
+
+    // time — 'always' = no time constraint (times=[])
+    if (!matchFilter('time', p => p.times.length === 0 ? ['always'] : p.times, p)) return false;
+
+    // weather — 'any' = no weather constraint (weathers=[])
+    if (!matchFilter('weather', p => p.weathers.length === 0 ? ['any'] : p.weathers, p)) return false;
+
+    // special (condition_tags types)
+    if (!matchFilter('special', p => {
+      const types = p.condition_tags.map(t => t.type);
+      if (types.length === 0) types.push('none');
+      return types;
+    }, p)) return false;
+
+    // EV stats
+    if (!matchFilter('ev', p => {
+      return ['hp','atk','def','spa','spd','spe'].filter(s => p.ev[s] > 0);
+    }, p)) return false;
 
     return true;
   });
@@ -978,11 +1513,12 @@ function renderEVBars(ev) {
 
 function render() {
   const filtered = sortData(filteredData());
-  document.getElementById('results-count').textContent = `${filtered.length.toLocaleString('fr')} Pokémon`;
+  const n = filtered.length;
+  document.getElementById('results-count').textContent = `${n.toLocaleString('fr')} entrée${n > 1 ? 's' : ''} de spawn`;
 
   const tbody = document.getElementById('tbody');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="13" class="empty">Aucun résultat</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="14" class="empty">Aucun résultat</td></tr>`;
     return;
   }
 
@@ -991,19 +1527,40 @@ function render() {
     const bLabel = BUCKET_FR[p.bucket] || '—';
     const isSource = p.numero === SOURCE_NUM;
     const delay = Math.min(i * 0.015, 0.4);
+
     const contextesHtml = p.contextes.length
       ? p.contextes.map(c => `<span class="badge-contexte badge-ctx-${c}" title="${CONTEXTE_LABELS[c] || c}">${CONTEXTE_ICONS[c] || '?'} ${CONTEXTE_LABELS[c] || c}</span>`).join('')
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
-    // Condition tags HTML
+
+    // Conditions
     const condTagsHtml = p.condition_tags && p.condition_tags.length > 0
       ? `<div class="cond-tags-cell">${p.condition_tags.map(t =>
           `<span class="cond-tag ${t.type}" title="${t.label}">${t.icon} <span style="font-size:0.62rem">${t.label}</span></span>`
         ).join('')}</div>`
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
-    // Y level display
+
+    // Anti-conditions
+    const antiTagsHtml = p.anticondition_tags && p.anticondition_tags.length > 0
+      ? `<div class="cond-tags-cell">${p.anticondition_tags.map(t =>
+          `<span class="cond-tag anti-tag" title="${t.label}">${t.icon} <span style="font-size:0.62rem">${t.label}</span></span>`
+        ).join('')}</div>`
+      : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+
+    // Y level
     const yHtml = (p.y_min !== null || p.y_max !== null)
-      ? `<div style="font-size:0.7rem;color:#e8ff47;font-family:'Space Mono',monospace">Y: ${p.y_min ?? '?'} → ${p.y_max ?? '?'}</div>`
+      ? `<div style="font-size:0.7rem;color:#e8ff47;font-family:'Space Mono',monospace;margin-top:3px">Y: ${p.y_min ?? '?'} → ${p.y_max ?? '?'}</div>`
       : '';
+
+    // Temps : [] = pas de contrainte = toujours
+    const timeHtml = p.times.length
+      ? p.times.map(t => `<span class="badge-time">${TIME_ICONS[t] || t}</span>`).join(' ')
+      : '<span class="badge-time badge-time-always" title="Aucune contrainte horaire — spawn toujours">🕐 Toujours</span>';
+
+    // Météo : [] = toute météo
+    const weatherHtml = p.weathers.length
+      ? p.weathers.map(w => `<span class="badge-weather">${WEATHER_ICONS[w] || w}</span>`).join(' ')
+      : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+
     return `
       <tr class="${isSource ? 'is-source' : ''}" style="animation-delay:${delay}s">
         <td class="rank-num">${i + 1}</td>
@@ -1013,9 +1570,7 @@ function render() {
           ${isSource ? '<span class="badge badge-grey" style="margin-left:6px">source</span>' : ''}
         </td>
         <td><span class="badge ${bClass}">${bLabel}</span></td>
-        <td>
-          <span class="ev-total ${p.ev.total === 0 ? 'zero' : ''}">${p.ev.total}</span>
-        </td>
+        <td><span class="ev-total ${p.ev.total === 0 ? 'zero' : ''}">${p.ev.total}</span></td>
         <td>
           <div style="display:flex;align-items:flex-end;gap:4px">
             <div class="ev-bars">${renderEVBars(p.ev)}</div>
@@ -1023,9 +1578,10 @@ function render() {
           </div>
         </td>
         <td><div class="contextes-list">${contextesHtml}</div></td>
-        <td style="min-width:130px">${condTagsHtml}${yHtml}</td>
-        <td class="td-time">${p.times.length ? p.times.map(t => `<span class="badge-time">${TIME_ICONS[t] || t}</span>`).join(' ') : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}</td>
-        <td class="td-weather">${p.weathers.length ? p.weathers.map(w => `<span class="badge-weather">${WEATHER_ICONS[w] || w}</span>`).join(' ') : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}</td>
+        <td style="min-width:140px">${condTagsHtml}${yHtml}</td>
+        <td style="min-width:140px">${antiTagsHtml}</td>
+        <td class="td-time">${timeHtml}</td>
+        <td class="td-weather">${weatherHtml}</td>
         <td><div class="lumiere-col">${renderLumiere(p.lumiere_profils)}</div></td>
         <td class="td-poids">${p.poids || '—'}</td>
         <td class="td-level">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</td>
@@ -1057,11 +1613,9 @@ document.querySelectorAll('thead th[data-col]').forEach(th => {
 });
 
 let debounce;
-['search','filter-bucket','filter-ev','filter-contexte','filter-time','filter-weather','filter-special'].forEach(id => {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(render, 200); });
-  el.addEventListener('change', () => render());
+document.getElementById('search').addEventListener('input', () => {
+  clearTimeout(debounce);
+  debounce = setTimeout(render, 200);
 });
 document.getElementById('y-min-slider').addEventListener('input', () => { updateYDisplay(); render(); });
 document.getElementById('y-max-slider').addEventListener('input', () => { updateYDisplay(); render(); });
