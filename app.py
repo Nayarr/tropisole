@@ -660,7 +660,7 @@ def spawns_by_real_biome():
 
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
-               biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
+               biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
                peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
         FROM pokemon_spawns
         WHERE {where_parts}
