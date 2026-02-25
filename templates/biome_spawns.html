@@ -26,6 +26,7 @@
       --uncommon: #55efc4;
       --rare: #fd79a8;
       --ultra: #e84393;
+      --filler: #ff0000;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -643,6 +644,7 @@
     .badge-uncommon  { background: rgba(85,239,196,0.15);  color: var(--uncommon); border: 1px solid rgba(85,239,196,0.3); }
     .badge-rare      { background: rgba(253,121,168,0.15); color: var(--rare);     border: 1px solid rgba(253,121,168,0.3); }
     .badge-ultra-rare{ background: rgba(232,67,147,0.15);  color: var(--ultra);    border: 1px solid rgba(232,67,147,0.3); }
+    .badge-filler    { background: rgba(255,0,0,0.15);    color: var(--filler);   border: 1px solid rgba(255,0,0,0.3); }
     .badge-grey      { background: rgba(106,106,136,0.15); color: var(--muted);    border: 1px solid rgba(106,106,136,0.3); }
 
     .ev-total {
@@ -1268,12 +1270,14 @@ const BUCKET_FR = {
   'uncommon': 'Peu commun',
   'rare': 'Rare',
   'ultra-rare': 'Ultra-rare',
+  'filler': 'Filler',
 };
 const BUCKET_CLASS = {
   'common': 'badge-common',
   'uncommon': 'badge-uncommon',
   'rare': 'badge-rare',
   'ultra-rare': 'badge-ultra-rare',
+  'filler': 'badge-filler',
 };
 const EV_COLORS = {
   hp: '#ff6b81', atk: '#ffa07a', def: '#74b9ff',
