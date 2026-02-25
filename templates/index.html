@@ -405,6 +405,133 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* ── BIOME NAV ── */
+    .biome-nav {
+      position: relative;
+      z-index: 500;
+      display: flex;
+      overflow-x: auto;
+      background: rgba(10,10,15,0.97);
+      border-bottom: 1px solid var(--border);
+      scrollbar-width: none;
+    }
+    .biome-nav::-webkit-scrollbar { display: none; }
+
+    .biome-cat { position: relative; flex-shrink: 0; }
+
+    .biome-cat-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.7rem 1.1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-right: 1px solid var(--border);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.12s, background 0.12s;
+    }
+    .biome-cat-btn.is-active {
+      color: var(--accent);
+      background: rgba(232,255,71,0.06);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    /* ── Panel principal (L1) ── */
+    .biome-panel {
+      display: none;
+      position: fixed;
+      min-width: 200px;
+      background: #0e0e16;
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--accent);
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.85);
+      z-index: 99999;
+      overflow: visible;
+    }
+    .biome-panel.is-open { display: block; }
+
+    /* ── Entrée L1 ── */
+    .bp-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0.9rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.69rem;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(42,42,58,0.45);
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+      white-space: nowrap;
+      gap: 0.5rem;
+    }
+    .bp-item:last-child { border-bottom: none; }
+    .bp-item:hover, .bp-item.sub-open {
+      background: rgba(232,255,71,0.07);
+      color: var(--accent);
+    }
+    .bp-item .item-icon { font-size: 0.85rem; flex-shrink: 0; }
+    .bp-item .item-arrow { font-size: 0.6rem; opacity: 0.45; flex-shrink: 0; }
+    .bp-item.is-link .item-arrow { display: none; }
+
+    /* ── Sous-panel L2 (flyout à droite) ── */
+    .bp-sub {
+      display: none;
+      position: absolute;
+      left: calc(100% - 1px);
+      top: -2px;
+      min-width: 210px;
+      background: #0e0e16;
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--accent2);
+      border-radius: 0 10px 10px 0;
+      box-shadow: 8px 20px 60px rgba(0,0,0,0.8);
+      z-index: 100000;
+      max-height: 70vh;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .bp-item:hover .bp-sub,
+    .bp-item.sub-open .bp-sub { display: block; }
+
+    .bp-sub a {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.55rem 0.9rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.67rem;
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(42,42,58,0.35);
+      transition: background 0.1s, color 0.1s, padding-left 0.1s;
+      white-space: nowrap;
+    }
+    .bp-sub a:last-child { border-bottom: none; }
+    .bp-sub a:hover {
+      background: rgba(71,255,232,0.07);
+      color: var(--accent2);
+      padding-left: 1.2rem;
+    }
+    .bp-sub a .s-icon { font-size: 0.8rem; flex-shrink: 0; }
+    .bp-sub a .s-count {
+      margin-left: auto;
+      font-size: 0.58rem;
+      color: var(--muted);
+      opacity: 0.7;
+    }
   </style>
 </head>
 <body>
@@ -426,6 +553,304 @@
   </div>
 </header>
 
+<!-- ── BIOME NAV BAR ── -->
+<nav class="biome-nav" id="biomeNav">
+
+  <!-- ① OCÉAN & LITTORAL -->
+  <div class="biome-cat">
+    <button class="biome-cat-btn">🌊 Océan &amp; Littoral</button>
+    <div class="biome-panel">
+
+      <a class="bp-item is-link" href="/spawns/biome?biomes=Océan">
+        <span class="item-icon">🌊</span>Océan (tout)
+      </a>
+
+      <div class="bp-item">
+        <span class="item-icon">🔆</span>Océan chaud
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Océan+chaud"><span class="s-icon">🔆</span>Océan chaud<span class="s-count">2</span></a>
+          <a href="/spawns/biome?biomes=Océan+tiède"><span class="s-icon">🌡️</span>Océan tiède<span class="s-count">2</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">❄️</span>Océan froid
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Océan+froid"><span class="s-icon">❄️</span>Océan froid<span class="s-count">2</span></a>
+          <a href="/spawns/biome?biomes=Océan+gelé"><span class="s-icon">🧊</span>Océan gelé<span class="s-count">5</span></a>
+          <a href="/spawns/biome?biomes=Grand+océan"><span class="s-icon">🌑</span>Grand océan<span class="s-count">2</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🏖️</span>Côte &amp; Plage
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Côte"><span class="s-icon">🏖️</span>Côte<span class="s-count">18</span></a>
+          <a href="/spawns/biome?biomes=Plage"><span class="s-icon">🏝️</span>Plage<span class="s-count">3</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🌴</span>Îles
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Île"><span class="s-icon">🏝️</span>Île<span class="s-count">17</span></a>
+          <a href="/spawns/biome?biomes=Île+tropicale"><span class="s-icon">🌴</span>Île tropicale<span class="s-count">3</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">💧</span>Eau douce
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Eau+douce"><span class="s-icon">💧</span>Eau douce<span class="s-count">5</span></a>
+          <a href="/spawns/biome?biomes=Rivière"><span class="s-icon">🏞️</span>Rivière<span class="s-count">4</span></a>
+          <a href="/spawns/biome?biomes=Marais"><span class="s-icon">🐸</span>Marais<span class="s-count">7</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ② FROID -->
+  <div class="biome-cat">
+    <button class="biome-cat-btn">❄️ Froid</button>
+    <div class="biome-panel">
+
+      <a class="bp-item is-link" href="/spawns/biome?biomes=Froid">
+        <span class="item-icon">❄️</span>Froid (tout)
+      </a>
+
+      <div class="bp-item">
+        <span class="item-icon">🌲</span>Taïga
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Taïga"><span class="s-icon">🌲</span>Taïga<span class="s-count">33</span></a>
+          <a href="/spawns/biome?biomes=Taïga+enneigée"><span class="s-icon">🌨️</span>Taïga enneigée<span class="s-count">2</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🥶</span>Toundra &amp; Gel
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Toundra"><span class="s-icon">🥶</span>Toundra<span class="s-count">15</span></a>
+          <a href="/spawns/biome?biomes=Glacial"><span class="s-icon">🧊</span>Glacial<span class="s-count">20</span></a>
+          <a href="/spawns/biome?biomes=Glaciaire"><span class="s-icon">🏔️</span>Glaciaire<span class="s-count">11</span></a>
+          <a href="/spawns/biome?biomes=Enneigé"><span class="s-icon">☃️</span>Enneigé<span class="s-count">5</span></a>
+          <a href="/spawns/biome?biomes=Forêt+enneigée"><span class="s-icon">🌨️</span>Forêt enneigée<span class="s-count">15</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ③ CHAUD & ARIDE -->
+  <div class="biome-cat">
+    <button class="biome-cat-btn">☀️ Chaud &amp; Aride</button>
+    <div class="biome-panel">
+
+      <a class="bp-item is-link" href="/spawns/biome?biomes=Aride">
+        <span class="item-icon">🌵</span>Aride (tout)
+      </a>
+
+      <div class="bp-item">
+        <span class="item-icon">🏜️</span>Désert
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Désert"><span class="s-icon">🏜️</span>Désert<span class="s-count">16</span></a>
+          <a href="/spawns/biome?biomes=Terres+arides"><span class="s-icon">🪨</span>Terres arides<span class="s-count">6</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🦒</span>Savane &amp; Prairie
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Savane"><span class="s-icon">🦒</span>Savane<span class="s-count">14</span></a>
+          <a href="/spawns/biome?biomes=Prairie"><span class="s-icon">🌿</span>Prairie<span class="s-count">2</span></a>
+          <a href="/spawns/biome?biomes=Plaines"><span class="s-icon">🌾</span>Plaines<span class="s-count">14</span></a>
+          <a href="/spawns/biome?biomes=Maquis"><span class="s-icon">🌵</span>Maquis<span class="s-count">4</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ④ FORÊT & VÉGÉTATION -->
+  <div class="biome-cat">
+    <button class="biome-cat-btn">🌳 Forêt &amp; Végétation</button>
+    <div class="biome-panel">
+
+      <div class="bp-item">
+        <span class="item-icon">🌳</span>Forêts
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Forêt"><span class="s-icon">🌳</span>Forêt<span class="s-count">19</span></a>
+          <a href="/spawns/biome?biomes=Jungle"><span class="s-icon">🌿</span>Jungle<span class="s-count">15</span></a>
+          <a href="/spawns/biome?biomes=Bambou"><span class="s-icon">🎋</span>Bambou<span class="s-count">2</span></a>
+          <a href="/spawns/biome?biomes=Dense"><span class="s-icon">🌲</span>Dense<span class="s-count">—</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🌸</span>Floral &amp; Luxuriant
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Floral"><span class="s-icon">🌸</span>Floral<span class="s-count">24</span></a>
+          <a href="/spawns/biome?biomes=Fleurs+de+cerisier"><span class="s-icon">🌸</span>Fleurs de cerisier<span class="s-count">3</span></a>
+          <a href="/spawns/biome?biomes=Luxuriant"><span class="s-icon">🌱</span>Luxuriant<span class="s-count">8</span></a>
+          <a href="/spawns/biome?biomes=Champignon"><span class="s-icon">🍄</span>Champignon<span class="s-count">6</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🍂</span>Saisons
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Automne"><span class="s-icon">🍂</span>Automne</a>
+          <a href="/spawns/biome?biomes=Printemps"><span class="s-icon">🌼</span>Printemps</a>
+          <a href="/spawns/biome?biomes=Été"><span class="s-icon">☀️</span>Été</a>
+          <a href="/spawns/biome?biomes=Hiver"><span class="s-icon">⛄</span>Hiver</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ⑤ MONTAGNE & ALTITUDE -->
+  <div class="biome-cat">
+    <button class="biome-cat-btn">⛰️ Montagne</button>
+    <div class="biome-panel">
+
+      <a class="bp-item is-link" href="/spawns/biome?biomes=Montagne">
+        <span class="item-icon">🏔️</span>Montagne (tout)
+      </a>
+
+      <div class="bp-item">
+        <span class="item-icon">⛰️</span>Collines &amp; Hautes terres
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Collines"><span class="s-icon">⛰️</span>Collines<span class="s-count">19</span></a>
+          <a href="/spawns/biome?biomes=Hautes+terres"><span class="s-icon">🏞️</span>Hautes terres<span class="s-count">13</span></a>
+          <a href="/spawns/biome?biomes=Plateau"><span class="s-icon">🗻</span>Plateau<span class="s-count">3</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🏔️</span>Sommets &amp; Glaciers
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Sommet"><span class="s-icon">🏔️</span>Sommet<span class="s-count">10</span></a>
+          <a href="/spawns/biome?biomes=Glaciaire"><span class="s-icon">🧊</span>Glaciaire<span class="s-count">11</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ⑥ SOUTERRAIN & SPÉCIAL -->
+  <div class="biome-cat">
+    <button class="biome-cat-btn">🕳️ Souterrain &amp; Spécial</button>
+    <div class="biome-panel">
+
+      <div class="bp-item">
+        <span class="item-icon">🕳️</span>Grottes
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Grotte"><span class="s-icon">🕳️</span>Grotte<span class="s-count">10</span></a>
+          <a href="/spawns/biome?biomes=Stalactites"><span class="s-icon">🔻</span>Stalactites<span class="s-count">8</span></a>
+          <a href="/spawns/biome?biomes=Abysses+sombres"><span class="s-icon">💀</span>Abysses sombres<span class="s-count">8</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🌋</span>Volcanique &amp; Thermal
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Volcanique"><span class="s-icon">🌋</span>Volcanique<span class="s-count">8</span></a>
+          <a href="/spawns/biome?biomes=Thermal"><span class="s-icon">♨️</span>Thermal<span class="s-count">10</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">✨</span>Magique &amp; Mystérieux
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Magique"><span class="s-icon">✨</span>Magique<span class="s-count">12</span></a>
+          <a href="/spawns/biome?biomes=Effrayant"><span class="s-icon">👻</span>Effrayant<span class="s-count">7</span></a>
+          <a href="/spawns/biome?biomes=Ciel"><span class="s-icon">☁️</span>Ciel<span class="s-count">4</span></a>
+          <a href="/spawns/biome?biomes=Éther"><span class="s-icon">🌟</span>Éther<span class="s-count">1</span></a>
+          <a href="/spawns/biome?biomes=Bumblezone"><span class="s-icon">🐝</span>Bumblezone<span class="s-count">8</span></a>
+        </div>
+      </div>
+
+      <a class="bp-item is-link" href="/spawns/biome?biomes=Fin">
+        <span class="item-icon">🌌</span>The End
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ⑦ NETHER -->
+  <div class="biome-cat">
+    <button class="biome-cat-btn">🔥 Nether</button>
+    <div class="biome-panel">
+
+      <a class="bp-item is-link" href="/spawns/biome?biomes=Nether">
+        <span class="item-icon">🔥</span>Nether (tout)
+      </a>
+
+      <div class="bp-item">
+        <span class="item-icon">🔴</span>Cramoisi &amp; Distordu
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Nether+cramoisi"><span class="s-icon">🔴</span>Cramoisi<span class="s-count">7</span></a>
+          <a href="/spawns/biome?biomes=Nether+distordu"><span class="s-icon">💜</span>Distordu<span class="s-count">5</span></a>
+          <a href="/spawns/biome?biomes=Désert+distordu"><span class="s-icon">🌀</span>Désert distordu<span class="s-count">—</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🪨</span>Basalte &amp; Quartz
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Nether+basaltique"><span class="s-icon">🪨</span>Basaltique<span class="s-count">5</span></a>
+          <a href="/spawns/biome?biomes=Quartz+du+Nether"><span class="s-icon">💎</span>Quartz<span class="s-count">3</span></a>
+          <a href="/spawns/biome?biomes=Terres+dévastées+du+Nether"><span class="s-icon">💀</span>Terres dévastées<span class="s-count">9</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">💙</span>Âme &amp; Fongique
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Nether+feu+de+l%27%C3%82me"><span class="s-icon">💙</span>Feu de l'Âme<span class="s-count">5</span></a>
+          <a href="/spawns/biome?biomes=Nether+sable+de+l%27%C3%82me"><span class="s-icon">🔵</span>Sable de l'Âme<span class="s-count">10</span></a>
+          <a href="/spawns/biome?biomes=Nether+fongique"><span class="s-icon">🍄</span>Fongique<span class="s-count">16</span></a>
+          <a href="/spawns/biome?biomes=Végétation+du+Nether"><span class="s-icon">🌿</span>Végétation<span class="s-count">5</span></a>
+        </div>
+      </div>
+
+      <div class="bp-item">
+        <span class="item-icon">🌡️</span>Températures extrêmes
+        <span class="item-arrow">▶</span>
+        <div class="bp-sub">
+          <a href="/spawns/biome?biomes=Nether+gelé"><span class="s-icon">🧊</span>Nether gelé<span class="s-count">1</span></a>
+          <a href="/spawns/biome?biomes=Nether+toxique"><span class="s-icon">☠️</span>Nether toxique<span class="s-count">3</span></a>
+          <a href="/spawns/biome?biomes=Désert+du+Nether"><span class="s-icon">🏜️</span>Désert du Nether<span class="s-count">6</span></a>
+          <a href="/spawns/biome?biomes=Forêt+du+Nether"><span class="s-icon">🌲</span>Forêt du Nether<span class="s-count">5</span></a>
+          <a href="/spawns/biome?biomes=Montagne+du+Nether"><span class="s-icon">⛰️</span>Montagne<span class="s-count">2</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</nav>
 <div class="controls">
   <div class="search-wrap">
     <input type="text" id="search" placeholder="Rechercher un Pokémon…" autocomplete="off" />
@@ -626,6 +1051,80 @@
 
   loadStats();
   loadPokemon();
+
+  // ── BIOME NAV ──────────────────────────────────────────────────────
+  (function() {
+    var cats    = Array.from(document.querySelectorAll('.biome-cat'));
+    var panels  = Array.from(document.querySelectorAll('.biome-panel'));
+    var buttons = Array.from(document.querySelectorAll('.biome-cat-btn'));
+    var hideTimer = null;
+    var current = null; // { cat, panel, btn }
+
+    // Déplacer tous les panels dans <body> pour éviter tout clipping
+    panels.forEach(function(p) { document.body.appendChild(p); });
+
+    function positionPanel(btn, panel) {
+      var r = btn.getBoundingClientRect();
+      panel.style.top  = (r.bottom) + 'px';
+      panel.style.left = r.left + 'px';
+    }
+
+    function openPanel(i) {
+      clearTimeout(hideTimer);
+      // Fermer l'ancien
+      if (current && current.i !== i) {
+        current.panel.classList.remove('is-open');
+        current.btn.classList.remove('is-active');
+      }
+      var panel = panels[i];
+      var btn   = buttons[i];
+      positionPanel(btn, panel);
+      panel.classList.add('is-open');
+      btn.classList.add('is-active');
+      current = { i: i, panel: panel, btn: btn };
+    }
+
+    function scheduleClose() {
+      hideTimer = setTimeout(function() {
+        if (current) {
+          current.panel.classList.remove('is-open');
+          current.btn.classList.remove('is-active');
+          current = null;
+        }
+      }, 180);
+    }
+
+    function cancelClose() { clearTimeout(hideTimer); }
+
+    cats.forEach(function(cat, i) {
+      var btn   = buttons[i];
+      var panel = panels[i];
+
+      btn.addEventListener('mouseenter', function() { openPanel(i); });
+      btn.addEventListener('mouseleave', scheduleClose);
+
+      panel.addEventListener('mouseenter', cancelClose);
+      panel.addEventListener('mouseleave', scheduleClose);
+    });
+
+    // Fermer si clic ailleurs
+    document.addEventListener('click', function(e) {
+      if (!current) return;
+      if (!current.panel.contains(e.target) && !current.btn.contains(e.target)) {
+        current.panel.classList.remove('is-open');
+        current.btn.classList.remove('is-active');
+        current = null;
+      }
+    });
+
+    // Repositionner au scroll/resize
+    window.addEventListener('scroll', function() {
+      if (current) positionPanel(current.btn, current.panel);
+    }, { passive: true });
+    window.addEventListener('resize', function() {
+      if (current) positionPanel(current.btn, current.panel);
+    });
+  })();
 </script>
 </body>
 </html>
