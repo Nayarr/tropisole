@@ -364,50 +364,7 @@ def _build_spawn_list(filtered_rows):
     return pokemon_list
 
 
-def is_excluded_by_biomes(row, searched_tags, searched_biomes_fr, literal_biome_id=None):
-    """
-    Détermine si une entrée de spawn doit être exclue des résultats d'un biome donné.
-
-    - searched_tags       : tags cobblemon du biome recherché (ex: ['#cobblemon:is_cold'])
-    - searched_biomes_fr  : noms FR du biome recherché (ex: ['Froid'])
-    - literal_biome_id    : ID Minecraft littéral du biome réel (ex: 'minecraft:frozen_river').
-                            Si fourni, un Pokémon de structure n'est PAS exclu si ce biome ID
-                            figure explicitement dans ses biomes_tags (cas Tiplouf/Piplup).
-                            Si None (mode tag FR), les Pokémon de structure sont toujours exclus.
-    """
-    # 1. Exclusion par biome tag ou nom FR
-    excl_tags_set = {t.strip() for t in (row["biomes_exclus_tags"] or "").split(",") if t.strip()}
-    excl_fr_set   = {b.strip() for b in (row["biomes_exclus"] or "").split(",") if b.strip()}
-    for tag in searched_tags:
-        if tag and tag in excl_tags_set:
-            return True
-    for bio in searched_biomes_fr:
-        if bio and bio in excl_fr_set:
-            return True
-
-    # 2. Exclusion des Pokémon liés à une structure spécifique
-    # Ces Pokémon ne spawnent QUE dans leur structure, pas dans n'importe quel biome
-    # portant le bon tag (ex: Abra preset=mansion + #cobblemon:is_overworld ≠ partout)
-    structures_raw = row["structures"]
-    if structures_raw:
-        try:
-            structs = json.loads(structures_raw)
-        except Exception:
-            structs = []
-        if structs:
-            if literal_biome_id is None:
-                # Mode tag FR : exclure systématiquement
-                return True
-            else:
-                # Mode biome réel : autoriser si le biome ID est explicitement dans biomes_tags
-                biomes_tags_str = row["biomes_tags"] or ""
-                if literal_biome_id not in biomes_tags_str:
-                    return True
-
-    return False
-
-
-
+@app.route("/")
 def index():
     conn = get_db()
 
@@ -603,13 +560,41 @@ def spawns_by_biome():
 
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
-               biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
+               biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
                peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
     """, params).fetchall()
     conn.close()
+
+    def is_excluded_by_biomes(row, searched_tags, searched_biomes_fr):
+        # Découpe en ensembles pour éviter les faux positifs de substring
+        excl_tags_set = {t.strip() for t in (row["biomes_exclus_tags"] or "").split(",") if t.strip()}
+        excl_fr_set   = {b.strip() for b in (row["biomes_exclus"] or "").split(",") if b.strip()}
+        for tag in searched_tags:
+            if tag and tag in excl_tags_set:
+                return True
+        for bio in searched_biomes_fr:
+            if bio and bio in excl_fr_set:
+                return True
+
+        # Les entrées avec une structure requise spawnent uniquement dans cette structure,
+        # pas dans n'importe quel biome portant le tag (ex: is_overworld + mansion ≠ partout).
+        # On les exclut ici : la page /spawns/biome liste les co-spawns d'un même biome,
+        # et les Pokémon de structure n'y apparaissent que s'ils partagent le même biome
+        # ET la même structure (géré via la page détail).
+        structures_raw = row["structures"]
+        if structures_raw:
+            import json as _json
+            try:
+                structs = _json.loads(structures_raw)
+            except Exception:
+                structs = []
+            if structs:
+                return True
+
+        return False
 
     filtered_rows = [r for r in rows if not is_excluded_by_biomes(r, cobblemon_tags, biomes_list)]
     pokemon_list = _build_spawn_list(filtered_rows)
@@ -683,7 +668,35 @@ def spawns_by_real_biome():
     """, params).fetchall()
     conn.close()
 
-    filtered_rows = [r for r in rows if not is_excluded_by_biomes(r, cobblemon_tags_reel, tags_fr, literal_biome_id=minecraft_id)]
+    def is_excluded_by_biomes(row, searched_tags, searched_biomes_fr):
+        # Découpe en ensembles pour éviter les faux positifs de substring
+        excl_tags_set = {t.strip() for t in (row["biomes_exclus_tags"] or "").split(",") if t.strip()}
+        excl_fr_set   = {b.strip() for b in (row["biomes_exclus"] or "").split(",") if b.strip()}
+        for tag in searched_tags:
+            if tag and tag in excl_tags_set:
+                return True
+        for bio in searched_biomes_fr:
+            if bio and bio in excl_fr_set:
+                return True
+
+        # Exclure les entrées qui requièrent une structure spécifique :
+        # ces Pokémon ne peuvent pas spawner dans un biome quelconque,
+        # sauf si le biome réel est directement dans leurs biomes_tags (ex: minecraft:frozen_river).
+        structures_raw = row["structures"]
+        if structures_raw:
+            import json as _json
+            try:
+                structs = _json.loads(structures_raw)
+            except Exception:
+                structs = []
+            if structs:
+                biomes_tags_str = row["biomes_tags"] or ""
+                if minecraft_id not in biomes_tags_str:
+                    return True
+
+        return False
+
+    filtered_rows = [r for r in rows if not is_excluded_by_biomes(r, cobblemon_tags_reel, tags_fr)]
     pokemon_list = _build_spawn_list(filtered_rows)
 
     return render_template("biome_spawns.html",
