@@ -800,6 +800,35 @@
     .badge-weather { background: rgba(116,185,255,0.08); color: #74b9ff; border-color: rgba(116,185,255,0.2); }
     .td-time, .td-weather { white-space: nowrap; }
 
+    /* CANSEESKY BADGE */
+    .badge-sky-yes  { background: rgba(232,255,71,0.09);  color: #e8ff47; border: 1px solid rgba(232,255,71,0.28); font-family:'Space Mono',monospace; font-size:0.6rem; padding:0.2rem 0.5rem; border-radius:4px; white-space:nowrap; }
+    .badge-sky-no   { background: rgba(106,106,136,0.13); color: var(--muted); border: 1px solid rgba(106,106,136,0.28); font-family:'Space Mono',monospace; font-size:0.6rem; padding:0.2rem 0.5rem; border-radius:4px; white-space:nowrap; }
+    .badge-sky-any  { color: var(--muted); font-size:0.7rem; }
+
+    /* PRESET BADGES */
+    .preset-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      min-width: 100px;
+    }
+    .badge-preset {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      white-space: nowrap;
+      text-transform: lowercase;
+    }
+    .badge-preset.treetop  { border-color: rgba(85,239,196,0.3);  background: rgba(85,239,196,0.08);  color: #55efc4; }
+    .badge-preset.natural  { border-color: rgba(116,185,255,0.25); background: rgba(116,185,255,0.07); color: #74b9ff; }
+    .badge-preset.water    { border-color: rgba(71,255,232,0.25);  background: rgba(71,255,232,0.07);  color: #47ffe8; }
+    .badge-preset.foliage  { border-color: rgba(85,239,196,0.2);   background: rgba(85,239,196,0.05);  color: #55efc4; }
+    .badge-preset.lava     { border-color: rgba(253,121,168,0.25); background: rgba(253,121,168,0.07); color: #fd79a8; }
+
     /* SCROLLBAR */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
@@ -1123,6 +1152,11 @@
           <button class="ms-toggle incl" onclick="toggleOpt('special','no_structure','incl')">+</button>
           <button class="ms-toggle excl" onclick="toggleOpt('special','no_structure','excl')">−</button>
         </div>
+        <div class="ms-option" id="opt-special-treetop">
+          <span class="ms-option-label">🌲 Treetop (cime d'arbre)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('special','treetop','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('special','treetop','excl')">−</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1207,11 +1241,12 @@
           <th data-col="ev_total" class="sorted">EVs lâchés<span class="sort-arrow">↓</span></th>
           <th>Répartition EVs</th>
           <th>Lieu de spawn</th>
+          <th>Presets</th>
+          <th>Ciel visible</th>
           <th>Conditions</th>
           <th>Anti-conditions</th>
           <th data-col="time">Moment<span class="sort-arrow"></span></th>
           <th data-col="weather">Météo<span class="sort-arrow"></span></th>
-          <th>Lumière</th>
           <th data-col="poids">Poids spawn<span class="sort-arrow"></span></th>
           <th data-col="niveau">Niveau<span class="sort-arrow"></span></th>
         </tr>
@@ -1269,6 +1304,8 @@ const RAW_DATA = [
     is_slime_chunk: {{ p.is_slime_chunk | tojson }},
     needed_blocks: {{ (p.needed_blocks or []) | tojson }},
     lune: {{ (p.lune or '') | tojson }},
+    presets: {{ (p.presets_list or []) | tojson }},
+    peut_voir_ciel: {{ (p.peut_voir_ciel or '') | tojson }},
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 ];
@@ -1433,9 +1470,11 @@ function filteredData() {
     // weather — 'any' = no weather constraint (weathers=[])
     if (!matchFilter('weather', p => p.weathers.length === 0 ? ['any'] : p.weathers, p)) return false;
 
-    // special (condition_tags types)
+    // special (condition_tags types + presets comme treetop)
     if (!matchFilter('special', p => {
       const types = p.condition_tags.map(t => t.type);
+      // Ajouter les presets pertinents comme valeurs filtrables
+      if (p.presets) p.presets.forEach(pr => { if (!types.includes(pr)) types.push(pr); });
       if (types.length === 0) types.push('none');
       return types;
     }, p)) return false;
@@ -1518,7 +1557,7 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="14" class="empty">Aucun résultat</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="15" class="empty">Aucun résultat</td></tr>`;
     return;
   }
 
@@ -1531,6 +1570,19 @@ function render() {
     const contextesHtml = p.contextes.length
       ? p.contextes.map(c => `<span class="badge-contexte badge-ctx-${c}" title="${CONTEXTE_LABELS[c] || c}">${CONTEXTE_ICONS[c] || '?'} ${CONTEXTE_LABELS[c] || c}</span>`).join('')
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+
+    // Presets
+    const presetsHtml = p.presets && p.presets.length > 0
+      ? `<div class="preset-list">${p.presets.map(pr =>
+          `<span class="badge-preset ${pr}" title="${pr}">🏷 ${pr}</span>`
+        ).join('')}</div>`
+      : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+
+    // CanSeeSky
+    const skyVal = p.peut_voir_ciel;
+    const skyHtml = skyVal === 'true'  ? '<span class="badge-sky-yes">☀️ Oui</span>'
+                  : skyVal === 'false' ? '<span class="badge-sky-no">🚫 Non</span>'
+                  : '<span class="badge-sky-any">—</span>';
 
     // Conditions
     const condTagsHtml = p.condition_tags && p.condition_tags.length > 0
@@ -1578,11 +1630,12 @@ function render() {
           </div>
         </td>
         <td><div class="contextes-list">${contextesHtml}</div></td>
+        <td>${presetsHtml}</td>
+        <td>${skyHtml}</td>
         <td style="min-width:140px">${condTagsHtml}${yHtml}</td>
         <td style="min-width:140px">${antiTagsHtml}</td>
         <td class="td-time">${timeHtml}</td>
         <td class="td-weather">${weatherHtml}</td>
-        <td><div class="lumiere-col">${renderLumiere(p.lumiere_profils)}</div></td>
         <td class="td-poids">${p.poids || '—'}</td>
         <td class="td-level">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</td>
       </tr>`;

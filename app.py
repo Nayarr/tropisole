@@ -337,6 +337,9 @@ def _build_spawn_list(filtered_rows):
         p["y_min"] = cond.get("minY")
         p["y_max"] = cond.get("maxY")
         p["contextes"] = [p["contexte"]] if p.get("contexte") else []
+        # Parse presets CSV → list
+        raw_presets = p.get("presets") or ""
+        p["presets_list"] = [s.strip() for s in raw_presets.split(",") if s.strip()]
         # times = [] signifie "spawn toujours" (pas de contrainte horaire)
         p["times"]     = [p["time"]]     if p.get("time")     else []
         # weathers = [] signifie "toute météo"
@@ -561,7 +564,7 @@ def spawns_by_biome():
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu, presets
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
@@ -661,7 +664,7 @@ def spawns_by_real_biome():
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu, presets
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
