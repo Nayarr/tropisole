@@ -16,12 +16,13 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-BUCKET_ORDER = {"common": 1, "uncommon": 2, "rare": 3, "ultra-rare": 4}
+BUCKET_ORDER = {"common": 1, "uncommon": 2, "rare": 3, "ultra-rare": 4, "filler": 5}
 BUCKET_FR = {
     "common": "Commun",
     "uncommon": "Peu commun",
     "rare": "Rare",
     "ultra-rare": "Ultra-rare",
+    "filler": "Filler",
     None: "—"
 }
 TIME_FR = {
