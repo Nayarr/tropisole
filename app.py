@@ -457,11 +457,44 @@ def index():
 
     all_biome_tags = sorted(BIOME_MAP.keys())
 
+    # Grandes catégories thématiques → liste de tags Cobblemon
+    BIOME_CATEGORIES = {
+        "❄️ Froid & Neige": ["Froid", "Glacial", "Glaciaire", "Forêt enneigée", "Enneigé", "Plage enneigée", "Océan gelé", "Toundra", "Hiver"],
+        "🏔️ Montagnes & Sommets": ["Montagne", "Sommet", "Hautes terres", "Collines", "Plateau"],
+        "🌲 Forêts": ["Forêt", "Forêt enneigée", "Taïga", "Dense", "Bambou", "Fleurs de cerisier"],
+        "🌿 Plaines & Prairies": ["Prairie", "Plaines", "Floral", "Printemps", "Été", "Automne", "Clairsemé"],
+        "🏜️ Aride & Désert": ["Désert", "Aride", "Terres arides", "Sableux", "Savane"],
+        "🌊 Océans & Côtes": ["Océan", "Grand océan", "Océan tiède", "Océan chaud", "Océan gelé", "Côte", "Plage", "Île", "Île tropicale"],
+        "🌴 Jungle & Tropical": ["Jungle", "Luxuriant", "Île tropicale", "Chaud"],
+        "🌾 Zones humides": ["Marais", "Boueux", "Eau douce", "Rivière", "Thermal"],
+        "🍄 Spéciaux": ["Champignon", "Champs de champignons", "Magique", "Effrayant", "Sel", "Volcanique", "Stalactites", "Ciel"],
+        "🕳️ Souterrain": ["Grotte", "Abysses sombres"],
+        "🔥 Nether": ["Nether", "Nether basaltique", "Nether cramoisi", "Désert du Nether", "Forêt du Nether", "Nether gelé", "Nether fongique", "Montagne du Nether", "Végétation du Nether", "Quartz du Nether", "Nether feu de l'Âme", "Nether sable de l'Âme", "Nether toxique", "Nether distordu", "Terres dévastées du Nether"],
+        "🌌 End & Autres": ["Fin", "Éther", "Bumblezone", "Canyon de cristal", "Prairie fleurie", "Champs pollinisés", "Constructions hurlantes"],
+    }
+
+    # Pour chaque catégorie, collecter tous les biomes réels uniques
+    biomes_by_category = {}
+    for cat_name, tags in BIOME_CATEGORIES.items():
+        seen = set()
+        biomes = []
+        for tag in tags:
+            if tag not in BIOME_MAP:
+                continue
+            for entry in BIOME_MAP[tag]:
+                b = entry["biome"]
+                if b not in seen and not b.startswith("All "):
+                    seen.add(b)
+                    biomes.append(b)
+        if biomes:
+            biomes_by_category[cat_name] = sorted(biomes)
+
     return render_template("index.html",
                            buckets=buckets,
                            times=times,
                            weathers=weathers,
                            all_biome_tags=all_biome_tags,
+                           biomes_by_category=biomes_by_category,
                            bucket_fr=BUCKET_FR,
                            time_fr=TIME_FR,
                            weather_fr=WEATHER_FR)
