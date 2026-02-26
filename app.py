@@ -32,18 +32,16 @@ ADMIN_PASSWORD = os.environ.get("COBBLEDEX_ADMIN_PASSWORD", "tropisole_pokesnap"
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    try:
-        cursor.execute("ALTER TABLE users ADD COLUMN validated INTEGER NOT NULL DEFAULT 0")
-    except sqlite3.OperationalError:
-        pass
-    try:
-        cursor.execute("ALTER TABLE users ADD COLUMN email TEXT")
-    except sqlite3.OperationalError:
-        pass
-    try:
-        cursor.execute("ALTER TABLE users ADD COLUMN created_at TEXT")  # pas de DEFAULT ici
-    except sqlite3.OperationalError:
-        pass
+    for col, definition in [
+        ("validated", "INTEGER NOT NULL DEFAULT 0"),
+        ("email",     "TEXT"),
+        ("username",  "TEXT"),
+        ("created_at","TEXT"),
+    ]:
+        try:
+            cursor.execute(f"ALTER TABLE users ADD COLUMN {col} {definition}")
+        except sqlite3.OperationalError:
+            pass
     conn.commit()
     conn.close()
 
@@ -51,8 +49,7 @@ init_db()
 
 @app.before_request
 def security_check():
-    # Pages publiques
-    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse']
+    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse', '/admin/logout']
     if request.path.startswith('/static') or request.path in public:
         return
 
@@ -88,6 +85,7 @@ def security_check():
 @app.route('/firebase-auth', methods=['POST'])
 def firebase_auth():
     id_token = request.json.get('idToken')
+    username  = (request.json.get('username') or '').strip()
     try:
         decoded_token = auth.verify_id_token(id_token, clock_skew_seconds=10)
         uid   = decoded_token['uid']
@@ -99,11 +97,10 @@ def firebase_auth():
         row = cursor.fetchone()
 
         if row is None:
-            # Nouvel utilisateur : enregistrement en attente de validation
             device_id = generate_hardware_id()
             cursor.execute(
-                "INSERT INTO users (firebase_uid, device_id, email, validated) VALUES (?, ?, ?, 0)",
-                (uid, device_id, email)
+                "INSERT INTO users (firebase_uid, device_id, email, username, validated) VALUES (?, ?, ?, ?, 0)",
+                (uid, device_id, email, username)
             )
             conn.commit()
             conn.close()
@@ -908,15 +905,14 @@ def admin():
     validated = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 1 ORDER BY created_at DESC").fetchall()]
     conn.close()
 
-    # Enrichir avec les emails Firebase
+    # Enrichir avec les emails Firebase si manquants
     for u in pending + validated:
         if not u.get('email'):
             try:
-                firebase_user = auth.get_user(u['firebase_uid'])
-                u['email'] = firebase_user.email
-                # En profiter pour mettre à jour la DB
+                fb_user = auth.get_user(u['firebase_uid'])
+                u['email'] = fb_user.email
                 conn = sqlite3.connect(DB_PATH)
-                conn.execute("UPDATE users SET email = ? WHERE firebase_uid = ?", (firebase_user.email, u['firebase_uid']))
+                conn.execute("UPDATE users SET email = ? WHERE firebase_uid = ?", (fb_user.email, u['firebase_uid']))
                 conn.commit()
                 conn.close()
             except Exception:
@@ -944,7 +940,6 @@ def admin_refuse():
         return redirect('/admin')
     uid = request.form.get('uid')
     if uid:
-        # Supprimer de la DB locale + révoquer le token Firebase
         conn = sqlite3.connect(DB_PATH)
         conn.execute("DELETE FROM users WHERE firebase_uid = ?", (uid,))
         conn.commit()

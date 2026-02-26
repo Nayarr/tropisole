@@ -374,6 +374,10 @@
     <div class="panel" id="panel-register">
       <div class="login-card">
         <div class="field">
+          <label for="reg-username">Nom en jeu (pseudo Minecraft)</label>
+          <input type="text" id="reg-username" placeholder="Ton pseudo" autocomplete="off" />
+        </div>
+        <div class="field">
           <label for="reg-email">Adresse e-mail</label>
           <input type="email" id="reg-email" placeholder="toi@exemple.com" autocomplete="email" />
         </div>
@@ -540,6 +544,11 @@
     const password = document.getElementById('reg-password').value;
     const confirm  = document.getElementById('reg-confirm').value;
 
+    const username = document.getElementById('reg-username').value.trim();
+    if (!username) {
+      showAlert('alert-register', 'Veuillez entrer votre nom en jeu.', 'error');
+      return;
+    }
     if (!email || !password || !confirm) {
       showAlert('alert-register', 'Veuillez remplir tous les champs.', 'error');
       return;
@@ -562,11 +571,11 @@
       const res = await fetch('/firebase-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken })
+        body: JSON.stringify({ idToken, username })
       });
 
       if (res.status === 202) {
-        showAlert('alert-register', '✅ Compte créé ! Votre accès est en attente de validation par un administrateur. Vous serez contacté par email.', 'success');
+        showAlert('alert-register', '✅ Compte créé ! Votre accès est en attente de validation par un administrateur.', 'success');
         setLoading('btn-register', false);
       } else if (res.ok) {
         showAlert('alert-register', 'Compte créé — redirection…', 'success');
@@ -582,13 +591,8 @@
     }
   }
 
-  // Afficher la bannière si redirigé avec ?pending=1
   if (new URLSearchParams(window.location.search).get('pending') === '1') {
     document.getElementById('pending-notice').style.display = 'block';
-    document.getElementById('panel-login').classList.add('active');
-    document.getElementById('tab-login').classList.add('active');
-    document.getElementById('panel-register').classList.remove('active');
-    document.getElementById('tab-register').classList.remove('active');
   }
 </script>
 </body>

@@ -171,6 +171,9 @@
         <div class="user-avatar pending">{{ (u.email or '?')[0].upper() }}</div>
         <div class="user-info">
           <div class="user-email">{{ u.email or '(email inconnu)' }}</div>
+          {% if u.username %}
+          <div class="user-meta" style="color:var(--accent2);margin-top:.15rem;">🎮 {{ u.username }}</div>
+          {% endif %}
           <div class="user-meta">
             UID : {{ u.firebase_uid[:20] }}…
             {% if u.created_at %} · Inscrit le {{ u.created_at[:10] }}{% endif %}
@@ -208,6 +211,9 @@
         <div class="user-avatar validated">{{ (u.email or '?')[0].upper() }}</div>
         <div class="user-info">
           <div class="user-email">{{ u.email or '(email inconnu)' }}</div>
+          {% if u.username %}
+          <div class="user-meta" style="color:var(--accent2);margin-top:.15rem;">🎮 {{ u.username }}</div>
+          {% endif %}
           <div class="user-meta">
             UID : {{ u.firebase_uid[:20] }}…
             {% if u.created_at %} · Inscrit le {{ u.created_at[:10] }}{% endif %}
