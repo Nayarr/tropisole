@@ -131,6 +131,32 @@ def parse_level(level_str):
         return None, None
 
 
+# ── Mapping preset Cobblemon → structures Minecraft injectées ────────────────
+# Les presets définissent des conditions supplémentaires (structure requise, etc.)
+# qui ne figurent PAS dans les JSON spawn — définis dans le code du mod.
+PRESET_STRUCTURES = {
+    "mansion":            ["minecraft:woodland_mansion"],
+    "mansion_bedrooms":   ["minecraft:woodland_mansion"],
+    "mansion_dining":     ["minecraft:woodland_mansion"],
+    "ancient_city":       ["minecraft:ancient_city"],
+    "desert_pyramid":     ["minecraft:desert_pyramid"],
+    "jungle_pyramid":     ["minecraft:jungle_pyramid"],
+    "pillager_outpost":   ["minecraft:pillager_outpost"],
+    "illager_structures": ["minecraft:pillager_outpost", "minecraft:woodland_mansion"],
+    "stronghold":         ["minecraft:stronghold"],
+    "trail_ruins":        ["minecraft:trail_ruins"],
+    "ruined_portal":      ["minecraft:ruined_portal"],
+    "ocean_monument":     ["minecraft:ocean_monument"],
+    "ocean_ruins":        ["minecraft:ocean_ruin"],
+    "nether_fossil":      ["minecraft:nether_fossil"],
+    "nether_structures":  ["minecraft:nether_fortress", "minecraft:bastion_remnant"],
+    "derelict":           ["minecraft:shipwreck", "minecraft:ocean_ruin"],
+    "urban":              ["minecraft:village"],
+    "redstone":           ["minecraft:mineshaft"],
+    "webs":               ["minecraft:mineshaft"],
+    "salt":               ["minecraft:mineshaft"],
+}
+
 # Corrections manuelles : erreurs détectées dans le xlsx
 # (numéro national -> nom FR correct)
 FR_NAME_CORRECTIONS = {
@@ -283,31 +309,6 @@ def create_database():
             acond  = s.get("anticondition", {})
 
             # ── Résolution des presets → structures ──────────────────────────
-            # Les presets Cobblemon injectent des conditions supplémentaires
-            # (notamment la structure requise) qui ne figurent PAS dans le JSON spawn.
-            # On les applique ici manuellement d'après la définition officielle du mod.
-            PRESET_STRUCTURES = {
-                "mansion":          ["minecraft:woodland_mansion"],
-                "mansion_bedrooms": ["minecraft:woodland_mansion"],
-                "mansion_dining":   ["minecraft:woodland_mansion"],
-                "ancient_city":     ["minecraft:ancient_city"],
-                "desert_pyramid":   ["minecraft:desert_pyramid"],
-                "jungle_pyramid":   ["minecraft:jungle_pyramid"],
-                "pillager_outpost": ["minecraft:pillager_outpost"],
-                "illager_structures": ["minecraft:pillager_outpost", "minecraft:woodland_mansion"],
-                "stronghold":       ["minecraft:stronghold"],
-                "trail_ruins":      ["minecraft:trail_ruins"],
-                "ruined_portal":    ["minecraft:ruined_portal"],
-                "ocean_monument":   ["minecraft:ocean_monument"],
-                "ocean_ruins":      ["minecraft:ocean_ruin"],
-                "nether_fossil":    ["minecraft:nether_fossil"],
-                "nether_structures":["minecraft:nether_fortress", "minecraft:bastion_remnant"],
-                "derelict":         ["minecraft:shipwreck", "minecraft:ocean_ruin"],
-                "urban":            ["minecraft:village"],
-                "redstone":         ["minecraft:mineshaft"],
-                "webs":             ["minecraft:mineshaft"],
-                "salt":             ["minecraft:mineshaft"],
-            }
             presets = s.get("presets", [])
             # Fusionner les structures injectées par les presets avec celles déjà présentes
             preset_structures = []
