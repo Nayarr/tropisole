@@ -331,6 +331,10 @@
 </head>
 <body>
 
+<div id="pending-notice" style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,171,64,.12);border-bottom:1px solid rgba(255,171,64,.3);padding:.75rem 2rem;font-family:'Space Mono',monospace;font-size:.75rem;color:#ffab40;text-align:center;">
+  ⏳ Votre compte est en attente de validation par un administrateur.
+</div>
+
 <header>
   <div class="logo">
     <div class="logo-title">COBBLEDEX</div>
@@ -511,7 +515,11 @@
         body: JSON.stringify({ idToken })
       });
 
-      if (res.ok) {
+      if (res.status === 202) {
+        const data = await res.json();
+        showAlert('alert-login', '⏳ ' + (data.message || 'Compte en attente de validation.'), 'success');
+        setLoading('btn-login', false);
+      } else if (res.ok) {
         showAlert('alert-login', 'Connexion réussie — redirection…', 'success');
         setTimeout(() => { window.location.href = '/'; }, 700);
       } else {
@@ -557,7 +565,10 @@
         body: JSON.stringify({ idToken })
       });
 
-      if (res.ok) {
+      if (res.status === 202) {
+        showAlert('alert-register', '✅ Compte créé ! Votre accès est en attente de validation par un administrateur. Vous serez contacté par email.', 'success');
+        setLoading('btn-register', false);
+      } else if (res.ok) {
         showAlert('alert-register', 'Compte créé — redirection…', 'success');
         setTimeout(() => { window.location.href = '/'; }, 700);
       } else {
@@ -569,6 +580,15 @@
       showAlert('alert-register', FIREBASE_ERRORS[e.code] || 'Erreur : ' + e.message, 'error');
       setLoading('btn-register', false);
     }
+  }
+
+  // Afficher la bannière si redirigé avec ?pending=1
+  if (new URLSearchParams(window.location.search).get('pending') === '1') {
+    document.getElementById('pending-notice').style.display = 'block';
+    document.getElementById('panel-login').classList.add('active');
+    document.getElementById('tab-login').classList.add('active');
+    document.getElementById('panel-register').classList.remove('active');
+    document.getElementById('tab-register').classList.remove('active');
   }
 </script>
 </body>

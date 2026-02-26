@@ -13,7 +13,7 @@ from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, get_mod_co
                            get_cobblemon_tags_for_fr_biomes)
 
 app = Flask(__name__)
-app.secret_key = "cle_secrete_pour_session"
+app.secret_key = "bfcdc97aed922f455ccac7c0af8833b776446cc8b13466187c0b4c6f6ca8ef33"
 app.permanent_session_lifetime = timedelta(hours=2)  # Session valide 2 heures
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cobbledex.db")
 
@@ -27,53 +27,99 @@ def generate_hardware_id():
     accept_lang = request.headers.get('Accept-Language', '')
     return hashlib.sha256(f"{user_agent}{accept_lang}".encode()).hexdigest()
 
+ADMIN_PASSWORD = os.environ.get("COBBLEDEX_ADMIN_PASSWORD", "tropisole_pokesnap")
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN validated INTEGER NOT NULL DEFAULT 0")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN email TEXT")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE users ADD COLUMN created_at TEXT")  # pas de DEFAULT ici
+    except sqlite3.OperationalError:
+        pass
+    conn.commit()
+    conn.close()
+
+init_db()
+
 @app.before_request
 def security_check():
-    # Pages publiques (login, inscription, etc.)
-    if request.path.startswith('/static') or request.path in ['/login', '/firebase-auth', '/logout']:
+    # Pages publiques
+    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse']
+    if request.path.startswith('/static') or request.path in public:
         return
 
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    # VERROUILLAGE D'APPAREIL VIA SQLITE
     current_device = generate_hardware_id()
-    user_id = session['user_id'] # L'UID Firebase
+    user_id = session['user_id']
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    # On vérifie si cet UID Firebase a déjà un appareil enregistré
-    cursor.execute("SELECT device_id FROM users WHERE firebase_uid = ?", (user_id,))
+    cursor.execute("SELECT device_id, validated FROM users WHERE firebase_uid = ?", (user_id,))
     row = cursor.fetchone()
 
     if row:
-        if row[0] != current_device:
+        device_id, validated = row
+        if device_id != current_device:
             conn.close()
-            return "🛑 Cet appareil n'est pas autorisé pour ce compte Firebase.", 403
+            return "🛑 Cet appareil n'est pas autorisé pour ce compte.", 403
+        if not validated:
+            conn.close()
+            session.clear()
+            return redirect('/login?pending=1')
     else:
-        # Premier enregistrement de l'appareil pour cet utilisateur Firebase
-        cursor.execute("INSERT OR REPLACE INTO users (firebase_uid, device_id) VALUES (?, ?)", 
-                       (user_id, current_device))
-        conn.commit()
-    
+        conn.close()
+        session.clear()
+        return redirect('/login')
+
     conn.close()
 
 # --- LOGIQUE DE CONNEXION ---
 
 @app.route('/firebase-auth', methods=['POST'])
 def firebase_auth():
-    """
-    Cette route reçoit le 'idToken' envoyé par ton front-end (JS) 
-    après que Firebase ait validé l'utilisateur.
-    """
     id_token = request.json.get('idToken')
     try:
-        # Vérification du token côté serveur
         decoded_token = auth.verify_id_token(id_token, clock_skew_seconds=10)
+        uid   = decoded_token['uid']
+        email = decoded_token.get('email', '')
+
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT validated FROM users WHERE firebase_uid = ?", (uid,))
+        row = cursor.fetchone()
+
+        if row is None:
+            # Nouvel utilisateur : enregistrement en attente de validation
+            device_id = generate_hardware_id()
+            cursor.execute(
+                "INSERT INTO users (firebase_uid, device_id, email, validated) VALUES (?, ?, ?, 0)",
+                (uid, device_id, email)
+            )
+            conn.commit()
+            conn.close()
+            return {"status": "pending", "message": "Votre compte est en attente de validation par un administrateur."}, 202
+
+        validated = row[0]
+        conn.close()
+
+        if not validated:
+            return {"status": "pending", "message": "Votre compte est en attente de validation par un administrateur."}, 202
+
         session.permanent = True
-        session['user_id'] = decoded_token['uid']
-        session['email'] = decoded_token['email']
+        session['user_id'] = uid
+        session['email']   = email
         return {"status": "success"}, 200
+
     except Exception as e:
         return {"status": "error", "message": str(e)}, 401
 
@@ -425,9 +471,6 @@ def _build_spawn_list(filtered_rows):
         else:
             p["lumiere_profils"] = []
         enrich_spawn_conditions(p)
-        # Parser la colonne presets (CSV comme "natural, treetop") → liste Python
-        raw_presets = p.get("presets") or ""
-        p["presets_list"] = [pr.strip() for pr in raw_presets.split(",") if pr.strip()]
         num = p["numero"]
         if num not in ev_cache:
             ev = get_ev(num)
@@ -673,8 +716,7 @@ def spawns_by_biome():
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
-               presets
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
@@ -774,8 +816,7 @@ def spawns_by_real_biome():
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
-               presets
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
@@ -844,6 +885,82 @@ def api_stats():
         "total_pokemon": total_pokemon,
         "par_bucket": {(r["bucket"] or "inconnu"): r["n"] for r in buckets}
     })
+
+
+
+# ── ADMIN ──────────────────────────────────────────────────────────────────
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    error = None
+    if request.method == 'POST' and 'password' in request.form:
+        if request.form['password'] == ADMIN_PASSWORD:
+            session['is_admin'] = True
+        else:
+            error = "Mot de passe incorrect."
+
+    if not session.get('is_admin'):
+        return render_template('admin_login.html', error=error)
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    pending   = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 0 ORDER BY created_at DESC").fetchall()]
+    validated = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 1 ORDER BY created_at DESC").fetchall()]
+    conn.close()
+
+    # Enrichir avec les emails Firebase
+    for u in pending + validated:
+        if not u.get('email'):
+            try:
+                firebase_user = auth.get_user(u['firebase_uid'])
+                u['email'] = firebase_user.email
+                # En profiter pour mettre à jour la DB
+                conn = sqlite3.connect(DB_PATH)
+                conn.execute("UPDATE users SET email = ? WHERE firebase_uid = ?", (firebase_user.email, u['firebase_uid']))
+                conn.commit()
+                conn.close()
+            except Exception:
+                u['email'] = None
+
+    return render_template('admin.html', pending=pending, validated=validated)
+
+
+@app.route('/admin/validate', methods=['POST'])
+def admin_validate():
+    if not session.get('is_admin'):
+        return redirect('/admin')
+    uid = request.form.get('uid')
+    if uid:
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute("UPDATE users SET validated = 1 WHERE firebase_uid = ?", (uid,))
+        conn.commit()
+        conn.close()
+    return redirect('/admin')
+
+
+@app.route('/admin/refuse', methods=['POST'])
+def admin_refuse():
+    if not session.get('is_admin'):
+        return redirect('/admin')
+    uid = request.form.get('uid')
+    if uid:
+        # Supprimer de la DB locale + révoquer le token Firebase
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute("DELETE FROM users WHERE firebase_uid = ?", (uid,))
+        conn.commit()
+        conn.close()
+        try:
+            auth.revoke_refresh_tokens(uid)
+            auth.delete_user(uid)
+        except Exception:
+            pass
+    return redirect('/admin')
+
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('is_admin', None)
+    return redirect('/admin')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
