@@ -425,6 +425,9 @@ def _build_spawn_list(filtered_rows):
         else:
             p["lumiere_profils"] = []
         enrich_spawn_conditions(p)
+        # Parser la colonne presets (CSV comme "natural, treetop") → liste Python
+        raw_presets = p.get("presets") or ""
+        p["presets_list"] = [pr.strip() for pr in raw_presets.split(",") if pr.strip()]
         num = p["numero"]
         if num not in ev_cache:
             ev = get_ev(num)
@@ -670,7 +673,8 @@ def spawns_by_biome():
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
+               presets
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
@@ -770,7 +774,8 @@ def spawns_by_real_biome():
     rows = conn.execute(f"""
         SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
+               presets
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree

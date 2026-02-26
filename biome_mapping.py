@@ -846,10 +846,30 @@ COBBLEMON_TAG_HIERARCHY = {
         "#cobblemon:is_volcanic",
     ],
 
+    # NETHER — parent de tous les sous-biomes du Nether
+    "#cobblemon:is_nether": [
+        "#cobblemon:nether/is_basalt",
+        "#cobblemon:nether/is_crimson",
+        "#cobblemon:nether/is_desert",
+        "#cobblemon:nether/is_forest",
+        "#cobblemon:nether/is_frozen",
+        "#cobblemon:nether/is_fungus",
+        "#cobblemon:nether/is_mountain",
+        "#cobblemon:nether/is_overgrowth",
+        "#cobblemon:nether/is_quartz",
+        "#cobblemon:nether/is_soul_fire",
+        "#cobblemon:nether/is_soul_sand",
+        "#cobblemon:nether/is_toxic",
+        "#cobblemon:nether/is_warped",
+        "#cobblemon:nether/is_wasteland",
+        "#minecraft:is_nether",         # alias vanilla
+    ],
+
     # ARID = All Sandy + All Savanna  (← c'est un PARENT, pas une feuille !)
     "#cobblemon:is_arid": [
         "#cobblemon:is_sandy",
         "#cobblemon:is_savanna",
+        "#cobblemon:is_shrubland",  # Maquis → aride
     ],
 
     # OCEAN = vanilla + All Coast + All Cold Ocean + All Deep Ocean
@@ -874,6 +894,8 @@ COBBLEMON_TAG_HIERARCHY = {
         "#cobblemon:is_cold_ocean",
         "#cobblemon:is_freezing",
         "#cobblemon:is_peak",
+        "#cobblemon:is_snowy",          # Enneigé
+        "#cobblemon:is_snowy_taiga",    # Taïga enneigée
         "#cobblemon:is_taiga",
         "#cobblemon:is_tundra",
     ],
@@ -913,6 +935,7 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_mountain": [
         "#cobblemon:is_hills",
         "#cobblemon:is_peak",
+        "#cobblemon:is_plateau",    # Plateau → montagne
     ],
 
     # HILLS inclut All Highlands (selon le wiki : "All Highlands biomes")
@@ -985,10 +1008,12 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_river": [],
     "#cobblemon:is_swamp": [],
     "#cobblemon:is_savanna": [],
-    "#cobblemon:is_forest": [],
+    "#cobblemon:is_forest": [
+        "#cobblemon:is_cherry_blossom",  # Fleurs de cerisier → forêt
+    ],
     "#cobblemon:is_snowy_taiga": [],
     "#cobblemon:is_snowy_forest": [],
-    "#cobblemon:is_snowy": [],
+    "#cobblemon:is_snowy": [],  # feuille froide → rattaché via is_cold
     "#cobblemon:is_peak": [],
     "#cobblemon:is_highlands": [],
     "#cobblemon:is_glacial": [],
@@ -996,8 +1021,9 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_desert": [],
     "#cobblemon:is_bamboo": [],
     "#cobblemon:is_cave": [
-        "#cobblemon:is_lush",      # Lush Caves est une grotte de l'overworld
-        "#cobblemon:is_deep_dark", # Deep Dark aussi
+        "#cobblemon:is_lush",       # Lush Caves → grotte overworld
+        "#cobblemon:is_dripstone",  # Dripstone Caves → grotte overworld
+        "#cobblemon:is_deep_dark",  # Deep Dark → grotte overworld
     ],
     "#cobblemon:is_deep_dark": [],
     "#cobblemon:is_floral": [],
@@ -1010,10 +1036,27 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_thermal": [],
     "#cobblemon:is_volcanic": [],
     "#cobblemon:is_tundra": [],
-    "#cobblemon:is_cherry_blossom": [],
-    "#cobblemon:is_shrubland": [],
-    "#cobblemon:is_plateau": [],
-    "#cobblemon:is_dripstone": [],
+    "#cobblemon:is_cherry_blossom": [],  # feuille → rattaché via is_forest
+    "#cobblemon:is_shrubland": [],       # feuille → rattaché via is_arid/is_grassland
+    "#cobblemon:is_plateau": [],         # feuille → rattaché via is_mountain
+    "#cobblemon:is_dripstone": [],       # feuille → rattaché via is_cave
+
+    # ── NETHER (feuilles, rattachées à is_nether) ──
+    "#cobblemon:nether/is_basalt":     [],
+    "#cobblemon:nether/is_crimson":    [],
+    "#cobblemon:nether/is_desert":     [],
+    "#cobblemon:nether/is_forest":     [],
+    "#cobblemon:nether/is_frozen":     [],
+    "#cobblemon:nether/is_fungus":     [],
+    "#cobblemon:nether/is_mountain":   [],
+    "#cobblemon:nether/is_overgrowth": [],
+    "#cobblemon:nether/is_quartz":     [],
+    "#cobblemon:nether/is_soul_fire":  [],
+    "#cobblemon:nether/is_soul_sand":  [],
+    "#cobblemon:nether/is_toxic":      [],
+    "#cobblemon:nether/is_warped":     [],
+    "#cobblemon:nether/is_wasteland":  [],
+    "#minecraft:is_nether":            [],  # alias vanilla → même niveau que is_nether
 }
 
 # ── Mapping tag FR -> tag Cobblemon brut ──────────────────────────────────────
@@ -1067,7 +1110,7 @@ FR_TAG_TO_COBBLEMON = {
     "Thermal":                    "#cobblemon:is_thermal",
     "Volcanique":                 "#cobblemon:is_volcanic",
     "Effrayant":                  "#cobblemon:is_spooky",
-    "Nether":                     "#minecraft:is_nether",
+    "Nether":                     "#cobblemon:is_nether",
     "Nether basaltique":          "#cobblemon:nether/is_basalt",
     "Nether cramoisi":            "#cobblemon:nether/is_crimson",
     "Désert du Nether":           "#cobblemon:nether/is_desert",
