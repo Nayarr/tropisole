@@ -995,7 +995,10 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_badlands": [],
     "#cobblemon:is_desert": [],
     "#cobblemon:is_bamboo": [],
-    "#cobblemon:is_cave": [],
+    "#cobblemon:is_cave": [
+        "#cobblemon:is_lush",      # Lush Caves est une grotte de l'overworld
+        "#cobblemon:is_deep_dark", # Deep Dark aussi
+    ],
     "#cobblemon:is_deep_dark": [],
     "#cobblemon:is_floral": [],
     "#cobblemon:is_jungle": [],
