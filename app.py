@@ -1,15 +1,83 @@
-from flask import Flask, render_template, request, jsonify, abort
+from flask import Flask, render_template, request, jsonify, abort, session, redirect, url_for, flash
+import firebase_admin
+from firebase_admin import credentials, auth
 import json
 import sqlite3
 import os
 import math
+import hashlib
 from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, get_mod_color,
                            BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted, get_tags_for_biome,
                            get_cobblemon_tags_for_fr_biomes)
 
 app = Flask(__name__)
-DB_PATH = os.path.join(os.path.dirname(__file__), "cobbledex.db")
+app.secret_key = "cle_secrete_pour_session"
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cobbledex.db")
+
+# Initialisation de Firebase
+cred = credentials.Certificate(os.path.join(os.path.dirname(os.path.abspath(__file__)), "tropisole-e9cc2-firebase-adminsdk-fbsvc-f4fb28a221.json"))
+firebase_admin.initialize_app(cred)
+
+def generate_hardware_id():
+    """Signature de l'appareil actuel."""
+    user_agent = request.headers.get('User-Agent', '')
+    accept_lang = request.headers.get('Accept-Language', '')
+    return hashlib.sha256(f"{user_agent}{accept_lang}".encode()).hexdigest()
+
+@app.before_request
+def security_check():
+    # Pages publiques (login, inscription, etc.)
+    if request.path.startswith('/static') or request.path in ['/login', '/firebase-auth']:
+        return
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    # VERROUILLAGE D'APPAREIL VIA SQLITE
+    current_device = generate_hardware_id()
+    user_id = session['user_id'] # L'UID Firebase
+
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    # On vérifie si cet UID Firebase a déjà un appareil enregistré
+    cursor.execute("SELECT device_id FROM users WHERE firebase_uid = ?", (user_id,))
+    row = cursor.fetchone()
+
+    if row:
+        if row[0] != current_device:
+            conn.close()
+            return "🛑 Cet appareil n'est pas autorisé pour ce compte Firebase.", 403
+    else:
+        # Premier enregistrement de l'appareil pour cet utilisateur Firebase
+        cursor.execute("INSERT OR REPLACE INTO users (firebase_uid, device_id) VALUES (?, ?)", 
+                       (user_id, current_device))
+        conn.commit()
+    
+    conn.close()
+
+# --- LOGIQUE DE CONNEXION ---
+
+@app.route('/firebase-auth', methods=['POST'])
+def firebase_auth():
+    """
+    Cette route reçoit le 'idToken' envoyé par ton front-end (JS) 
+    après que Firebase ait validé l'utilisateur.
+    """
+    id_token = request.json.get('idToken')
+    try:
+        # Vérification du token côté serveur
+        decoded_token = auth.verify_id_token(id_token, clock_skew_seconds=10)
+        session['user_id'] = decoded_token['uid']
+        session['email'] = decoded_token['email']
+        return {"status": "success"}, 200
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 401
+
+@app.route('/login')
+def login():
+    # Ici tu affiches ta page HTML qui contient le script JS Firebase
+    return render_template('login.html')
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)

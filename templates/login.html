@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cobbledex — Connexion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <style>
+    :root {
+      --bg:      #0a0a0f;
+      --surface: #111118;
+      --card:    #16161f;
+      --border:  #2a2a3a;
+      --accent:  #e8ff47;
+      --accent2: #47ffe8;
+      --text:    #e8e8f0;
+      --muted:   #6a6a88;
+      --red:     #ff4757;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(232,255,71,0.055) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 2.5rem 2rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(232,255,71,0.04) 0%, transparent 100%);
+      display: flex;
+      align-items: center;
+    }
+
+    .logo { display: flex; flex-direction: column; }
+
+    .logo-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      line-height: 1;
+      text-shadow: 0 0 40px rgba(232,255,71,0.3);
+    }
+
+    .logo-sub {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    main {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+      position: relative;
+    }
+
+    .tab-btn:first-child {
+      border-right: 1px solid var(--border);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      background: rgba(232,255,71,0.06);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+    }
+
+    /* ── PANELS ── */
+    .panel { display: none; }
+    .panel.active { display: flex; flex-direction: column; gap: 0; }
+
+    /* CARD */
+    .login-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(232,255,71,0.03), transparent 50%);
+      pointer-events: none;
+    }
+
+    /* FIELD */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .field label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .field input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,255,71,0.08);
+    }
+
+    .field input::placeholder { color: var(--muted); opacity: 0.6; }
+
+    /* Password strength bar */
+    .strength-bar-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 0.3rem;
+      margin-top: 0.3rem;
+    }
+    .strength-bar-wrap.visible { display: flex; }
+
+    .strength-bar {
+      height: 3px;
+      border-radius: 2px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .strength-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.3s, background 0.3s;
+    }
+    .strength-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
+
+    /* BUTTONS */
+    .btn-login {
+      width: 100%;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 6px;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+    }
+
+    .btn-login:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(232,255,71,0.25);
+    }
+    .btn-login:active:not(:disabled) { transform: translateY(0); }
+    .btn-login:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .spinner {
+      display: none;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(10,10,15,0.3);
+      border-top-color: var(--bg);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    .btn-login.loading .btn-text { display: none; }
+    .btn-login.loading .spinner  { display: block; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ALERT */
+    .alert {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      line-height: 1.55;
+      display: none;
+    }
+    .alert.error {
+      display: block;
+      background: rgba(255,71,87,0.1);
+      border: 1px solid rgba(255,71,87,0.3);
+      color: var(--red);
+    }
+    .alert.success {
+      display: block;
+      background: rgba(71,255,232,0.08);
+      border: 1px solid rgba(71,255,232,0.25);
+      color: var(--accent2);
+    }
+
+    /* DEVICE NOTE */
+    .device-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.015);
+      margin-top: 1.8rem;
+    }
+    .device-note .icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .device-note p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.67rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .device-note strong { color: var(--text); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-title">COBBLEDEX</div>
+    <div class="logo-sub">Base de données Cobblemon Spawns v1.7.1</div>
+  </div>
+</header>
+
+<main>
+  <div class="login-wrapper">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-login"    onclick="switchTab('login')">Connexion</button>
+      <button class="tab-btn"        id="tab-register" onclick="switchTab('register')">Créer un compte</button>
+    </div>
+
+    <!-- ── PANEL CONNEXION ── -->
+    <div class="panel active" id="panel-login">
+      <div class="login-card">
+        <div class="field">
+          <label for="login-email">Adresse e-mail</label>
+          <input type="email" id="login-email" placeholder="toi@exemple.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="login-password">Mot de passe</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+        <div id="alert-login" class="alert"></div>
+        <button class="btn-login" id="btn-login" onclick="login()">
+          <span class="btn-text">Se connecter</span>
+          <span class="spinner"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── PANEL INSCRIPTION ── -->
+    <div class="panel" id="panel-register">
+      <div class="login-card">
+        <div class="field">
+          <label for="reg-email">Adresse e-mail</label>
+          <input type="email" id="reg-email" placeholder="toi@exemple.com" autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="reg-password">Mot de passe</label>
+          <input type="password" id="reg-password" placeholder="8 caractères minimum" autocomplete="new-password"
+                 oninput="updateStrength(this.value)" />
+          <div class="strength-bar-wrap" id="strength-wrap">
+            <div class="strength-bar"><div class="strength-bar-fill" id="strength-fill"></div></div>
+            <span class="strength-label" id="strength-label"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="reg-confirm">Confirmer le mot de passe</label>
+          <input type="password" id="reg-confirm" placeholder="••••••••" autocomplete="new-password" />
+        </div>
+        <div id="alert-register" class="alert"></div>
+        <button class="btn-login" id="btn-register" onclick="register()">
+          <span class="btn-text">Créer le compte</span>
+          <span class="spinner"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- DEVICE NOTE -->
+    <div class="device-note">
+      <span class="icon">🔒</span>
+      <p><strong>Appareil unique.</strong> Chaque compte est verrouillé sur un seul appareil physique au premier login. Toute tentative depuis un autre appareil sera refusée.</p>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyD1xoheh3BPkb8ApvVmP2HXcVN42MiU5Ag",
+    authDomain: "tropisole-e9cc2.firebaseapp.com",
+    projectId: "tropisole-e9cc2",
+    storageBucket: "tropisole-e9cc2.appspot.com",
+    messagingSenderId: "103939448578976402291",
+    appId: "1:581420986357:web:5023cb93d4befa2a893abc"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  // ── TAB SWITCH ────────────────────────────────────────────────────────────
+  function switchTab(name) {
+    ['login', 'register'].forEach(t => {
+      document.getElementById('tab-' + t).classList.toggle('active', t === name);
+      document.getElementById('panel-' + t).classList.toggle('active', t === name);
+    });
+    // clear alerts on switch
+    ['alert-login', 'alert-register'].forEach(id => {
+      const el = document.getElementById(id);
+      el.className = 'alert';
+      el.textContent = '';
+    });
+  }
+
+  // ── Enter to submit ───────────────────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    if (document.getElementById('panel-login').classList.contains('active')) login();
+    else register();
+  });
+
+  // ── UTILS ─────────────────────────────────────────────────────────────────
+  function setLoading(btnId, on) {
+    const btn = document.getElementById(btnId);
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+  }
+
+  function showAlert(alertId, msg, type) {
+    const el = document.getElementById(alertId);
+    el.textContent = msg;
+    el.className = 'alert' + (msg ? ' ' + type : '');
+  }
+
+  const FIREBASE_ERRORS = {
+    'auth/user-not-found':         'Aucun compte trouvé pour cet email.',
+    'auth/wrong-password':         'Mot de passe incorrect.',
+    'auth/invalid-email':          'Adresse e-mail invalide.',
+    'auth/invalid-credential':     'Identifiants invalides.',
+    'auth/email-already-in-use':   'Un compte existe déjà avec cet email.',
+    'auth/weak-password':          'Mot de passe trop faible (8 caractères min.).',
+    'auth/too-many-requests':      'Trop de tentatives. Réessayez dans quelques minutes.',
+    'auth/network-request-failed': 'Erreur réseau. Vérifiez votre connexion.',
+  };
+
+  // ── PASSWORD STRENGTH ─────────────────────────────────────────────────────
+  function updateStrength(val) {
+    const wrap  = document.getElementById('strength-wrap');
+    const fill  = document.getElementById('strength-fill');
+    const label = document.getElementById('strength-label');
+
+    if (!val) { wrap.classList.remove('visible'); return; }
+    wrap.classList.add('visible');
+
+    let score = 0;
+    if (val.length >= 8)  score++;
+    if (val.length >= 12) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { pct: '20%',  color: '#ff4757', text: 'Très faible' },
+      { pct: '40%',  color: '#ff6b35', text: 'Faible' },
+      { pct: '60%',  color: '#ffa07a', text: 'Moyen' },
+      { pct: '80%',  color: '#55efc4', text: 'Fort' },
+      { pct: '100%', color: '#e8ff47', text: 'Très fort' },
+    ];
+    const lvl = levels[Math.max(0, score - 1)] || levels[0];
+    fill.style.width      = lvl.pct;
+    fill.style.background = lvl.color;
+    label.textContent     = lvl.text;
+    label.style.color     = lvl.color;
+  }
+
+  // ── LOGIN ─────────────────────────────────────────────────────────────────
+  async function login() {
+    showAlert('alert-login', '', '');
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    if (!email || !password) {
+      showAlert('alert-login', 'Veuillez renseigner votre email et mot de passe.', 'error');
+      return;
+    }
+
+    setLoading('btn-login', true);
+    try {
+      const cred    = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const idToken = await cred.user.getIdToken();
+
+      const res = await fetch('/firebase-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken })
+      });
+
+      if (res.ok) {
+        showAlert('alert-login', 'Connexion réussie — redirection…', 'success');
+        setTimeout(() => { window.location.href = '/'; }, 700);
+      } else {
+        const err = await res.json();
+        showAlert('alert-login', 'Erreur serveur : ' + (err.message || 'inconnue'), 'error');
+        setLoading('btn-login', false);
+      }
+    } catch (e) {
+      showAlert('alert-login', FIREBASE_ERRORS[e.code] || 'Erreur : ' + e.message, 'error');
+      setLoading('btn-login', false);
+    }
+  }
+
+  // ── REGISTER ──────────────────────────────────────────────────────────────
+  async function register() {
+    showAlert('alert-register', '', '');
+    const email    = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value;
+    const confirm  = document.getElementById('reg-confirm').value;
+
+    if (!email || !password || !confirm) {
+      showAlert('alert-register', 'Veuillez remplir tous les champs.', 'error');
+      return;
+    }
+    if (password.length < 8) {
+      showAlert('alert-register', 'Le mot de passe doit contenir au moins 8 caractères.', 'error');
+      return;
+    }
+    if (password !== confirm) {
+      showAlert('alert-register', 'Les mots de passe ne correspondent pas.', 'error');
+      return;
+    }
+
+    setLoading('btn-register', true);
+    try {
+      const cred    = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      const idToken = await cred.user.getIdToken();
+
+      // On connecte directement après création
+      const res = await fetch('/firebase-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken })
+      });
+
+      if (res.ok) {
+        showAlert('alert-register', 'Compte créé — redirection…', 'success');
+        setTimeout(() => { window.location.href = '/'; }, 700);
+      } else {
+        const err = await res.json();
+        showAlert('alert-register', 'Erreur serveur : ' + (err.message || 'inconnue'), 'error');
+        setLoading('btn-register', false);
+      }
+    } catch (e) {
+      showAlert('alert-register', FIREBASE_ERRORS[e.code] || 'Erreur : ' + e.message, 'error');
+      setLoading('btn-register', false);
+    }
+  }
+</script>
+</body>
+</html>
