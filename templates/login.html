@@ -334,6 +334,9 @@
 <div id="pending-notice" style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,171,64,.12);border-bottom:1px solid rgba(255,171,64,.3);padding:.75rem 2rem;font-family:'Space Mono',monospace;font-size:.75rem;color:#ffab40;text-align:center;">
   ⏳ Votre compte est en attente de validation par un administrateur.
 </div>
+<div id="expired-notice" style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,71,87,.1);border-bottom:1px solid rgba(255,71,87,.3);padding:.75rem 2rem;font-family:'Space Mono',monospace;font-size:.75rem;color:#ff4757;text-align:center;">
+  🔒 Votre accès a expiré. Contactez un administrateur pour renouveler votre accès.
+</div>
 
 <header>
   <div class="logo">
@@ -497,6 +500,74 @@
     label.style.color     = lvl.color;
   }
 
+  // ── DEVICE FINGERPRINT ────────────────────────────────────────────────────
+  async function getDeviceFingerprint() {
+    const components = [];
+
+    // CPU / mémoire
+    components.push('cores:' + (navigator.hardwareConcurrency || 0));
+    components.push('mem:'   + (navigator.deviceMemory       || 0));
+
+    // Écran
+    components.push('scr:'  + screen.width + 'x' + screen.height + 'x' + screen.colorDepth);
+    components.push('dpr:'  + (window.devicePixelRatio || 1).toFixed(2));
+
+    // OS / plateforme
+    components.push('plat:' + (navigator.platform || ''));
+    components.push('tz:'   + Intl.DateTimeFormat().resolvedOptions().timeZone);
+    components.push('lang:' + navigator.language);
+
+    // Tactile
+    components.push('touch:' + navigator.maxTouchPoints);
+
+    // Canvas fingerprint (rendu unique par GPU + driver)
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width  = 200;
+      canvas.height = 50;
+      const ctx = canvas.getContext('2d');
+      ctx.textBaseline = 'top';
+      ctx.font = '14px "Arial"';
+      ctx.fillStyle = '#f60';
+      ctx.fillRect(0, 0, 200, 50);
+      ctx.fillStyle = '#069';
+      ctx.fillText('Cobbledex🎮', 2, 4);
+      ctx.fillStyle = 'rgba(102,204,0,0.7)';
+      ctx.fillText('Cobbledex🎮', 4, 6);
+      components.push('canvas:' + canvas.toDataURL().slice(-40));
+    } catch (e) {
+      components.push('canvas:n/a');
+    }
+
+    // WebGL renderer (nom du GPU)
+    try {
+      const gl  = document.createElement('canvas').getContext('webgl');
+      const ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
+      if (ext) {
+        components.push('gpu:' + gl.getParameter(ext.UNMASKED_RENDERER_WEBGL));
+        components.push('gvnd:' + gl.getParameter(ext.UNMASKED_VENDOR_WEBGL));
+      } else {
+        components.push('gpu:n/a');
+      }
+    } catch (e) {
+      components.push('gpu:err');
+    }
+
+    // Hash SHA-256 côté client (TextEncoder + SubtleCrypto)
+    const raw = components.join('|');
+    try {
+      const buf    = new TextEncoder().encode(raw);
+      const digest = await crypto.subtle.digest('SHA-256', buf);
+      const hex    = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2,'0')).join('');
+      return hex;
+    } catch (e) {
+      // Fallback : simple hash maison si SubtleCrypto indisponible (très rare)
+      let h = 0;
+      for (let i = 0; i < raw.length; i++) { h = Math.imul(31, h) + raw.charCodeAt(i) | 0; }
+      return 'fb_' + Math.abs(h).toString(16).padStart(8, '0');
+    }
+  }
+
   // ── LOGIN ─────────────────────────────────────────────────────────────────
   async function login() {
     showAlert('alert-login', '', '');
@@ -513,10 +584,11 @@
       const cred    = await firebase.auth().signInWithEmailAndPassword(email, password);
       const idToken = await cred.user.getIdToken();
 
+      const deviceFingerprint = await getDeviceFingerprint();
       const res = await fetch('/firebase-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken })
+        body: JSON.stringify({ idToken, deviceFingerprint })
       });
 
       if (res.status === 202) {
@@ -568,10 +640,11 @@
       const idToken = await cred.user.getIdToken();
 
       // On connecte directement après création
+      const deviceFingerprint = await getDeviceFingerprint();
       const res = await fetch('/firebase-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken, username })
+        body: JSON.stringify({ idToken, username, deviceFingerprint })
       });
 
       if (res.status === 202) {
@@ -591,8 +664,12 @@
     }
   }
 
-  if (new URLSearchParams(window.location.search).get('pending') === '1') {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('pending') === '1') {
     document.getElementById('pending-notice').style.display = 'block';
+  }
+  if (params.get('expired') === '1') {
+    document.getElementById('expired-notice').style.display = 'block';
   }
 </script>
 </body>

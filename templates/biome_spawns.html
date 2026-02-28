@@ -143,6 +143,7 @@
     }
 
     .biome-expand-chip {
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
@@ -814,6 +815,20 @@
       gap: 0.25rem;
       min-width: 100px;
     }
+    .badge-forme-reg {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 0.1rem 0.45rem;
+      border-radius: 20px;
+      border: 1px solid;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
     .badge-preset {
       font-family: 'Space Mono', monospace;
       font-size: 0.55rem;
@@ -825,7 +840,7 @@
       white-space: nowrap;
       text-transform: lowercase;
     }
-    .badge-preset.treetop  { border-color: rgba(255,171,64,0.4);  background: rgba(255,171,64,0.1);   color: #ffab40; }
+    .badge-preset.treetop  { border-color: rgba(85,239,196,0.3);  background: rgba(85,239,196,0.08);  color: #55efc4; }
     .badge-preset.natural  { border-color: rgba(116,185,255,0.25); background: rgba(116,185,255,0.07); color: #74b9ff; }
     .badge-preset.water    { border-color: rgba(71,255,232,0.25);  background: rgba(71,255,232,0.07);  color: #47ffe8; }
     .badge-preset.foliage  { border-color: rgba(85,239,196,0.2);   background: rgba(85,239,196,0.05);  color: #55efc4; }
@@ -888,10 +903,30 @@
     <div class="biome-expand-group">
       <span class="biome-expand-tag">{{ group.tag }}</span>
       {% for bm in group.biomes %}
-      <span class="biome-expand-chip" style="border-color:{{ get_mod_color(bm.mod) }}44;color:{{ get_mod_color(bm.mod) }};background:{{ get_mod_color(bm.mod) }}11">
+        {% if bm.biome.startswith('All ') %}
+          {% set fr_tag = all_biomes_to_fr.get(bm.biome) %}
+          {% if fr_tag %}
+      <a class="biome-expand-chip" href="/spawns/biome?biomes={{ fr_tag | urlencode }}"
+         style="border-color:{{ get_mod_color(bm.mod) }}44;color:{{ get_mod_color(bm.mod) }};background:{{ get_mod_color(bm.mod) }}11;text-decoration:none;opacity:0.8"
+         title="Voir tous les spawns : {{ fr_tag }}">
+        <span class="biome-expand-dot" style="background:{{ get_mod_color(bm.mod) }}"></span>
+        {{ bm.biome }}
+      </a>
+          {% else %}
+      <span class="biome-expand-chip" style="border-color:{{ get_mod_color(bm.mod) }}44;color:{{ get_mod_color(bm.mod) }};background:{{ get_mod_color(bm.mod) }}11;opacity:0.4;cursor:default;font-style:italic"
+            title="Tag groupé sans correspondance">
         <span class="biome-expand-dot" style="background:{{ get_mod_color(bm.mod) }}"></span>
         {{ bm.biome }}
       </span>
+          {% endif %}
+        {% else %}
+      <a class="biome-expand-chip" href="/spawns/biome-reel?biome={{ bm.biome | urlencode }}&mod={{ bm.mod | urlencode }}"
+         style="border-color:{{ get_mod_color(bm.mod) }}44;color:{{ get_mod_color(bm.mod) }};background:{{ get_mod_color(bm.mod) }}11;text-decoration:none"
+         title="Voir tous les spawns de {{ bm.biome }}">
+        <span class="biome-expand-dot" style="background:{{ get_mod_color(bm.mod) }}"></span>
+        {{ bm.biome }}
+      </a>
+        {% endif %}
       {% endfor %}
     </div>
     {% endfor %}
@@ -1315,6 +1350,7 @@ const RAW_DATA = [
     lune: {{ (p.lune or '') | tojson }},
     presets: {{ (p.presets_list or []) | tojson }},
     peut_voir_ciel: {{ (p.peut_voir_ciel or '') | tojson }},
+    forme_regionale: {{ (p.forme_regionale) | tojson }},
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 ];
@@ -1628,6 +1664,7 @@ function render() {
         <td class="td-num">#${String(p.numero).padStart(4,'0')}</td>
         <td class="td-name">
           <a href="/pokemon/${p.numero}">${p.pokemon}</a>
+          ${p.forme_regionale ? `<span class="badge-forme-reg" style="color:${p.forme_regionale.color};border-color:${p.forme_regionale.color}44;background:${p.forme_regionale.color}18">🌏 ${p.forme_regionale.short}</span>` : ''}
           ${isSource ? '<span class="badge badge-grey" style="margin-left:6px">source</span>' : ''}
         </td>
         <td><span class="badge ${bClass}">${bLabel}</span></td>

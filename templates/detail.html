@@ -351,6 +351,20 @@
     }
 
     /* SCROLLBAR */
+    .badge-forme {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -505,6 +519,11 @@
         {% else %}
           <span class="badge badge-grey">—</span>
         {% endif %}
+        {% if s.forme_regionale %}
+          <span class="badge-forme" style="color:{{ s.forme_regionale.color }};border-color:{{ s.forme_regionale.color }}44;background:{{ s.forme_regionale.color }}15">
+            🌏 {{ s.forme_regionale.short }}
+          </span>
+        {% endif %}
         {% if s.moment and s.moment != 'any' %}
           <span class="badge badge-moment">{{ moment_fr.get(s.moment, s.moment) }}</span>
         {% endif %}
@@ -569,7 +588,15 @@
                 <div class="biome-mod-chips">
                   {% for b in blist %}
                   {% if b.startswith('All ') %}
-                  <span class="biome-chip" style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }};opacity:0.6;cursor:default" title="Tag groupé — non cliquable">{{ b }}</span>
+                    {% set fr_tag = all_biomes_to_fr.get(b) %}
+                    {% if fr_tag %}
+                  <a class="biome-chip"
+                     href="/spawns/biome?biomes={{ fr_tag | urlencode }}&from={{ numero }}&entry={{ s.entree }}"
+                     style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }};opacity:0.8"
+                     title="Voir tous les Pokémon : {{ fr_tag }}">{{ b }}</a>
+                    {% else %}
+                  <span class="biome-chip" style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }};opacity:0.4;cursor:default;font-style:italic" title="Tag groupé sans correspondance">{{ b }}</span>
+                    {% endif %}
                   {% else %}
                   <a class="biome-chip"
                      href="/spawns/biome-reel?biome={{ b | urlencode }}&mod={{ mod | urlencode }}&from={{ numero }}&entry={{ s.entree }}"

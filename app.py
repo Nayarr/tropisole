@@ -6,11 +6,12 @@ import sqlite3
 import os
 import math
 import hashlib
-from datetime import timedelta
+from datetime import timedelta, datetime, timezone
 from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
-from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, get_mod_color,
-                           BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted, get_tags_for_biome,
-                           get_cobblemon_tags_for_fr_biomes)
+from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spawn_biomes_filtered,
+                           get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
+                           get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
+                           FR_TAG_TO_COBBLEMON)
 
 app = Flask(__name__)
 app.secret_key = "bfcdc97aed922f455ccac7c0af8833b776446cc8b13466187c0b4c6f6ca8ef33"
@@ -21,8 +22,19 @@ DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cobbledex.db
 cred = credentials.Certificate(os.path.join(os.path.dirname(os.path.abspath(__file__)), "tropisole-e9cc2-firebase-adminsdk-fbsvc-f4fb28a221.json"))
 firebase_admin.initialize_app(cred)
 
-def generate_hardware_id():
-    """Signature de l'appareil actuel."""
+def generate_hardware_id(client_fingerprint=None):
+    """
+    Signature de l'appareil.
+    - Si le client envoie un fingerprint JS (canvas + GPU + écran + CPU...),
+      on l'utilise directement — il est déjà sha256 côté client.
+    - Sinon fallback sur User-Agent + Accept-Language (moins fiable).
+    Le fingerprint est indépendant du réseau : WiFi ou 4G -> même valeur.
+    """
+    if client_fingerprint and len(client_fingerprint) >= 16:
+        # Re-hash côté serveur pour éviter qu'un attaquant envoie
+        # directement le hash volé d'une autre personne.
+        return hashlib.sha256(f"cobbledex_v2:{client_fingerprint}".encode()).hexdigest()
+    # Fallback legacy
     user_agent = request.headers.get('User-Agent', '')
     accept_lang = request.headers.get('Accept-Language', '')
     return hashlib.sha256(f"{user_agent}{accept_lang}".encode()).hexdigest()
@@ -33,10 +45,11 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     for col, definition in [
-        ("validated", "INTEGER NOT NULL DEFAULT 0"),
-        ("email",     "TEXT"),
-        ("username",  "TEXT"),
-        ("created_at","TEXT"),
+        ("validated",  "INTEGER NOT NULL DEFAULT 0"),
+        ("email",      "TEXT"),
+        ("username",   "TEXT"),
+        ("created_at", "TEXT"),
+        ("expires_at", "TEXT"),
     ]:
         try:
             cursor.execute(f"ALTER TABLE users ADD COLUMN {col} {definition}")
@@ -56,8 +69,8 @@ def security_check():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    current_device = generate_hardware_id()
     user_id = session['user_id']
+    session_fp = session.get('device_fp')  # fingerprint JS mémorisé au moment du login
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
@@ -66,13 +79,27 @@ def security_check():
 
     if row:
         device_id, validated = row
-        if device_id != current_device:
+        # On compare uniquement si les deux côtés ont un fingerprint JS robuste.
+        # Si session_fp est absent (session legacy ou navigateur sans SubtleCrypto),
+        # on skip la vérification matérielle — le token Firebase suffit.
+        if session_fp and device_id and session_fp != device_id:
             conn.close()
             return "🛑 Cet appareil n'est pas autorisé pour ce compte.", 403
         if not validated:
             conn.close()
             session.clear()
             return redirect('/login?pending=1')
+        # Vérifier expiration
+        cursor.execute("SELECT expires_at FROM users WHERE firebase_uid = ?", (user_id,))
+        exp_row = cursor.fetchone()
+        if exp_row and exp_row[0]:
+            expires_at = datetime.fromisoformat(exp_row[0].replace("Z", "+00:00"))
+            if expires_at.tzinfo is None:
+                expires_at = expires_at.replace(tzinfo=timezone.utc)
+            if datetime.now(timezone.utc) > expires_at:
+                conn.close()
+                session.clear()
+                return redirect('/login?expired=1')
     else:
         conn.close()
         session.clear()
@@ -86,6 +113,7 @@ def security_check():
 def firebase_auth():
     id_token = request.json.get('idToken')
     username  = (request.json.get('username') or '').strip()
+    client_fp = request.json.get('deviceFingerprint', None)
     try:
         decoded_token = auth.verify_id_token(id_token, clock_skew_seconds=10)
         uid   = decoded_token['uid']
@@ -97,24 +125,45 @@ def firebase_auth():
         row = cursor.fetchone()
 
         if row is None:
-            device_id = generate_hardware_id()
+            device_id = generate_hardware_id(client_fp)
+            expires_at = (datetime.now(timezone.utc) + timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute(
-                "INSERT INTO users (firebase_uid, device_id, email, username, validated) VALUES (?, ?, ?, ?, 0)",
-                (uid, device_id, email, username)
+                "INSERT INTO users (firebase_uid, device_id, email, username, validated, expires_at) VALUES (?, ?, ?, ?, 0, ?)",
+                (uid, device_id, email, username, expires_at)
             )
             conn.commit()
             conn.close()
             return {"status": "pending", "message": "Votre compte est en attente de validation par un administrateur."}, 202
 
         validated = row[0]
-        conn.close()
 
         if not validated:
+            conn.close()
             return {"status": "pending", "message": "Votre compte est en attente de validation par un administrateur."}, 202
+
+        # Récupérer le device_id enregistré en DB
+        cursor.execute("SELECT device_id FROM users WHERE firebase_uid = ?", (uid,))
+        device_row = cursor.fetchone()
+        stored_device_id = device_row[0] if device_row else None
+
+        if client_fp:
+            incoming_device_id = generate_hardware_id(client_fp)
+            if stored_device_id is None:
+                # Compte legacy sans device_id → on l'enregistre une seule fois, puis verrouillé
+                cursor.execute("UPDATE users SET device_id = ? WHERE firebase_uid = ?", (incoming_device_id, uid))
+                conn.commit()
+                stored_device_id = incoming_device_id
+            elif incoming_device_id != stored_device_id:
+                conn.close()
+                return {"status": "error", "message": "Cet appareil n'est pas autorisé pour ce compte."}, 403
+        
+        conn.close()
 
         session.permanent = True
         session['user_id'] = uid
         session['email']   = email
+        if client_fp:
+            session['device_fp'] = stored_device_id
         return {"status": "success"}, 200
 
     except Exception as e:
@@ -230,6 +279,22 @@ MOON_PHASE_FR = {
     3: "Lune gibbeuse décroissante", 4: "Nouvelle lune",
     5: "Lune gibbeuse croissante", 6: "Premier quartier", 7: "Lune croissante",
 }
+
+# Formes régionales reconnues → label FR + couleur badge
+FORME_REGIONALE = {
+    "alolan":   {"label": "Forme d'Alola",   "short": "Alola",   "color": "#00b4d8"},
+    "galarian": {"label": "Forme de Galar",   "short": "Galar",   "color": "#9b5de5"},
+    "hisuian":  {"label": "Forme de Hisui",   "short": "Hisui",   "color": "#e9c46a"},
+    "paldean":  {"label": "Forme de Paldea",  "short": "Paldea",  "color": "#f4a261"},
+    "valencian":{"label": "Forme Valenciana", "short": "Valencia","color": "#2dc653"},
+}
+
+def get_forme_regionale(forme_str):
+    """Retourne le dict FORME_REGIONALE si la forme est régionale, sinon None."""
+    if not forme_str:
+        return None
+    key = forme_str.strip().lower().split()[0].split("=")[0]
+    return FORME_REGIONALE.get(key)
 
 def _make_condition_tags(cond, structures_raw, spawn_dict):
     """Génère la liste complète des tags de condition à partir du dict parsé."""
@@ -468,6 +533,9 @@ def _build_spawn_list(filtered_rows):
         else:
             p["lumiere_profils"] = []
         enrich_spawn_conditions(p)
+        raw_presets = p.get("presets") or ""
+        p["presets_list"] = [pr.strip() for pr in raw_presets.split(",") if pr.strip()]
+        p["forme_regionale"] = get_forme_regionale(p.get("forme"))
         num = p["numero"]
         if num not in ev_cache:
             ev = get_ev(num)
@@ -532,6 +600,16 @@ def index():
         if biomes:
             biomes_by_category[cat_name] = sorted(biomes)
 
+    # Récupérer expires_at de l'utilisateur connecté
+    user_expires_at = None
+    user_id = session.get('user_id')
+    if user_id:
+        conn2 = sqlite3.connect(DB_PATH)
+        row_exp = conn2.execute("SELECT expires_at FROM users WHERE firebase_uid = ?", (user_id,)).fetchone()
+        conn2.close()
+        if row_exp and row_exp[0]:
+            user_expires_at = row_exp[0][:10]  # juste la date YYYY-MM-DD
+
     return render_template("index.html",
                            buckets=buckets,
                            times=times,
@@ -540,7 +618,8 @@ def index():
                            biomes_by_category=biomes_by_category,
                            bucket_fr=BUCKET_FR,
                            time_fr=TIME_FR,
-                           weather_fr=WEATHER_FR)
+                           weather_fr=WEATHER_FR,
+                           user_expires_at=user_expires_at)
 
 @app.route("/api/pokemon")
 def api_pokemon():
@@ -644,10 +723,12 @@ def pokemon_detail(numero):
 
     # Expand each spawn's biomes into individual real biomes (flat + grouped by mod)
     for s in spawns:
-        s["biomes_expanded"] = expand_spawn_biomes(s["biomes"])
+        excl = s.get("biomes_exclus") or None
+        s["biomes_expanded"] = expand_spawn_biomes_filtered(s["biomes"], excl)
         s["biomes_exclus_expanded"] = expand_spawn_biomes(s["biomes_exclus"])
-        s["biomes_by_mod"] = expand_biomes_by_mod(s["biomes"])
+        s["biomes_by_mod"] = expand_biomes_by_mod(s["biomes"], excl)
         s["biomes_exclus_by_mod"] = expand_biomes_by_mod(s["biomes_exclus"])
+        s["forme_regionale"] = get_forme_regionale(s.get("forme"))
         enrich_spawn_conditions(s)
 
     # Previous / next
@@ -672,7 +753,8 @@ def pokemon_detail(numero):
                            time_fr=TIME_FR,
                            weather_fr=WEATHER_FR,
                            mod_colors=MOD_COLORS,
-                           get_mod_color=get_mod_color)
+                           get_mod_color=get_mod_color,
+                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG)
 
 @app.route("/spawns/biome")
 def spawns_by_biome():
@@ -711,9 +793,10 @@ def spawns_by_biome():
         params = [f"%{b}%" for b in biomes_list]
 
     rows = conn.execute(f"""
-        SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
+        SELECT numero, pokemon, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
+               presets
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
@@ -761,7 +844,8 @@ def spawns_by_biome():
                            ev_stat_labels=EV_STAT_LABELS,
                            ev_stat_colors=EV_STAT_COLORS,
                            mod_colors=MOD_COLORS,
-                           get_mod_color=get_mod_color)
+                           get_mod_color=get_mod_color,
+                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG)
 
 @app.route("/spawns/biome-reel")
 def spawns_by_real_biome():
@@ -790,7 +874,14 @@ def spawns_by_real_biome():
         if row:
             source_pokemon = dict(row)
 
-    cobblemon_tags_reel = get_cobblemon_tags_for_fr_biomes(tags_fr)
+    # Pour un biome réel précis, on utilise UNIQUEMENT les tags directs (sans remonter
+    # ni descendre la hiérarchie). Sinon "Nether Wastes" → tag "Nether" → tous les
+    # sous-biomes Nether → faux positifs (ex: Stalgamin via nether/is_frozen).
+    cobblemon_tags_reel = set()
+    for fr_tag in tags_fr:
+        cobblemon_tag = FR_TAG_TO_COBBLEMON.get(fr_tag)
+        if cobblemon_tag:
+            cobblemon_tags_reel.add(cobblemon_tag)
 
     # Dériver l'ID Minecraft littéral (ex: "Frozen River" → "minecraft:frozen_river")
     # pour trouver les Pokémon qui l'ont en dur dans leurs biomes_tags
@@ -811,9 +902,10 @@ def spawns_by_real_biome():
         params = [f"%{t}%" for t in tags_fr]
 
     rows = conn.execute(f"""
-        SELECT numero, pokemon, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
+        SELECT numero, pokemon, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
-               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu
+               peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
+               presets
         FROM pokemon_spawns
         WHERE {where_parts}
         ORDER BY numero, entree
@@ -865,7 +957,8 @@ def spawns_by_real_biome():
                            ev_stat_labels=EV_STAT_LABELS,
                            ev_stat_colors=EV_STAT_COLORS,
                            mod_colors=MOD_COLORS,
-                           get_mod_color=get_mod_color)
+                           get_mod_color=get_mod_color,
+                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG)
 
 
 @app.route("/api/stats")
@@ -918,7 +1011,11 @@ def admin():
             except Exception:
                 u['email'] = None
 
-    return render_template('admin.html', pending=pending, validated=validated)
+    now = datetime.now(timezone.utc)
+    now_date  = now.strftime("%Y-%m-%d")
+    warn_date = (now + timedelta(days=2)).strftime("%Y-%m-%d")
+    return render_template('admin.html', pending=pending, validated=validated,
+                           now_date=now_date, warn_date=warn_date)
 
 
 @app.route('/admin/validate', methods=['POST'])
@@ -949,6 +1046,33 @@ def admin_refuse():
             auth.delete_user(uid)
         except Exception:
             pass
+    return redirect('/admin')
+
+
+@app.route('/admin/extend', methods=['POST'])
+def admin_extend():
+    if not session.get('is_admin'):
+        return redirect('/admin')
+    uid = request.form.get('uid')
+    days = int(request.form.get('days', 7))
+    if uid:
+        conn = sqlite3.connect(DB_PATH)
+        row = conn.execute("SELECT expires_at FROM users WHERE firebase_uid = ?", (uid,)).fetchone()
+        # Prolonger depuis maintenant ou depuis l'expiration actuelle si future
+        if row and row[0]:
+            try:
+                current_exp = datetime.fromisoformat(row[0])
+                if current_exp.tzinfo is None:
+                    current_exp = current_exp.replace(tzinfo=timezone.utc)
+                base = max(current_exp, datetime.now(timezone.utc))
+            except Exception:
+                base = datetime.now(timezone.utc)
+        else:
+            base = datetime.now(timezone.utc)
+        new_exp = (base + timedelta(days=days)).strftime("%Y-%m-%d %H:%M:%S")
+        conn.execute("UPDATE users SET expires_at = ? WHERE firebase_uid = ?", (new_exp, uid))
+        conn.commit()
+        conn.close()
     return redirect('/admin')
 
 

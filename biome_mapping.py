@@ -8,7 +8,9 @@ BIOME_MAP = {
         {"biome": "All Savanna biomes", "mod": "Cobblemon"},
     ],
     "Terres arides": [  # Badlands
-        {"biome": "All vanilla Badlands biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Badlands", "mod": "Vanilla Minecraft"},
+        {"biome": "Eroded Badlands", "mod": "Vanilla Minecraft"},
+        {"biome": "Wooded Badlands", "mod": "Vanilla Minecraft"},
         {"biome": "Ashen Savanna", "mod": "Terralith"},
         {"biome": "Red Oasis", "mod": "Terralith"},
         {"biome": "Warped Mesa", "mod": "Terralith"},
@@ -16,7 +18,9 @@ BIOME_MAP = {
         {"biome": "Danakil Desert", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Plage": [  # Beach
-        {"biome": "All vanilla Beach biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Beach", "mod": "Vanilla Minecraft"},
+        {"biome": "Snowy Beach", "mod": "Vanilla Minecraft"},
+        {"biome": "Stony Shore", "mod": "Vanilla Minecraft"},
         {"biome": "Guelta", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Sand Dunes", "mod": "Wythers' Overhauled Overworld"},
     ],
@@ -72,7 +76,10 @@ BIOME_MAP = {
         {"biome": "Deep Dark Incursion", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Grand océan": [  # Deep Ocean
-        {"biome": "All vanilla Deep Ocean biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Cold Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Frozen Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Lukewarm Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Ocean", "mod": "Vanilla Minecraft"},
         {"biome": "Deep Icy Ocean", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Désert": [  # Desert
@@ -130,7 +137,11 @@ BIOME_MAP = {
         {"biome": "Spring Flower Forest", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Forêt": [  # Forest
-        {"biome": "All vanilla Forest biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Birch Forest", "mod": "Vanilla Minecraft"},
+        {"biome": "Dark Forest", "mod": "Vanilla Minecraft"},
+        {"biome": "Flower Forest", "mod": "Vanilla Minecraft"},
+        {"biome": "Forest", "mod": "Vanilla Minecraft"},
+        {"biome": "Old Growth Birch Forest", "mod": "Vanilla Minecraft"},
         {"biome": "Cherry Grove", "mod": "Vanilla Minecraft"},
         {"biome": "Alpha Islands", "mod": "Terralith"},
         {"biome": "Alpha Islands Winter", "mod": "Terralith"},
@@ -149,6 +160,9 @@ BIOME_MAP = {
         {"biome": "Subtropical Forest", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tangled Forest", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Forest", "mod": "Wythers' Overhauled Overworld"},
+        # Biomes hybrides deep dark + forêt (Wythers) — ont les deux tags is_forest ET is_deep_dark
+        {"biome": "Deep Dark Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Deep Dark Incursion", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Glacial": [  # Freezing (tag large, englobe tout le froid extrême)
         {"biome": "Frozen River", "mod": "Vanilla Minecraft"},
@@ -219,7 +233,10 @@ BIOME_MAP = {
         {"biome": "Wistman Woods", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Collines": [  # Hills
-        {"biome": "All vanilla Hills biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Stony Peaks", "mod": "Vanilla Minecraft"},
+        {"biome": "Windswept Gravelly Hills", "mod": "Vanilla Minecraft"},
+        {"biome": "Windswept Hills", "mod": "Vanilla Minecraft"},
+        {"biome": "Windswept Wooded Hills", "mod": "Vanilla Minecraft"},
         {"biome": "All Highlands biomes", "mod": "Cobblemon"},
         {"biome": "Blooming Valley", "mod": "Terralith"},
         {"biome": "Forested Highlands", "mod": "Terralith"},
@@ -259,7 +276,9 @@ BIOME_MAP = {
         {"biome": "Tropical Island", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Jungle": [
-        {"biome": "All vanilla Jungle biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Bamboo Jungle", "mod": "Vanilla Minecraft"},
+        {"biome": "Jungle", "mod": "Vanilla Minecraft"},
+        {"biome": "Sparse Jungle", "mod": "Vanilla Minecraft"},
         {"biome": "Underground Jungle", "mod": "Terralith"},
         {"biome": "Dripleaf Swamp", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Eucalyptus Deanei Forest", "mod": "Wythers' Overhauled Overworld"},
@@ -304,7 +323,10 @@ BIOME_MAP = {
         {"biome": "Moonlight Valley", "mod": "Terralith"},
     ],
     "Montagne": [  # Mountain
-        {"biome": "All vanilla Mountain biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Frozen Peaks", "mod": "Vanilla Minecraft"},
+        {"biome": "Jagged Peaks", "mod": "Vanilla Minecraft"},
+        {"biome": "Meadow", "mod": "Vanilla Minecraft"},
+        {"biome": "Stony Peaks", "mod": "Vanilla Minecraft"},
         {"biome": "All Hill biomes", "mod": "Cobblemon"},
         {"biome": "Stony Spires", "mod": "Terralith"},
         {"biome": "Volcanic Peaks", "mod": "Terralith"},
@@ -324,7 +346,15 @@ BIOME_MAP = {
         {"biome": "Deep Dark Incursion", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Océan": [  # Ocean
-        {"biome": "All vanilla Ocean biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Cold Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Cold Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Frozen Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Lukewarm Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Deep Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Frozen Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Lukewarm Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Ocean", "mod": "Vanilla Minecraft"},
+        {"biome": "Warm Ocean", "mod": "Vanilla Minecraft"},
         {"biome": "All Coast biomes", "mod": "Cobblemon"},
         {"biome": "All Cold Ocean biomes", "mod": "Cobblemon"},
         {"biome": "All Deep Ocean biomes", "mod": "Cobblemon"},
@@ -366,7 +396,7 @@ BIOME_MAP = {
         {"biome": "Ayers Rock", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Rivière": [  # River
-        {"biome": "All vanilla River biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "River", "mod": "Vanilla Minecraft"},
         {"biome": "Warm River", "mod": "Vanilla Minecraft"},
         {"biome": "Guelta", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Forest River", "mod": "Wythers' Overhauled Overworld"},
@@ -386,7 +416,9 @@ BIOME_MAP = {
         {"biome": "All BYG Sandy biomes", "mod": "Oh The Biomes You'll Go"},
     ],
     "Savane": [  # Savanna
-        {"biome": "All vanilla Savanna biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Savanna", "mod": "Vanilla Minecraft"},
+        {"biome": "Savanna Plateau", "mod": "Vanilla Minecraft"},
+        {"biome": "Windswept Savanna", "mod": "Vanilla Minecraft"},
         {"biome": "Arid Highlands", "mod": "Terralith"},
         {"biome": "Ashen Savanna", "mod": "Terralith"},
         {"biome": "Brushland", "mod": "Terralith"},
@@ -443,7 +475,9 @@ BIOME_MAP = {
         {"biome": "Orchid Swamp", "mod": "Terralith"},
     ],
     "Taïga": [  # Taiga
-        {"biome": "All vanilla Taiga biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Old Growth Pine Taiga", "mod": "Vanilla Minecraft"},
+        {"biome": "Old Growth Spruce Taiga", "mod": "Vanilla Minecraft"},
+        {"biome": "Taiga", "mod": "Vanilla Minecraft"},
         {"biome": "Grove", "mod": "Vanilla Minecraft"},
         {"biome": "Alpine Grove", "mod": "Terralith"},
         {"biome": "Haze Mountain", "mod": "Terralith"},
@@ -554,10 +588,18 @@ BIOME_MAP = {
         {"biome": "All Volcanic biomes", "mod": "Cobblemon"},
     ],
     "Fin": [  # End
-        {"biome": "All vanilla End biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "End Barrens", "mod": "Vanilla Minecraft"},
+        {"biome": "End Highlands", "mod": "Vanilla Minecraft"},
+        {"biome": "End Midlands", "mod": "Vanilla Minecraft"},
+        {"biome": "Small End Islands", "mod": "Vanilla Minecraft"},
+        {"biome": "The End", "mod": "Vanilla Minecraft"},
     ],
     "Nether": [
-        {"biome": "All vanilla Nether biomes", "mod": "Vanilla Minecraft"},
+        {"biome": "Basalt Deltas", "mod": "Vanilla Minecraft"},
+        {"biome": "Crimson Forest", "mod": "Vanilla Minecraft"},
+        {"biome": "Nether Wastes", "mod": "Vanilla Minecraft"},
+        {"biome": "Soul Sand Valley", "mod": "Vanilla Minecraft"},
+        {"biome": "Warped Forest", "mod": "Vanilla Minecraft"},
     ],
     "Nether basaltique": [  # Nether Basalt
         {"biome": "Basalt Deltas", "mod": "Vanilla Minecraft"},
@@ -807,13 +849,24 @@ def get_all_real_biomes_sorted():
                 seen[key] = b["mod"]
     return sorted([{"biome": k, "mod": v} for k, v in seen.items()], key=lambda x: x["biome"])
 
-def expand_biomes_by_mod(biomes_str):
+def expand_biomes_by_mod(biomes_str, biomes_exclus_str=None):
     """
     Comme expand_spawn_biomes mais regroupe les biomes réels PAR MOD.
+    Si biomes_exclus_str est fourni, les biomes exclus sont filtrés du résultat.
     Retourne : [{"tag": "...", "by_mod": {"Vanilla Minecraft": [...], "Terralith": [...], ...}}]
     """
     if not biomes_str:
         return []
+
+    # Construire l'ensemble des biomes réels exclus
+    excluded_biomes = set()
+    if biomes_exclus_str:
+        for t in biomes_exclus_str.split(","):
+            t = t.strip()
+            if t:
+                for b in get_real_biomes(t):
+                    excluded_biomes.add(b["biome"])
+
     result = []
     for t in biomes_str.split(","):
         t = t.strip()
@@ -822,9 +875,94 @@ def expand_biomes_by_mod(biomes_str):
         real_biomes = get_real_biomes(t)
         by_mod = {}
         for b in real_biomes:
+            if b["biome"] in excluded_biomes:
+                continue
             mod = b["mod"]
             by_mod.setdefault(mod, []).append(b["biome"])
         result.append({"tag": t, "by_mod": by_mod})
+    return result
+
+
+# Reverse map: "All vanilla Jungle biomes" → "Jungle" (tag FR cliquable)
+# Construit depuis BIOME_MAP, avec overrides manuels pour les cas ambigus
+# (un même "All X biomes" peut apparaître dans plusieurs tags FR)
+_ALL_BIOMES_RAW = {
+    b["biome"]: tag_fr
+    for tag_fr, biomes in BIOME_MAP.items()
+    for b in biomes
+    if b["biome"].startswith("All ")
+}
+
+# Overrides manuels : choisir le tag FR le plus précis qui a un mapping Cobblemon
+_ALL_BIOMES_OVERRIDES = {
+    "All Jungle biomes":          "Jungle",
+    "All Arid biomes":            "Aride",
+    "All Floral biomes":          "Floral",
+    "All Forest biomes":          "Forêt",
+    "All Grassland biomes":       "Prairie",
+    "All Magical biomes":         "Magique",
+    "All Mountain biomes":        "Montagne",
+    "All Mushroom biomes":        "Champignon",
+    "All Swamp biomes":           "Marais",
+    "All Tundra biomes":          "Toundra",
+    "All Freezing biomes":        "Glacial",
+    "All Taiga biomes":           "Taïga",
+    "All Savanna biomes":         "Savane",
+    "All Cold Ocean biomes":      "Océan froid",
+    "All Frozen Ocean biomes":    "Océan gelé",
+    "All Lukewarm Ocean biomes":  "Océan tiède",
+    "All Warm Ocean biomes":      "Océan chaud",
+    "All Highlands biomes":       "Hautes terres",
+    "All Plains biomes":          "Plaines",
+    "All Coast biomes":           "Côte",
+    "All Deep Ocean biomes":      "Grand océan",
+    "All Sandy biomes":           "Aride",
+    "All Hill biomes":            "Collines",
+    "All Peak biomes":            "Sommet",
+    "All Glacial biomes":         "Glaciaire",
+    "All Snowy Forest biomes":    "Forêt enneigée",
+    "All River biomes":           "Rivière",
+    "All Beach biomes":           "Plage",
+    "All Cave biomes":            "Grotte",
+    "All Deep Dark biomes":       "Abysses sombres",
+    "All Sky biomes":             "Ciel",
+    "All Spooky biomes":          "Effrayant",
+    "All Thermal biomes":         "Thermal",
+    "All Volcanic biomes":        "Volcanique",
+    "All BYG Sandy biomes":       "Désert",
+    "All Badlands biomes":        "Terres arides",
+    "All Desert biomes":          "Désert",
+    "All Lush biomes":            "Luxuriant",
+    "All vanilla End biomes":     "Fin",
+    "All Tropical Island biomes": "Île tropicale",
+    "All Island biomes":          "Île",
+}
+
+ALL_BIOMES_TO_FR_TAG = {**_ALL_BIOMES_RAW, **_ALL_BIOMES_OVERRIDES}
+
+
+def expand_spawn_biomes_filtered(biomes_str, biomes_exclus_str=None):
+    """
+    Comme expand_spawn_biomes mais filtre les biomes exclus du résultat.
+    """
+    if not biomes_str:
+        return []
+
+    excluded_biomes = set()
+    if biomes_exclus_str:
+        for t in biomes_exclus_str.split(","):
+            t = t.strip()
+            if t:
+                for b in get_real_biomes(t):
+                    excluded_biomes.add(b["biome"])
+
+    result = []
+    for t in biomes_str.split(","):
+        t = t.strip()
+        if not t:
+            continue
+        real_biomes = [b for b in get_real_biomes(t) if b["biome"] not in excluded_biomes]
+        result.append({"tag": t, "biomes": real_biomes})
     return result
 
 # ── Hiérarchie des tags Cobblemon ─────────────────────────────────────────────
@@ -833,6 +971,13 @@ def expand_biomes_by_mod(biomes_str):
 # Source: documentation officielle Cobblemon + wiki
 COBBLEMON_TAG_HIERARCHY = {
     # Source : wiki officiel Cobblemon (Biome Tags page) — version complète
+
+    # CAVE = grottes
+    "#cobblemon:is_cave": [
+        "#cobblemon:is_lush",
+        "#cobblemon:is_dripstone",
+        "#cobblemon:is_deep_dark",
+    ],
 
     # OVERWORLD : inclut tous les grands groupes Cobblemon
     "#cobblemon:is_overworld": [
@@ -1097,6 +1242,7 @@ FR_TAG_TO_COBBLEMON = {
     "Fleurs de cerisier":         "#cobblemon:is_cherry_blossom",
     "Froid":                      "#cobblemon:is_cold",
     "Abysses sombres":            "#cobblemon:is_deep_dark",
+    "Grotte":                     "#cobblemon:is_cave",
     "Stalactites":                "#cobblemon:is_dripstone",
     "Floral":                     "#cobblemon:is_floral",
     "Luxuriant":                  "#cobblemon:is_lush",
@@ -1125,6 +1271,7 @@ FR_TAG_TO_COBBLEMON = {
     "Nether toxique":             "#cobblemon:nether/is_toxic",
     "Nether distordu":            "#cobblemon:nether/is_warped",
     "Terres dévastées du Nether": "#cobblemon:nether/is_wasteland",
+    "Fin":                         "#cobblemon:is_end",
     "Éther":                      "#aether:is_aether",
     "Bumblezone":                 "#the_bumblezone:the_bumblezone",
 }
@@ -1143,22 +1290,33 @@ def get_parent_cobblemon_tags(cobblemon_tag):
     return parents
 
 
+def get_children_cobblemon_tags(cobblemon_tag):
+    """Retourne récursivement tous les tags enfants d'un tag donné."""
+    children = set()
+    for child in COBBLEMON_TAG_HIERARCHY.get(cobblemon_tag, []):
+        children.add(child)
+        children |= get_children_cobblemon_tags(child)
+    return children
+
+
 def get_cobblemon_tags_for_fr_biomes(fr_biomes_list):
     """
     Convertit une liste de tags FR en ensemble de tags Cobblemon bruts,
-    en incluant TOUS les tags parents (hiérarchie).
+    en incluant TOUS les tags parents ET enfants (hiérarchie complète).
     Utilisé pour la requête /spawns/biome afin de ne rater aucun pokemon.
 
     Ex: ['Île tropicale'] -> {'#cobblemon:is_tropical_island',
                                '#cobblemon:is_coast', '#cobblemon:is_ocean',
                                '#cobblemon:is_overworld'}
+    Ex: ['Nether'] -> tous les sous-tags nether/* + #minecraft:is_nether
     """
     all_cobblemon_tags = set()
     for fr_tag in fr_biomes_list:
         cobblemon_tag = FR_TAG_TO_COBBLEMON.get(fr_tag)
         if cobblemon_tag:
-            # Le tag lui-même
             all_cobblemon_tags.add(cobblemon_tag)
-            # Tous ses parents (pokemon qui spawent dans un biome plus large)
+            # Parents (pokémon qui spawnen dans une zone plus large)
             all_cobblemon_tags |= get_parent_cobblemon_tags(cobblemon_tag)
+            # Enfants (sous-tags inclus dans ce tag)
+            all_cobblemon_tags |= get_children_cobblemon_tags(cobblemon_tag)
     return all_cobblemon_tags

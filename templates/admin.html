@@ -125,6 +125,12 @@
     .btn-cancel { font-family:'Space Mono',monospace; font-size:.7rem; padding:.5rem .9rem; border-radius:6px; background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer; }
     .btn-cancel:hover { border-color:var(--accent); color:var(--accent); }
     .btn-confirm-refuse { font-family:'Space Mono',monospace; font-size:.7rem; padding:.5rem .9rem; border-radius:6px; background:var(--red); border:none; color:#fff; cursor:pointer; }
+    .btn-extend { font-family:'Space Mono',monospace; font-size:.67rem; text-transform:uppercase; letter-spacing:.08em; padding:.45rem .85rem; border-radius:6px; background:rgba(232,255,71,.12); border:1px solid rgba(232,255,71,.3); color:var(--accent); cursor:pointer; transition:opacity .2s; }
+    .btn-extend:hover { opacity:.8; }
+    .expiry { font-family:'Space Mono',monospace; font-size:.63rem; margin-top:.2rem; }
+    .expiry.ok      { color:var(--green); }
+    .expiry.warning { color:var(--orange); }
+    .expiry.expired { color:var(--red); }
   </style>
 </head>
 <body>
@@ -185,7 +191,7 @@
             <input type="hidden" name="uid" value="{{ u.firebase_uid }}" />
             <button type="submit" class="btn-validate">✓ Valider</button>
           </form>
-          <button class="btn-refuse" onclick="confirmRefuse('{{ u.firebase_uid }}', '{{ u.email or '' }}')">✕ Refuser</button>
+          <button class="btn-refuse" onclick="confirmRefuse('{{ u.firebase_uid }}', '{{ u.email or u.firebase_uid }}')">✕ Refuser</button>
         </div>
       </div>
       {% endfor %}
@@ -218,10 +224,21 @@
             UID : {{ u.firebase_uid[:20] }}…
             {% if u.created_at %} · Inscrit le {{ u.created_at[:10] }}{% endif %}
           </div>
+          {% if u.expires_at %}
+          <div class="expiry {% if u.expires_at[:10] < now_date %}expired{% elif u.expires_at[:10] <= warn_date %}warning{% else %}ok{% endif %}">
+            ⏱ Expire le {{ u.expires_at[:10] }}
+            {% if u.expires_at[:10] < now_date %} — EXPIRÉ{% endif %}
+          </div>
+          {% endif %}
         </div>
         <span class="user-status validated">Validé</span>
         <div class="user-actions">
-          <button class="btn-refuse" onclick="confirmRefuse('{{ u.firebase_uid }}', '{{ u.email or '' }}')">✕ Révoquer</button>
+          <form method="POST" action="/admin/extend" style="display:inline;">
+            <input type="hidden" name="uid" value="{{ u.firebase_uid }}" />
+            <input type="hidden" name="days" value="7" />
+            <button type="submit" class="btn-extend">+7 jours</button>
+          </form>
+          <button class="btn-refuse" onclick="confirmRefuse('{{ u.firebase_uid }}', '{{ u.email or u.firebase_uid }}')">✕ Révoquer</button>
         </div>
       </div>
       {% endfor %}
