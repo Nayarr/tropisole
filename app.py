@@ -11,7 +11,7 @@ from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spawn_biomes_filtered,
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
                            get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
-                           FR_TAG_TO_COBBLEMON)
+                           FR_TAG_TO_COBBLEMON, get_parent_cobblemon_tags)
 
 app = Flask(__name__)
 app.secret_key = "bfcdc97aed922f455ccac7c0af8833b776446cc8b13466187c0b4c6f6ca8ef33"
@@ -814,21 +814,8 @@ def spawns_by_biome():
             if bio and bio in excl_fr_set:
                 return True
 
-        # Les entrées avec une structure requise spawnent uniquement dans cette structure,
-        # pas dans n'importe quel biome portant le tag (ex: is_overworld + mansion ≠ partout).
-        # On les exclut ici : la page /spawns/biome liste les co-spawns d'un même biome,
-        # et les Pokémon de structure n'y apparaissent que s'ils partagent le même biome
-        # ET la même structure (géré via la page détail).
-        structures_raw = row["structures"]
-        if structures_raw:
-            import json as _json
-            try:
-                structs = _json.loads(structures_raw)
-            except Exception:
-                structs = []
-            if structs:
-                return True
-
+        # Les Pokémon avec structure requise sont affichés avec leur tag condition
+        # (ex: "⛩️ Structure : Temple jungle") — on ne les masque plus.
         return False
 
     filtered_rows = [r for r in rows if not is_excluded_by_biomes(r, cobblemon_tags, biomes_list)]
@@ -874,14 +861,16 @@ def spawns_by_real_biome():
         if row:
             source_pokemon = dict(row)
 
-    # Pour un biome réel précis, on utilise UNIQUEMENT les tags directs (sans remonter
-    # ni descendre la hiérarchie). Sinon "Nether Wastes" → tag "Nether" → tous les
-    # sous-biomes Nether → faux positifs (ex: Stalgamin via nether/is_frozen).
+    # Pour un biome réel précis : tags directs + leurs parents (is_lush → is_cave → is_overworld)
+    # mais PAS les enfants. Sans les parents, les Pokémon avec des tags larges (is_overworld)
+    # n'apparaissent pas. Sans les enfants, on évite les faux positifs (Nether Wastes → is_nether
+    # → is_frozen → Stalgamin qui ne spawn qu'en Nether gelé).
     cobblemon_tags_reel = set()
     for fr_tag in tags_fr:
         cobblemon_tag = FR_TAG_TO_COBBLEMON.get(fr_tag)
         if cobblemon_tag:
             cobblemon_tags_reel.add(cobblemon_tag)
+            cobblemon_tags_reel |= get_parent_cobblemon_tags(cobblemon_tag)
 
     # Dériver l'ID Minecraft littéral (ex: "Frozen River" → "minecraft:frozen_river")
     # pour trouver les Pokémon qui l'ont en dur dans leurs biomes_tags
@@ -923,23 +912,8 @@ def spawns_by_real_biome():
             if bio and bio in excl_fr_set:
                 return True
 
-        # Exclure les entrées qui requièrent une structure spécifique :
-        # ces Pokémon ne peuvent pas spawner dans un biome quelconque,
-        # sauf si le biome réel est directement dans leurs biomes_tags (ex: minecraft:frozen_river).
-        structures_raw = row["structures"]
-        if structures_raw:
-            import json as _json
-            try:
-                structs = _json.loads(structures_raw)
-            except Exception:
-                structs = []
-            if structs:
-                # Si l'entrée a une structure requise, elle n'est valide pour ce biome réel
-                # QUE si le biome ID minecraft littéral figure explicitement dans biomes_tags
-                biomes_tags_str = row["biomes_tags"] or ""
-                if minecraft_id not in biomes_tags_str:
-                    return True
-
+        # Les Pokémon avec structure requise sont affichés avec leur tag condition
+        # (ex: "⛩️ Structure : Temple jungle") — on ne les masque plus.
         return False
 
     filtered_rows = [r for r in rows if not is_excluded_by_biomes(r, cobblemon_tags_reel, tags_fr)]

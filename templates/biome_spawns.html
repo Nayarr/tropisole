@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Co-spawns — Cobbledex</title>
+  <title>Co-spawns — Tropisole</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
@@ -858,7 +858,7 @@
   {% if source_pokemon %}
   <a href="/pokemon/{{ source_pokemon.numero }}" class="nav-back">← {{ source_pokemon.pokemon }}</a>
   {% else %}
-  <a href="/" class="nav-back">← Cobbledex</a>
+  <a href="/" class="nav-back">← Tropisole</a>
   {% endif %}
   <span class="nav-title">Pokémon du même spawn</span>
 </nav>
@@ -1515,14 +1515,20 @@ function filteredData() {
     // weather — 'any' = no weather constraint (weathers=[])
     if (!matchFilter('weather', p => p.weathers.length === 0 ? ['any'] : p.weathers, p)) return false;
 
-    // special (condition_tags types + presets comme treetop)
-    if (!matchFilter('special', p => {
+    // special — logique AND : doit avoir TOUTES les conditions incluses
+    {
       const types = p.condition_tags.map(t => t.type);
-      // Ajouter les presets pertinents comme valeurs filtrables
       if (p.presets) p.presets.forEach(pr => { if (!types.includes(pr)) types.push(pr); });
       if (types.length === 0) types.push('none');
-      return types;
-    }, p)) return false;
+      // Exclusions : OR (si une exclue matche → caché)
+      for (const v of filterState['special'].exclude) {
+        if (types.includes(v)) return false;
+      }
+      // Inclusions : AND (toutes doivent être présentes)
+      for (const v of filterState['special'].include) {
+        if (!types.includes(v)) return false;
+      }
+    }
 
     // EV stats
     if (!matchFilter('ev', p => {
