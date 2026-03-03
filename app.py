@@ -62,7 +62,7 @@ init_db()
 
 @app.before_request
 def security_check():
-    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse', '/admin/logout']
+    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse', '/admin/logout', '/admin/set-expiry']
     if request.path.startswith('/static') or request.path in public:
         return
 
@@ -184,8 +184,9 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-BUCKET_ORDER = {"common": 1, "uncommon": 2, "rare": 3, "ultra-rare": 4}
+BUCKET_ORDER = {"filler": 1, "common": 2, "uncommon": 3, "rare": 4, "ultra-rare": 5}
 BUCKET_FR = {
+    "filler": "Fillers",
     "common": "Commun",
     "uncommon": "Peu commun",
     "rare": "Rare",
@@ -558,15 +559,7 @@ def index():
     buckets = [r[0] for r in conn.execute(
         "SELECT DISTINCT bucket FROM pokemon_spawns WHERE bucket IS NOT NULL ORDER BY bucket"
     ).fetchall()]
-    times = [r[0] for r in conn.execute(
-        "SELECT DISTINCT time FROM pokemon_spawns WHERE time IS NOT NULL ORDER BY time"
-    ).fetchall()]
-    weathers = [r[0] for r in conn.execute(
-        "SELECT DISTINCT weather FROM pokemon_spawns WHERE weather IS NOT NULL ORDER BY weather"
-    ).fetchall()]
     conn.close()
-
-    all_biome_tags = sorted(BIOME_MAP.keys())
 
     # Grandes catégories thématiques → liste de tags Cobblemon
     BIOME_CATEGORIES = {
@@ -612,9 +605,6 @@ def index():
 
     return render_template("index.html",
                            buckets=buckets,
-                           times=times,
-                           weathers=weathers,
-                           all_biome_tags=all_biome_tags,
                            biomes_by_category=biomes_by_category,
                            bucket_fr=BUCKET_FR,
                            time_fr=TIME_FR,
@@ -625,9 +615,7 @@ def index():
 def api_pokemon():
     search = request.args.get("q", "").strip()
     bucket  = request.args.get("bucket", "")
-    time    = request.args.get("time", "")
-    weather = request.args.get("weather", "")
-    biome   = request.args.get("biome", "")
+
     sort    = request.args.get("sort", "numero")
     order = request.args.get("order", "asc")
     page = int(request.args.get("page", 1))
@@ -646,15 +634,7 @@ def api_pokemon():
     if bucket:
         where_clauses.append("bucket = ?")
         params.append(bucket)
-    if time:
-        where_clauses.append("time = ?")
-        params.append(time)
-    if weather:
-        where_clauses.append("weather = ?")
-        params.append(weather)
-    if biome:
-        where_clauses.append("biomes LIKE ?")
-        params.append(f"%{biome}%")
+
 
     where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
 
@@ -1047,6 +1027,29 @@ def admin_extend():
         conn.execute("UPDATE users SET expires_at = ? WHERE firebase_uid = ?", (new_exp, uid))
         conn.commit()
         conn.close()
+    return redirect('/admin')
+
+
+@app.route('/admin/set-expiry', methods=['POST'])
+def admin_set_expiry():
+    if not session.get('is_admin'):
+        return redirect('/admin')
+    uid     = request.form.get('uid')
+    expires = request.form.get('expires', '').strip()  # 'permanent' | 'YYYY-MM-DD'
+    if not uid:
+        return redirect('/admin')
+
+    conn = sqlite3.connect(DB_PATH)
+    if expires == 'permanent':
+        # Accès permanent : on met expires_at à NULL
+        conn.execute("UPDATE users SET expires_at = NULL WHERE firebase_uid = ?", (uid,))
+    elif expires:
+        # Date précise fournie par le datepicker (format YYYY-MM-DD)
+        # On la stocke au format datetime avec heure de fin de journée
+        new_exp = expires + " 23:59:59"
+        conn.execute("UPDATE users SET expires_at = ? WHERE firebase_uid = ?", (new_exp, uid))
+    conn.commit()
+    conn.close()
     return redirect('/admin')
 
 

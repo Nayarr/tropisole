@@ -41,50 +41,45 @@
     }
     .btn-sm:hover { border-color:var(--accent); color:var(--accent); }
 
-    main { position:relative; z-index:5; padding:2rem; max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:2.5rem; }
+    main { position:relative; z-index:5; padding:2rem; max-width:960px; margin:0 auto; display:flex; flex-direction:column; gap:2.5rem; }
 
-    /* STATS BAR */
     .stats-bar { display:flex; gap:2rem; flex-wrap:wrap; }
     .stat { display:flex; flex-direction:column; gap:.2rem; }
     .stat .num { font-size:2rem; font-weight:800; line-height:1; }
-    .stat .num.pending-color  { color:var(--orange); }
-    .stat .num.valid-color    { color:var(--green); }
-    .stat .num.total-color    { color:var(--accent2); }
+    .stat .num.pending-color { color:var(--orange); }
+    .stat .num.valid-color   { color:var(--green); }
+    .stat .num.total-color   { color:var(--accent2); }
     .stat .lbl { font-family:'Space Mono',monospace; font-size:.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
 
-    /* SECTION */
     .section-title {
       font-family:'Space Mono',monospace; font-size:.72rem; text-transform:uppercase;
       letter-spacing:.15em; color:var(--muted); padding-bottom:.75rem;
       border-bottom:1px solid var(--border); display:flex; align-items:center; gap:.75rem;
     }
-    .section-title .badge {
-      font-size:.65rem; padding:.15rem .5rem; border-radius:20px;
-      background:rgba(255,171,64,.15); border:1px solid rgba(255,171,64,.3); color:var(--orange);
-    }
+    .section-title .badge { font-size:.65rem; padding:.15rem .5rem; border-radius:20px; background:rgba(255,171,64,.15); border:1px solid rgba(255,171,64,.3); color:var(--orange); }
     .section-title .badge.valid { background:rgba(85,239,196,.1); border-color:rgba(85,239,196,.25); color:var(--green); }
 
-    /* EMPTY STATE */
     .empty { text-align:center; padding:3rem 1rem; color:var(--muted); font-family:'Space Mono',monospace; font-size:.75rem; }
     .empty .icon { font-size:2rem; display:block; margin-bottom:.75rem; }
 
-    /* USER CARD */
     .user-list { display:flex; flex-direction:column; gap:.75rem; }
     .user-card {
       background:var(--card); border:1px solid var(--border); border-radius:10px;
       padding:1.1rem 1.3rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap;
       transition:border-color .2s;
     }
-    .user-card:hover { border-color:rgba(232,255,71,.2); }
-    .user-card.pending { border-left:3px solid var(--orange); }
-    .user-card.validated { border-left:3px solid var(--green); }
+    .user-card:hover { border-color:rgba(232,255,71,.15); }
+    .user-card.pending     { border-left:3px solid var(--orange); }
+    .user-card.validated   { border-left:3px solid var(--green); }
+    .user-card.expired-card{ border-left:3px solid var(--red); opacity:.85; }
 
     .user-avatar {
       width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
       font-size:1rem; font-weight:700; flex-shrink:0;
     }
-    .user-avatar.pending  { background:rgba(255,171,64,.15); color:var(--orange); border:1px solid rgba(255,171,64,.3); }
+    .user-avatar.pending   { background:rgba(255,171,64,.15); color:var(--orange); border:1px solid rgba(255,171,64,.3); }
     .user-avatar.validated { background:rgba(85,239,196,.1);  color:var(--green);  border:1px solid rgba(85,239,196,.25); }
+    .user-avatar.expired   { background:rgba(255,71,87,.1);   color:var(--red);    border:1px solid rgba(255,71,87,.25); }
 
     .user-info { flex:1; min-width:0; }
     .user-email { font-family:'Space Mono',monospace; font-size:.82rem; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -96,41 +91,105 @@
     }
     .user-status.pending   { background:rgba(255,171,64,.12); border:1px solid rgba(255,171,64,.3); color:var(--orange); }
     .user-status.validated { background:rgba(85,239,196,.08); border:1px solid rgba(85,239,196,.2); color:var(--green); }
+    .user-status.expired   { background:rgba(255,71,87,.1);   border:1px solid rgba(255,71,87,.25); color:var(--red); }
 
-    .user-actions { display:flex; gap:.5rem; flex-shrink:0; }
+    .user-actions { display:flex; gap:.5rem; flex-shrink:0; flex-wrap:wrap; align-items:center; }
 
-    .btn-validate, .btn-refuse {
+    .btn-validate, .btn-refuse, .btn-date {
       font-family:'Space Mono',monospace; font-size:.67rem; text-transform:uppercase; letter-spacing:.08em;
-      padding:.45rem .85rem; border-radius:6px; border:none; cursor:pointer;
-      transition:opacity .2s,transform .12s;
+      padding:.45rem .85rem; border-radius:6px; cursor:pointer;
+      transition:opacity .2s, transform .12s;
     }
-    .btn-validate:hover, .btn-refuse:hover { opacity:.85; transform:translateY(-1px); }
-    .btn-validate { background:var(--green); color:#0a0a0f; }
+    .btn-validate:hover, .btn-refuse:hover, .btn-date:hover { opacity:.85; transform:translateY(-1px); }
+    .btn-validate { background:var(--green); color:#0a0a0f; border:none; }
     .btn-refuse   { background:rgba(255,71,87,.15); border:1px solid rgba(255,71,87,.3); color:var(--red); }
+    .btn-date     { background:rgba(232,255,71,.1); border:1px solid rgba(232,255,71,.25); color:var(--accent); }
 
-    /* CONFIRM MODAL */
+    .expiry { font-family:'Space Mono',monospace; font-size:.63rem; margin-top:.25rem; }
+    .expiry.ok        { color:var(--green); }
+    .expiry.warning   { color:var(--orange); }
+    .expiry.expired   { color:var(--red); }
+    .expiry.permanent { color:var(--accent2); }
+
+    /* ── MODALS ── */
     .modal-overlay {
-      display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(4px);
-      z-index:9999; align-items:center; justify-content:center;
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.75);
+      backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center;
     }
     .modal-overlay.open { display:flex; }
     .modal {
-      background:var(--card); border:1px solid var(--border); border-radius:12px;
-      padding:2rem; max-width:380px; width:90%; display:flex; flex-direction:column; gap:1.3rem;
+      background:var(--card); border:1px solid var(--border); border-radius:14px;
+      padding:2rem; width:90%; display:flex; flex-direction:column; gap:1.4rem;
+      animation:fadeUp .18s ease;
     }
-    .modal-title { font-size:1.1rem; font-weight:700; color:var(--red); }
-    .modal-body  { font-family:'Space Mono',monospace; font-size:.75rem; color:var(--muted); line-height:1.6; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+    .modal-title { font-size:1.1rem; font-weight:700; }
+    .modal-body  { font-family:'Space Mono',monospace; font-size:.75rem; color:var(--muted); line-height:1.7; }
     .modal-email { color:var(--text); font-weight:700; }
-    .modal-actions { display:flex; gap:.75rem; justify-content:flex-end; }
-    .btn-cancel { font-family:'Space Mono',monospace; font-size:.7rem; padding:.5rem .9rem; border-radius:6px; background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer; }
+    .modal-actions { display:flex; gap:.75rem; justify-content:flex-end; flex-wrap:wrap; }
+    .btn-cancel {
+      font-family:'Space Mono',monospace; font-size:.7rem; padding:.5rem .9rem; border-radius:6px;
+      background:none; border:1px solid var(--border); color:var(--muted); cursor:pointer;
+    }
     .btn-cancel:hover { border-color:var(--accent); color:var(--accent); }
-    .btn-confirm-refuse { font-family:'Space Mono',monospace; font-size:.7rem; padding:.5rem .9rem; border-radius:6px; background:var(--red); border:none; color:#fff; cursor:pointer; }
-    .btn-extend { font-family:'Space Mono',monospace; font-size:.67rem; text-transform:uppercase; letter-spacing:.08em; padding:.45rem .85rem; border-radius:6px; background:rgba(232,255,71,.12); border:1px solid rgba(232,255,71,.3); color:var(--accent); cursor:pointer; transition:opacity .2s; }
-    .btn-extend:hover { opacity:.8; }
-    .expiry { font-family:'Space Mono',monospace; font-size:.63rem; margin-top:.2rem; }
-    .expiry.ok      { color:var(--green); }
-    .expiry.warning { color:var(--orange); }
-    .expiry.expired { color:var(--red); }
+    .btn-confirm-refuse {
+      font-family:'Space Mono',monospace; font-size:.7rem; padding:.5rem .9rem;
+      border-radius:6px; background:var(--red); border:none; color:#fff; cursor:pointer;
+    }
+
+    /* ── MODAL DATE ── */
+    #modal-date .modal { max-width:480px; }
+    .modal-date-title { font-size:1.05rem; font-weight:700; color:var(--accent); }
+    .modal-date-user  { font-family:'Space Mono',monospace; font-size:.75rem; color:var(--accent2); margin-top:.2rem; }
+
+    .date-section-label {
+      font-family:'Space Mono',monospace; font-size:.67rem; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.12em; margin-bottom:.55rem;
+    }
+    .date-presets { display:flex; gap:.45rem; flex-wrap:wrap; }
+    .preset-btn {
+      font-family:'Space Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.07em;
+      padding:.4rem .8rem; border-radius:6px; border:1px solid var(--border);
+      background:var(--surface); color:var(--muted); cursor:pointer; transition:all .15s;
+    }
+    .preset-btn:hover         { border-color:var(--accent2); color:var(--accent2); background:rgba(71,255,232,.05); }
+    .preset-btn.active        { border-color:var(--accent);  color:var(--accent);  background:rgba(232,255,71,.08); }
+    .preset-btn.perm          { border-color:rgba(71,255,232,.4); color:var(--accent2); }
+    .preset-btn.perm.active   { background:rgba(71,255,232,.1); }
+
+    .date-separator {
+      display:flex; align-items:center; gap:.75rem;
+      font-family:'Space Mono',monospace; font-size:.65rem; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.1em;
+    }
+    .date-separator::before, .date-separator::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    .date-field { display:flex; flex-direction:column; gap:.5rem; }
+    .date-field label { font-family:'Space Mono',monospace; font-size:.67rem; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; }
+    #date-picker {
+      width:100%; background:#111118; border:1px solid var(--border); border-radius:8px;
+      color:var(--text); font-family:'Space Mono',monospace; font-size:.9rem;
+      padding:.75rem 1rem; outline:none; transition:border-color .2s; color-scheme:dark;
+    }
+    #date-picker:focus { border-color:var(--accent); }
+
+    .date-preview {
+      font-family:'Space Mono',monospace; font-size:.72rem; padding:.65rem .9rem;
+      border-radius:8px; display:none; line-height:1.5;
+    }
+    .date-preview.show     { display:block; background:rgba(232,255,71,.05);  border:1px solid rgba(232,255,71,.2);  color:var(--accent); }
+    .date-preview.show.perm{ background:rgba(71,255,232,.05);  border-color:rgba(71,255,232,.2);  color:var(--accent2); }
+    .date-preview.show.warn{ background:rgba(255,171,64,.05);  border-color:rgba(255,171,64,.2);  color:var(--orange); }
+    .date-preview.show.danger { background:rgba(255,71,87,.05); border-color:rgba(255,71,87,.2); color:var(--red); }
+
+    .btn-apply {
+      font-family:'Space Mono',monospace; font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
+      padding:.65rem 1.4rem; border-radius:8px; border:none;
+      background:var(--accent); color:#0a0a0f; cursor:pointer;
+      transition:opacity .2s, transform .15s;
+    }
+    .btn-apply:hover    { opacity:.9; transform:translateY(-1px); }
+    .btn-apply:disabled { opacity:.3; cursor:not-allowed; transform:none; }
   </style>
 </head>
 <body>
@@ -213,8 +272,9 @@
     {% if validated %}
     <div class="user-list" style="margin-top:1rem;">
       {% for u in validated %}
-      <div class="user-card validated">
-        <div class="user-avatar validated">{{ (u.email or '?')[0].upper() }}</div>
+      {% set is_expired = u.expires_at and u.expires_at[:10] < now_date %}
+      <div class="user-card {{ 'expired-card' if is_expired else 'validated' }}">
+        <div class="user-avatar {{ 'expired' if is_expired else 'validated' }}">{{ (u.email or '?')[0].upper() }}</div>
         <div class="user-info">
           <div class="user-email">{{ u.email or '(email inconnu)' }}</div>
           {% if u.username %}
@@ -225,19 +285,23 @@
             {% if u.created_at %} · Inscrit le {{ u.created_at[:10] }}{% endif %}
           </div>
           {% if u.expires_at %}
-          <div class="expiry {% if u.expires_at[:10] < now_date %}expired{% elif u.expires_at[:10] <= warn_date %}warning{% else %}ok{% endif %}">
-            ⏱ Expire le {{ u.expires_at[:10] }}
-            {% if u.expires_at[:10] < now_date %} — EXPIRÉ{% endif %}
-          </div>
+            {% if is_expired %}
+            <div class="expiry expired">⛔ Expiré le {{ u.expires_at[:10] }}</div>
+            {% elif u.expires_at[:10] <= warn_date %}
+            <div class="expiry warning">⚠️ Expire le {{ u.expires_at[:10] }}</div>
+            {% else %}
+            <div class="expiry ok">✅ Expire le {{ u.expires_at[:10] }}</div>
+            {% endif %}
+          {% else %}
+          <div class="expiry permanent">♾️ Accès permanent</div>
           {% endif %}
         </div>
-        <span class="user-status validated">Validé</span>
+        <span class="user-status {{ 'expired' if is_expired else 'validated' }}">{{ 'Expiré' if is_expired else 'Validé' }}</span>
         <div class="user-actions">
-          <form method="POST" action="/admin/extend" style="display:inline;">
-            <input type="hidden" name="uid" value="{{ u.firebase_uid }}" />
-            <input type="hidden" name="days" value="7" />
-            <button type="submit" class="btn-extend">+7 jours</button>
-          </form>
+          <button class="btn-date"
+            onclick="openDateModal('{{ u.firebase_uid }}', '{{ u.username or u.email or u.firebase_uid }}', '{{ u.expires_at[:10] if u.expires_at else '' }}')">
+            📅 Gérer l'accès
+          </button>
           <button class="btn-refuse" onclick="confirmRefuse('{{ u.firebase_uid }}', '{{ u.email or u.firebase_uid }}')">✕ Révoquer</button>
         </div>
       </div>
@@ -253,17 +317,63 @@
 
 </main>
 
-<!-- MODAL CONFIRMATION REFUS -->
+<!-- ── MODAL GESTION DATE D'ACCÈS ── -->
+<div class="modal-overlay" id="modal-date">
+  <div class="modal" style="max-width:480px;">
+
+    <div>
+      <div class="modal-date-title">📅 Gérer l'accès</div>
+      <div class="modal-date-user" id="date-modal-user"></div>
+    </div>
+
+    <!-- Raccourcis -->
+    <div>
+      <div class="date-section-label">Raccourcis rapides</div>
+      <div class="date-presets">
+        <button class="preset-btn" data-days="7"   onclick="applyPreset(this,7)">+7 jours</button>
+        <button class="preset-btn" data-days="14"  onclick="applyPreset(this,14)">+14 jours</button>
+        <button class="preset-btn" data-days="30"  onclick="applyPreset(this,30)">+30 jours</button>
+        <button class="preset-btn" data-days="90"  onclick="applyPreset(this,90)">+3 mois</button>
+        <button class="preset-btn" data-days="180" onclick="applyPreset(this,180)">+6 mois</button>
+        <button class="preset-btn" data-days="365" onclick="applyPreset(this,365)">+1 an</button>
+        <button class="preset-btn perm"            onclick="applyPreset(this,'permanent')">♾️ Permanent</button>
+      </div>
+    </div>
+
+    <div class="date-separator">ou saisir une date précise</div>
+
+    <!-- Date picker manuel -->
+    <div class="date-field">
+      <label for="date-picker">Date d'expiration</label>
+      <input type="date" id="date-picker" oninput="onDateInput(this.value)" />
+    </div>
+
+    <!-- Aperçu calculé -->
+    <div class="date-preview" id="date-preview"></div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDateModal()">Annuler</button>
+      <form method="POST" action="/admin/set-expiry" id="date-form">
+        <input type="hidden" name="uid"     id="date-uid" />
+        <input type="hidden" name="expires" id="date-value" />
+        <button type="submit" class="btn-apply" id="btn-apply" disabled>Appliquer</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── MODAL CONFIRMATION REFUS ── -->
 <div class="modal-overlay" id="modal-refuse">
-  <div class="modal">
-    <div class="modal-title">⚠️ Confirmer le refus</div>
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-title" style="color:var(--red);">⚠️ Confirmer la révocation</div>
     <div class="modal-body">
       Supprimer le compte de <span class="modal-email" id="modal-email-label"></span> ?
       Cette action est <strong>irréversible</strong> — le compte Firebase sera supprimé et l'utilisateur devra se réinscrire.
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-      <form method="POST" action="/admin/refuse" id="refuse-form" style="display:inline;">
+      <button class="btn-cancel" onclick="closeRefuseModal()">Annuler</button>
+      <form method="POST" action="/admin/refuse" id="refuse-form">
         <input type="hidden" name="uid" id="refuse-uid" />
         <button type="submit" class="btn-confirm-refuse">Supprimer</button>
       </form>
@@ -272,16 +382,114 @@
 </div>
 
 <script>
+  // ── Modal date ────────────────────────────────────────────────────────────
+  function openDateModal(uid, username, currentExpiry) {
+    document.getElementById('date-uid').value = uid;
+    document.getElementById('date-modal-user').textContent = '🎮 ' + username;
+    document.getElementById('date-picker').value = currentExpiry || '';
+    document.getElementById('date-value').value = '';
+    document.getElementById('btn-apply').disabled = true;
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    setPreview(null);
+
+    // Si expiry existant → pré-afficher
+    if (currentExpiry) onDateInput(currentExpiry, false);
+
+    document.getElementById('modal-date').classList.add('open');
+  }
+
+  function closeDateModal() {
+    document.getElementById('modal-date').classList.remove('open');
+  }
+
+  function applyPreset(btn, val) {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    if (val === 'permanent') {
+      document.getElementById('date-picker').value = '';
+      document.getElementById('date-value').value  = 'permanent';
+      setPreview('permanent');
+    } else {
+      const d = new Date();
+      d.setDate(d.getDate() + val);
+      const iso = toISO(d);
+      document.getElementById('date-picker').value = iso;
+      document.getElementById('date-value').value  = iso;
+      setPreview(iso);
+    }
+    document.getElementById('btn-apply').disabled = false;
+  }
+
+  function onDateInput(val, enableApply = true) {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    if (!val) {
+      setPreview(null);
+      document.getElementById('date-value').value = '';
+      document.getElementById('btn-apply').disabled = true;
+      return;
+    }
+    document.getElementById('date-value').value = val;
+    if (enableApply) document.getElementById('btn-apply').disabled = false;
+    setPreview(val);
+  }
+
+  function setPreview(val) {
+    const el = document.getElementById('date-preview');
+    if (!val) { el.className = 'date-preview'; el.innerHTML = ''; return; }
+
+    if (val === 'permanent') {
+      el.className = 'date-preview show perm';
+      el.innerHTML = '♾️ Accès permanent — aucune date d\'expiration';
+      return;
+    }
+
+    const target = new Date(val + 'T00:00:00');
+    const today  = new Date(); today.setHours(0,0,0,0);
+    const diff   = Math.round((target - today) / 86400000);
+    const fmt    = target.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+    let cls = 'date-preview show';
+    let txt = '';
+
+    if (diff < 0) {
+      cls += ' danger';
+      txt = `⛔ ${fmt} — cette date est dans le passé (${Math.abs(diff)} jour${Math.abs(diff)>1?'s':''})`;
+    } else if (diff === 0) {
+      cls += ' warn';
+      txt = `⚠️ ${fmt} — expire aujourd'hui`;
+    } else if (diff <= 7) {
+      cls += ' warn';
+      txt = `⚠️ ${fmt} — dans ${diff} jour${diff>1?'s':''}`;
+    } else {
+      txt = `✅ ${fmt} — dans ${diff} jour${diff>1?'s':''}`;
+    }
+
+    el.className = cls;
+    el.innerHTML = txt;
+  }
+
+  function toISO(d) {
+    return d.getFullYear() + '-'
+      + String(d.getMonth()+1).padStart(2,'0') + '-'
+      + String(d.getDate()).padStart(2,'0');
+  }
+
+  // ── Modal refus ──────────────────────────────────────────────────────────
   function confirmRefuse(uid, email) {
     document.getElementById('refuse-uid').value = uid;
     document.getElementById('modal-email-label').textContent = email || uid;
     document.getElementById('modal-refuse').classList.add('open');
   }
-  function closeModal() {
+  function closeRefuseModal() {
     document.getElementById('modal-refuse').classList.remove('open');
   }
-  document.getElementById('modal-refuse').addEventListener('click', function(e) {
-    if (e.target === this) closeModal();
+
+  // Fermer en cliquant à l'extérieur
+  ['modal-date','modal-refuse'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('open');
+    });
   });
 </script>
 

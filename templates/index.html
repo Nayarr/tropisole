@@ -21,6 +21,7 @@
       --uncommon: #55efc4;
       --rare: #fd79a8;
       --ultra: #e84393;
+      --filler: #ff0000;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -445,6 +446,7 @@
       letter-spacing: 0.05em;
     }
 
+    .badge-filler    { background: rgba(255,0,0,0.15);    color: var(--filler);   border: 1px solid rgba(255,0,0,0.3); }
     .badge-common    { background: rgba(116,185,255,0.15); color: var(--common); border: 1px solid rgba(116,185,255,0.3); }
     .badge-uncommon  { background: rgba(85,239,196,0.15);  color: var(--uncommon); border: 1px solid rgba(85,239,196,0.3); }
     .badge-rare      { background: rgba(253,121,168,0.15); color: var(--rare); border: 1px solid rgba(253,121,168,0.3); }
@@ -2035,26 +2037,6 @@
     {% endfor %}
   </select>
 
-  <select id="filter-time">
-    <option value="">— Moment —</option>
-    {% for t in times %}
-    <option value="{{ t }}">{{ time_fr.get(t, t) }}</option>
-    {% endfor %}
-  </select>
-
-  <select id="filter-weather">
-    <option value="">— Météo —</option>
-    {% for w in weathers %}
-    <option value="{{ w }}">{{ weather_fr.get(w, w) }}</option>
-    {% endfor %}
-  </select>
-
-  <select id="filter-biome">
-    <option value="">— Biome —</option>
-    {% for b in all_biomes %}
-    <option value="{{ b }}">{{ b }}</option>
-    {% endfor %}
-  </select>
 
   <div class="sort-group">
     <label>Trier par</label>
@@ -2082,6 +2064,7 @@
   let totalPages = 1;
 
   const BUCKET_CLASS = {
+    'filler': 'badge-filler',
     'common': 'badge-common',
     'uncommon': 'badge-uncommon',
     'rare': 'badge-rare',
@@ -2099,9 +2082,6 @@
     return new URLSearchParams({
       q: document.getElementById('search').value,
       bucket:  document.getElementById('filter-bucket').value,
-      time:    document.getElementById('filter-time').value,
-      weather: document.getElementById('filter-weather').value,
-      biome:   document.getElementById('filter-biome').value,
       sort: document.getElementById('sort').value,
       order: currentOrder,
       page: currentPage,
@@ -2205,7 +2185,7 @@
     currentPage = 1;
   }
 
-  ['filter-bucket', 'filter-time', 'filter-weather', 'filter-biome', 'sort'].forEach(id => {
+  ['filter-bucket', 'sort'].forEach(id => {
     document.getElementById(id).addEventListener('change', () => { resetPage(); loadPokemon(); });
   });
 

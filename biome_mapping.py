@@ -471,6 +471,7 @@ BIOME_MAP = {
         {"biome": "All BYG Swamp biomes", "mod": "Oh The Biomes You'll Go"},
         {"biome": "All Wythers' Swamp biomes", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Billabong", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Bayou", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Ice Marsh", "mod": "Terralith"},
         {"biome": "Orchid Swamp", "mod": "Terralith"},
     ],
@@ -791,6 +792,24 @@ BIOME_MAP = {
     "Bois aérien":            [{"biome": "Skylands Winter", "mod": "Terralith"}],
     "Gouffre cristallin":     [{"biome": "Crystal Caves", "mod": "Terralith"}, {"biome": "Glacial Chasm", "mod": "Terralith"}],
     "Désert distordu":        [{"biome": "Warped Desert", "mod": "Oh The Biomes You'll Go"}],
+
+    # ── Tags BYG dédiés (pour liens cliquables distincts) ─────────────────────
+    "Froid (BYG)":            [{"biome": "All BYG Cold biomes",    "mod": "Oh The Biomes You'll Go"}],
+    "Désert (BYG)":           [{"biome": "All BYG desert biomes",  "mod": "Oh The Biomes You'll Go"}],
+    "Floral (BYG)":           [{"biome": "All BYG Floral biomes",  "mod": "Oh The Biomes You'll Go"}],
+    "Glacial (BYG)":          [{"biome": "All BYG Snowy biomes",   "mod": "Oh The Biomes You'll Go"}],
+    "Glaciaire (BYG)":        [{"biome": "All BYG Icy biomes",     "mod": "Oh The Biomes You'll Go"}],
+    "Magique (BYG)":          [{"biome": "All BYG Magical biomes", "mod": "Oh The Biomes You'll Go"}],
+    "Plaines (BYG)":          [{"biome": "All BYG Plains biomes",  "mod": "Oh The Biomes You'll Go"}],
+    "Plateau (BYG)":          [{"biome": "All BYG Plateau biomes", "mod": "Oh The Biomes You'll Go"}],
+    "Sableux (BYG)":          [{"biome": "All BYG Sandy biomes",   "mod": "Oh The Biomes You'll Go"}],
+    "Effrayant (BYG)":        [{"biome": "All BYG Spooky biomes",  "mod": "Oh The Biomes You'll Go"}],
+    "Marais (BYG)":           [{"biome": "All BYG Swamp biomes",   "mod": "Oh The Biomes You'll Go"}],
+
+    # ── Tags Wythers dédiés (pour liens cliquables distincts) ─────────────────
+    "Désert (Wythers)":       [{"biome": "All Wythers' desert biomes",      "mod": "Wythers' Overhauled Overworld"}],
+    "Forêt sombre (Wythers)": [{"biome": "All Wythers' Dark Forest biomes", "mod": "Wythers' Overhauled Overworld"}],
+    "Marais (Wythers)":       [{"biome": "All Wythers' Swamp biomes",       "mod": "Wythers' Overhauled Overworld"}],
 }
 
 MOD_COLORS = {
@@ -808,15 +827,36 @@ MOD_COLORS = {
 }
 
 def get_real_biomes(tag_fr):
-    """Retourne la liste des biomes réels pour un tag FR."""
-    return BIOME_MAP.get(tag_fr, [{"biome": tag_fr, "mod": "Tag Cobblemon"}])
+    """Retourne la liste des biomes réels pour un tag FR.
+    Si tag_fr est un tag Cobblemon brut (#cobblemon:is_xxx), on le résout
+    en tag FR d'abord via COBBLEMON_TAG_TO_FR.
+    """
+    if tag_fr in BIOME_MAP:
+        return BIOME_MAP[tag_fr]
+    # Cas où la BDD stocke un tag Cobblemon brut (#cobblemon:is_bamboo, etc.)
+    if tag_fr.startswith("#"):
+        fr_tag = COBBLEMON_TAG_TO_FR.get(tag_fr)
+        if fr_tag and fr_tag in BIOME_MAP:
+            return BIOME_MAP[fr_tag]
+    return [{"biome": tag_fr, "mod": "Tag Cobblemon"}]
 
 def expand_spawn_biomes(biomes_str):
-    """Transforme 'Océan froid, Océan gelé, Toundra' en liste de dicts par tag."""
+    """Transforme 'Océan froid, Océan gelé, Toundra' en liste de dicts par tag.
+    Si un tag est un tag Cobblemon brut (#cobblemon:is_xxx), il est résolu en tag FR.
+    """
     if not biomes_str:
         return []
-    return [{"tag": t.strip(), "biomes": get_real_biomes(t.strip())}
-            for t in biomes_str.split(",") if t.strip()]
+    result = []
+    for t in biomes_str.split(","):
+        t = t.strip()
+        if not t:
+            continue
+        # Résoudre les tags Cobblemon bruts en tag FR
+        display_tag = t
+        if t.startswith("#") and t in COBBLEMON_TAG_TO_FR:
+            display_tag = COBBLEMON_TAG_TO_FR[t]
+        result.append({"tag": display_tag, "biomes": get_real_biomes(t)})
+    return result
 
 def get_mod_color(mod):
     return MOD_COLORS.get(mod, "#6a6a88")
@@ -929,13 +969,32 @@ _ALL_BIOMES_OVERRIDES = {
     "All Spooky biomes":          "Effrayant",
     "All Thermal biomes":         "Thermal",
     "All Volcanic biomes":        "Volcanique",
-    "All BYG Sandy biomes":       "Désert",
     "All Badlands biomes":        "Terres arides",
     "All Desert biomes":          "Désert",
     "All Lush biomes":            "Luxuriant",
     "All vanilla End biomes":     "Fin",
     "All Tropical Island biomes": "Île tropicale",
     "All Island biomes":          "Île",
+    "All Cold biomes":            "Froid",
+    "All Freshwater biomes":      "Eau douce",
+    "All Ocean biomes":           "Océan",
+    "All Temperate biomes":       "Tempéré",
+    # BYG — tags dédiés pour liens cliquables distincts
+    "All BYG Cold biomes":        "Froid (BYG)",
+    "All BYG desert biomes":      "Désert (BYG)",
+    "All BYG Floral biomes":      "Floral (BYG)",
+    "All BYG Snowy biomes":       "Glacial (BYG)",
+    "All BYG Icy biomes":         "Glaciaire (BYG)",
+    "All BYG Magical biomes":     "Magique (BYG)",
+    "All BYG Plains biomes":      "Plaines (BYG)",
+    "All BYG Plateau biomes":     "Plateau (BYG)",
+    "All BYG Sandy biomes":       "Sableux (BYG)",
+    "All BYG Spooky biomes":      "Effrayant (BYG)",
+    "All BYG Swamp biomes":       "Marais (BYG)",
+    # Wythers — tags dédiés pour liens cliquables distincts
+    "All Wythers' desert biomes":      "Désert (Wythers)",
+    "All Wythers' Dark Forest biomes": "Forêt sombre (Wythers)",
+    "All Wythers' Swamp biomes":       "Marais (Wythers)",
 }
 
 ALL_BIOMES_TO_FR_TAG = {**_ALL_BIOMES_RAW, **_ALL_BIOMES_OVERRIDES}
@@ -1250,6 +1309,8 @@ FR_TAG_TO_COBBLEMON = {
     "Champignon":                 "#cobblemon:is_mushroom",
     "Ciel":                       "#cobblemon:is_sky",
     "Maquis":                     "#cobblemon:is_shrubland",
+    "Sableux":                    "#cobblemon:is_sandy",
+    "Clairsemé":                  "#cobblemon:is_sparse",
     "Île":                        "#cobblemon:is_island",
     "Plateau":                    "#cobblemon:is_plateau",
     "Tempéré":                    "#cobblemon:is_temperate",
@@ -1274,7 +1335,27 @@ FR_TAG_TO_COBBLEMON = {
     "Fin":                         "#cobblemon:is_end",
     "Éther":                      "#aether:is_aether",
     "Bumblezone":                 "#the_bumblezone:the_bumblezone",
+    # BYG dédiés
+    "Froid (BYG)":            "#cobblemon:is_cold",
+    "Désert (BYG)":           "#cobblemon:is_desert",
+    "Floral (BYG)":           "#cobblemon:is_floral",
+    "Glacial (BYG)":          "#cobblemon:is_freezing",
+    "Glaciaire (BYG)":        "#cobblemon:is_glacial",
+    "Magique (BYG)":          "#cobblemon:is_magical",
+    "Plaines (BYG)":          "#cobblemon:is_plains",
+    "Plateau (BYG)":          "#cobblemon:is_plateau",
+    "Sableux (BYG)":          "#cobblemon:is_sandy",
+    "Effrayant (BYG)":        "#cobblemon:is_spooky",
+    "Marais (BYG)":           "#cobblemon:is_swamp",
+    # Wythers dédiés
+    "Désert (Wythers)":       "#cobblemon:is_desert",
+    "Forêt sombre (Wythers)": "#cobblemon:is_spooky",
+    "Marais (Wythers)":       "#cobblemon:is_swamp",
 }
+
+# Reverse map : tag Cobblemon brut → tag FR (le plus précis)
+# Utilisé pour résoudre les tags #cobblemon:is_xxx stockés directement en BDD
+COBBLEMON_TAG_TO_FR = {v: k for k, v in FR_TAG_TO_COBBLEMON.items()}
 
 def get_parent_cobblemon_tags(cobblemon_tag):
     """
