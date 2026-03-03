@@ -210,6 +210,52 @@
       color: var(--accent);
     }
 
+    /* TYPE FILTER */
+    .type-filter-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 0.9rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .type-filter-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      margin-right: 0.2rem;
+    }
+    .type-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      opacity: 0.55;
+      letter-spacing: 0.03em;
+    }
+    .type-btn:hover  { opacity: 0.85; transform: translateY(-1px); }
+    .type-btn.active { opacity: 1;    transform: translateY(-1px); box-shadow: 0 0 8px rgba(255,255,255,0.15); }
+
+    .poke-types { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+    .type-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 3px;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+
     .results-count {
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
@@ -2038,6 +2084,15 @@
   </select>
 
 
+  <div class="type-filter-wrap">
+    <span class="type-filter-label">Type</span>
+    {% for t in all_types %}
+    <button class="type-btn" data-type="{{ t }}"
+      style="background:{{ type_colors[t] }}22;border-color:{{ type_colors[t] }}66;color:{{ type_colors[t] }}"
+      onclick="toggleType('{{ t }}')">{{ t }}</button>
+    {% endfor %}
+  </div>
+
   <div class="sort-group">
     <label>Trier par</label>
     <select id="sort">
@@ -2063,6 +2118,9 @@
   let debounceTimer;
   let totalPages = 1;
 
+  const TYPE_COLORS = {{ type_colors | tojson }};
+  let activeType = '';
+
   const BUCKET_CLASS = {
     'filler': 'badge-filler',
     'common': 'badge-common',
@@ -2080,9 +2138,10 @@
 
   function getParams() {
     return new URLSearchParams({
-      q: document.getElementById('search').value,
-      bucket:  document.getElementById('filter-bucket').value,
-      sort: document.getElementById('sort').value,
+      q:      document.getElementById('search').value,
+      bucket: document.getElementById('filter-bucket').value,
+      type:   activeType,
+      sort:   document.getElementById('sort').value,
       order: currentOrder,
       page: currentPage,
       per_page: 40,
@@ -2139,6 +2198,7 @@
           <div class="poke-meta">
             ${p.bucket ? `<span class="badge ${cls}">${p.bucket_fr}</span>` : ''}
           </div>
+          ${p.types && p.types.length ? `<div class="poke-types">${p.types.map(t => `<span class="type-badge" style="background:${TYPE_COLORS[t]||'#6a6a88'}">${t}</span>`).join('')}</div>` : ''}
           <div class="poke-lvl">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</div>
         </a>`;
     }).join('');
@@ -2183,6 +2243,15 @@
 
   function resetPage() {
     currentPage = 1;
+  }
+
+  function toggleType(t) {
+    activeType = (activeType === t) ? '' : t;
+    document.querySelectorAll('.type-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === activeType);
+    });
+    resetPage();
+    loadPokemon();
   }
 
   ['filter-bucket', 'sort'].forEach(id => {

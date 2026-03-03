@@ -8,6 +8,7 @@ import math
 import hashlib
 from datetime import timedelta, datetime, timezone
 from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
+from pokemon_types import get_types, ALL_TYPES, TYPE_COLORS
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spawn_biomes_filtered,
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
                            get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
@@ -547,6 +548,7 @@ def _build_spawn_list(filtered_rows):
             ev_cache[num] = (ev, " + ".join(parts) if parts else "—")
         p["ev"], p["ev_str"] = ev_cache[num]
         p["ev_total"] = p["ev"]["total"]
+        p["types"] = get_types(num)
         pokemon_list.append(p)
     pokemon_list.sort(key=lambda x: (-x["ev_total"], x["numero"]))
     return pokemon_list
@@ -559,7 +561,15 @@ def index():
     buckets = [r[0] for r in conn.execute(
         "SELECT DISTINCT bucket FROM pokemon_spawns WHERE bucket IS NOT NULL ORDER BY bucket"
     ).fetchall()]
+    times = [r[0] for r in conn.execute(
+        "SELECT DISTINCT time FROM pokemon_spawns WHERE time IS NOT NULL ORDER BY time"
+    ).fetchall()]
+    weathers = [r[0] for r in conn.execute(
+        "SELECT DISTINCT weather FROM pokemon_spawns WHERE weather IS NOT NULL ORDER BY weather"
+    ).fetchall()]
     conn.close()
+
+    all_biome_tags = sorted(BIOME_MAP.keys())
 
     # Grandes catégories thématiques → liste de tags Cobblemon
     BIOME_CATEGORIES = {
@@ -607,49 +617,40 @@ def index():
                            buckets=buckets,
                            biomes_by_category=biomes_by_category,
                            bucket_fr=BUCKET_FR,
-                           time_fr=TIME_FR,
-                           weather_fr=WEATHER_FR,
+                           all_types=ALL_TYPES,
+                           type_colors=TYPE_COLORS,
                            user_expires_at=user_expires_at)
 
 @app.route("/api/pokemon")
 def api_pokemon():
-    search = request.args.get("q", "").strip()
-    bucket  = request.args.get("bucket", "")
-
-    sort    = request.args.get("sort", "numero")
-    order = request.args.get("order", "asc")
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 40))
+    search      = request.args.get("q", "").strip()
+    bucket      = request.args.get("bucket", "")
+    type_filter = request.args.get("type", "")
+    sort        = request.args.get("sort", "numero")
+    order       = request.args.get("order", "asc")
+    page        = int(request.args.get("page", 1))
+    per_page    = int(request.args.get("per_page", 40))
 
     conn = get_db()
 
-    # Build query on aggregated pokemon view
-    having_clauses = []
+    where_clauses = []
     params = []
 
-    where_clauses = []
-    if search:
-        where_clauses.append("pokemon LIKE ?")
-        params.append(f"%{search}%")
     if bucket:
         where_clauses.append("bucket = ?")
         params.append(bucket)
 
-
     where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
 
-    # Get one representative row per pokemon
     allowed_sorts = {"numero": "numero", "pokemon": "pokemon", "bucket": "bucket",
                      "niveau_min": "niveau_min", "poids": "poids"}
     sort_col = allowed_sorts.get(sort, "numero")
     order_dir = "ASC" if order == "asc" else "DESC"
 
-    # Subquery: pick one row per (numero, pokemon) combo
     base_query = f"""
         SELECT numero, pokemon,
                MAX(niveau_min) as niveau_min, MAX(niveau_max) as niveau_max,
                GROUP_CONCAT(DISTINCT bucket) as bucket,
-               GROUP_CONCAT(DISTINCT time) as time,
                COUNT(*) as nb_entrees
         FROM pokemon_spawns
         {where_sql}
@@ -657,13 +658,24 @@ def api_pokemon():
         ORDER BY {sort_col} {order_dir}
     """
 
-    # Count
-    count_q = f"SELECT COUNT(*) FROM ({base_query})"
-    total = conn.execute(count_q, params).fetchone()[0]
-
-    offset = (page - 1) * per_page
-    rows = conn.execute(base_query + f" LIMIT {per_page} OFFSET {offset}", params).fetchall()
+    all_rows = conn.execute(base_query, params).fetchall()
     conn.close()
+
+    # Filtre par nom insensible à la casse ET aux accents
+    if search:
+        import unicodedata
+        def normalize(s):
+            return unicodedata.normalize('NFD', s).encode('ascii', 'ignore').decode().lower()
+        needle = normalize(search)
+        all_rows = [r for r in all_rows if needle in normalize(r["pokemon"])]
+
+    # Filtre par type en Python (les types ne sont pas en BDD)
+    if type_filter:
+        all_rows = [r for r in all_rows if type_filter in get_types(r["numero"])]
+
+    total = len(all_rows)
+    offset = (page - 1) * per_page
+    rows = all_rows[offset: offset + per_page]
 
     result = []
     for r in rows:
@@ -676,6 +688,7 @@ def api_pokemon():
             "niveau_min": r["niveau_min"],
             "niveau_max": r["niveau_max"],
             "nb_entrees": r["nb_entrees"],
+            "types": get_types(r["numero"]),
         })
 
     return jsonify({
@@ -734,7 +747,9 @@ def pokemon_detail(numero):
                            weather_fr=WEATHER_FR,
                            mod_colors=MOD_COLORS,
                            get_mod_color=get_mod_color,
-                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG)
+                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG,
+                           all_types=ALL_TYPES,
+                           type_colors=TYPE_COLORS)
 
 @app.route("/spawns/biome")
 def spawns_by_biome():
@@ -812,7 +827,9 @@ def spawns_by_biome():
                            ev_stat_colors=EV_STAT_COLORS,
                            mod_colors=MOD_COLORS,
                            get_mod_color=get_mod_color,
-                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG)
+                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG,
+                           all_types=ALL_TYPES,
+                           type_colors=TYPE_COLORS)
 
 @app.route("/spawns/biome-reel")
 def spawns_by_real_biome():
@@ -912,7 +929,9 @@ def spawns_by_real_biome():
                            ev_stat_colors=EV_STAT_COLORS,
                            mod_colors=MOD_COLORS,
                            get_mod_color=get_mod_color,
-                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG)
+                           all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG,
+                           all_types=ALL_TYPES,
+                           type_colors=TYPE_COLORS)
 
 
 @app.route("/api/stats")

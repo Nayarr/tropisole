@@ -559,7 +559,7 @@
     .content {
       position: relative;
       z-index: 5;
-      padding: 1.5rem 2rem 3rem;
+      padding-top: 2rem;
       max-width: 1800px;
       margin: 0 auto;
     }
@@ -845,6 +845,54 @@
     .badge-preset.water    { border-color: rgba(71,255,232,0.25);  background: rgba(71,255,232,0.07);  color: #47ffe8; }
     .badge-preset.foliage  { border-color: rgba(85,239,196,0.2);   background: rgba(85,239,196,0.05);  color: #55efc4; }
     .badge-preset.lava     { border-color: rgba(253,121,168,0.25); background: rgba(253,121,168,0.07); color: #fd79a8; }
+
+    /* TYPE FILTER BUTTONS */
+    .type-filter-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.55rem 0.8rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .type-filter-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      margin-right: 0.2rem;
+    }
+    .type-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.18rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      opacity: 0.5;
+      letter-spacing: 0.03em;
+    }
+    .type-btn:hover  { opacity: 0.8; transform: translateY(-1px); }
+    .type-btn.active { opacity: 1;   transform: translateY(-1px); box-shadow: 0 0 8px rgba(255,255,255,0.12); }
+
+    /* TYPE BADGES dans la table */
+    .type-badges { display: flex; gap: 3px; flex-wrap: wrap; }
+    .type-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      font-weight: 700;
+      padding: 0.12rem 0.4rem;
+      border-radius: 3px;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      white-space: nowrap;
+    }
 
     /* SCROLLBAR */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -1250,6 +1298,15 @@
     </div>
   </div>
 
+  <div class="type-filter-wrap">
+    <span class="type-filter-label">Type</span>
+    {% for t in all_types %}
+    <button class="type-btn" id="type-btn-{{ t }}" data-type="{{ t }}"
+      style="background:{{ type_colors[t] }}22;border-color:{{ type_colors[t] }}66;color:{{ type_colors[t] }}"
+      onclick="toggleType('{{ t }}')">{{ t }}</button>
+    {% endfor %}
+  </div>
+
   <div class="y-filter-wrap" id="y-filter-section">
     <label class="y-filter-label">Couche Y accessible <span id="y-range-display">−60 → 320</span></label>
     <div class="y-slider-row">
@@ -1279,6 +1336,7 @@
           <th data-col="rank">#<span class="sort-arrow">↓</span></th>
           <th data-col="numero">N°<span class="sort-arrow"></span></th>
           <th data-col="pokemon">Pokémon<span class="sort-arrow"></span></th>
+          <th>Type</th>
           <th data-col="bucket">Rareté<span class="sort-arrow"></span></th>
           <th data-col="ev_total" class="sorted">EVs lâchés<span class="sort-arrow">↓</span></th>
           <th>Répartition EVs</th>
@@ -1351,6 +1409,7 @@ const RAW_DATA = [
     presets: {{ (p.presets_list or []) | tojson }},
     peut_voir_ciel: {{ (p.peut_voir_ciel or '') | tojson }},
     forme_regionale: {{ (p.forme_regionale) | tojson }},
+    types: {{ (p.types or []) | tojson }},
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 ];
@@ -1365,8 +1424,19 @@ const CONTEXTE_LABELS = {
   surface: 'Surface', seafloor: 'Seafloor'
 };
 
+const TYPE_COLORS = {{ type_colors | tojson }};
+let activeType = '';
+
 let currentSort = { col: 'ev_total', dir: 'desc' };
 let data = [...RAW_DATA];
+
+function toggleType(t) {
+  activeType = (activeType === t) ? '' : t;
+  document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === activeType);
+  });
+  render();
+}
 
 let yMinFilter = -64;
 let yMaxFilter = 320;
@@ -1535,6 +1605,9 @@ function filteredData() {
       return ['hp','atk','def','spa','spd','spe'].filter(s => p.ev[s] > 0);
     }, p)) return false;
 
+    // Type filter
+    if (activeType && !(p.types || []).includes(activeType)) return false;
+
     return true;
   });
 }
@@ -1672,6 +1745,11 @@ function render() {
           <a href="/pokemon/${p.numero}">${p.pokemon}</a>
           ${p.forme_regionale ? `<span class="badge-forme-reg" style="color:${p.forme_regionale.color};border-color:${p.forme_regionale.color}44;background:${p.forme_regionale.color}18">🌏 ${p.forme_regionale.short}</span>` : ''}
           ${isSource ? '<span class="badge badge-grey" style="margin-left:6px">source</span>' : ''}
+        </td>
+        <td>
+          ${(p.types||[]).length
+            ? `<div class="type-badges">${(p.types||[]).map(t=>`<span class="type-badge" style="background:${TYPE_COLORS[t]||'#6a6a88'}">${t}</span>`).join('')}</div>`
+            : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}
         </td>
         <td><span class="badge ${bClass}">${bLabel}</span></td>
         <td><span class="ev-total ${p.ev.total === 0 ? 'zero' : ''}">${p.ev.total}</span></td>
