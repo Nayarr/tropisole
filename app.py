@@ -57,6 +57,17 @@ def init_db():
             cursor.execute(f"ALTER TABLE users ADD COLUMN {col} {definition}")
         except sqlite3.OperationalError:
             pass
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS patch_notes (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            version    TEXT NOT NULL,
+            title      TEXT NOT NULL,
+            content    TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -1103,6 +1114,47 @@ def admin_set_expiry():
 def admin_logout():
     session.pop('is_admin', None)
     return redirect('/admin')
+
+# ── Patch Notes (public) ─────────────────────────────────────────────────────
+@app.route("/patchnotes")
+def patchnotes():
+    conn = get_db()
+    notes = conn.execute(
+        "SELECT * FROM patch_notes ORDER BY created_at DESC"
+    ).fetchall()
+    conn.close()
+    return render_template("patchnotes.html", notes=notes)
+
+
+# ── Admin : créer un patch note ───────────────────────────────────────────────
+@app.route("/admin/patch-notes/add", methods=["POST"])
+def admin_add_patch_note():
+    if not session.get("admin"):
+        return redirect("/admin")
+    version = request.form.get("version", "").strip()
+    title   = request.form.get("title", "").strip()
+    content = request.form.get("content", "").strip()
+    if version and title and content:
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO patch_notes (version, title, content) VALUES (?, ?, ?)",
+            (version, title, content)
+        )
+        conn.commit()
+        conn.close()
+    return redirect("/admin")
+
+
+# ── Admin : supprimer un patch note ──────────────────────────────────────────
+@app.route("/admin/patch-notes/delete/<int:note_id>", methods=["POST"])
+def admin_delete_patch_note(note_id):
+    if not session.get("admin"):
+        return redirect("/admin")
+    conn = get_db()
+    conn.execute("DELETE FROM patch_notes WHERE id = ?", (note_id,))
+    conn.commit()
+    conn.close()
+    return redirect("/admin")
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
