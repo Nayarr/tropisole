@@ -95,13 +95,15 @@
 
     .user-actions { display:flex; gap:.5rem; flex-shrink:0; flex-wrap:wrap; align-items:center; }
 
-    .btn-validate, .btn-refuse, .btn-date {
+    .btn-validate, .btn-refuse, .btn-date, .btn-device {
       font-family:'Space Mono',monospace; font-size:.67rem; text-transform:uppercase; letter-spacing:.08em;
       padding:.45rem .85rem; border-radius:6px; cursor:pointer;
       transition:opacity .2s, transform .12s;
     }
     .btn-validate:hover, .btn-refuse:hover, .btn-date:hover { opacity:.85; transform:translateY(-1px); }
     .btn-validate { background:var(--green); color:#0a0a0f; border:none; }
+    .btn-device   { background:rgba(255,165,0,.08); border:1px solid rgba(255,165,0,.3); color:#ffa500; }
+    .btn-device:hover { background:rgba(255,165,0,.18); }
     .btn-refuse   { background:rgba(255,71,87,.15); border:1px solid rgba(255,71,87,.3); color:var(--red); }
     .btn-date     { background:rgba(232,255,71,.1); border:1px solid rgba(232,255,71,.25); color:var(--accent); }
 
@@ -302,6 +304,13 @@
             onclick="openDateModal('{{ u.firebase_uid }}', '{{ u.username or u.email or u.firebase_uid }}', '{{ u.expires_at[:10] if u.expires_at else '' }}')">
             📅 Gérer l'accès
           </button>
+          <form method="POST" action="/admin/reset-device" style="display:inline">
+            <input type="hidden" name="uid" value="{{ u.firebase_uid }}" />
+            <button type="submit" class="btn-device"
+              onclick="return confirm('Réinitialiser le device ID de {{ u.email or u.firebase_uid }} ?')"
+              title="{{ '🔒 Device enregistré' if u.device_id else '⬜ Pas de device' }}"
+            >{{ '🔒 Reset device' if u.device_id else '⬜ Pas de device' }}</button>
+          </form>
           <button class="btn-refuse" onclick="confirmRefuse('{{ u.firebase_uid }}', '{{ u.email or u.firebase_uid }}')">✕ Révoquer</button>
         </div>
       </div>

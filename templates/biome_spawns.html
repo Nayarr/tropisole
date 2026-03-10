@@ -559,7 +559,7 @@
     .content {
       position: relative;
       z-index: 5;
-      padding-top: 2rem;
+      padding: 1.5rem 2rem 3rem;
       max-width: 1800px;
       margin: 0 auto;
     }
@@ -847,42 +847,8 @@
     .badge-preset.lava     { border-color: rgba(253,121,168,0.25); background: rgba(253,121,168,0.07); color: #fd79a8; }
 
     /* TYPE FILTER BUTTONS */
-    .type-filter-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.55rem 0.8rem;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-    .type-filter-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.62rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      white-space: nowrap;
-      margin-right: 0.2rem;
-    }
-    .type-btn {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.6rem;
-      font-weight: 700;
-      padding: 0.18rem 0.5rem;
-      border-radius: 4px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-      opacity: 0.5;
-      letter-spacing: 0.03em;
-    }
-    .type-btn:hover  { opacity: 0.8; transform: translateY(-1px); }
-    .type-btn.active { opacity: 1;   transform: translateY(-1px); box-shadow: 0 0 8px rgba(255,255,255,0.12); }
-
     /* TYPE BADGES dans la table */
-    .type-badges { display: flex; gap: 3px; flex-wrap: wrap; }
+    .type-badges { display: flex; gap: 3px; flex-wrap: nowrap; }
     .type-badge {
       font-family: 'Space Mono', monospace;
       font-size: 0.55rem;
@@ -1298,13 +1264,110 @@
     </div>
   </div>
 
-  <div class="type-filter-wrap">
-    <span class="type-filter-label">Type</span>
-    {% for t in all_types %}
-    <button class="type-btn" id="type-btn-{{ t }}" data-type="{{ t }}"
-      style="background:{{ type_colors[t] }}22;border-color:{{ type_colors[t] }}66;color:{{ type_colors[t] }}"
-      onclick="toggleType('{{ t }}')">{{ t }}</button>
-    {% endfor %}
+  <div class="ms-wrap" id="ms-type">
+    <button class="ms-btn" onclick="toggleDropdown('type')">
+      Type <span class="ms-badge" id="ms-badge-incl-type" style="display:none"></span>
+            <span class="ms-badge excl" id="ms-badge-excl-type" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-type">
+      <div class="ms-dropdown-header">
+        <span>Type Pokémon</span>
+        <button class="ms-clear-btn" onclick="clearFilter('type')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Type</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options">
+        <div class="ms-option" id="opt-type-Normal">
+          <span class="ms-option-label" style="color:{{ type_colors['Normal'] }}">⬜ Normal</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Normal','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Normal','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Feu">
+          <span class="ms-option-label" style="color:{{ type_colors['Feu'] }}">🔥 Feu</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Feu','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Feu','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Eau">
+          <span class="ms-option-label" style="color:{{ type_colors['Eau'] }}">💧 Eau</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Eau','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Eau','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Électrik">
+          <span class="ms-option-label" style="color:{{ type_colors['Électrik'] }}">⚡ Électrik</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Électrik','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Électrik','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Plante">
+          <span class="ms-option-label" style="color:{{ type_colors['Plante'] }}">🌿 Plante</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Plante','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Plante','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Glace">
+          <span class="ms-option-label" style="color:{{ type_colors['Glace'] }}">❄️ Glace</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Glace','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Glace','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Combat">
+          <span class="ms-option-label" style="color:{{ type_colors['Combat'] }}">🥊 Combat</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Combat','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Combat','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Poison">
+          <span class="ms-option-label" style="color:{{ type_colors['Poison'] }}">☠️ Poison</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Poison','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Poison','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Sol">
+          <span class="ms-option-label" style="color:{{ type_colors['Sol'] }}">🌍 Sol</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Sol','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Sol','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Vol">
+          <span class="ms-option-label" style="color:{{ type_colors['Vol'] }}">🦅 Vol</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Vol','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Vol','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Psy">
+          <span class="ms-option-label" style="color:{{ type_colors['Psy'] }}">🔮 Psy</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Psy','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Psy','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Insecte">
+          <span class="ms-option-label" style="color:{{ type_colors['Insecte'] }}">🐛 Insecte</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Insecte','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Insecte','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Roche">
+          <span class="ms-option-label" style="color:{{ type_colors['Roche'] }}">🪨 Roche</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Roche','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Roche','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Spectre">
+          <span class="ms-option-label" style="color:{{ type_colors['Spectre'] }}">👻 Spectre</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Spectre','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Spectre','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Dragon">
+          <span class="ms-option-label" style="color:{{ type_colors['Dragon'] }}">🐉 Dragon</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Dragon','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Dragon','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Ténèbres">
+          <span class="ms-option-label" style="color:{{ type_colors['Ténèbres'] }}">🌑 Ténèbres</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Ténèbres','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Ténèbres','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Acier">
+          <span class="ms-option-label" style="color:{{ type_colors['Acier'] }}">⚙️ Acier</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Acier','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Acier','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-type-Fée">
+          <span class="ms-option-label" style="color:{{ type_colors['Fée'] }}">✨ Fée</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('type','Fée','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('type','Fée','excl')">−</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="y-filter-wrap" id="y-filter-section">
@@ -1425,18 +1488,9 @@ const CONTEXTE_LABELS = {
 };
 
 const TYPE_COLORS = {{ type_colors | tojson }};
-let activeType = '';
 
 let currentSort = { col: 'ev_total', dir: 'desc' };
 let data = [...RAW_DATA];
-
-function toggleType(t) {
-  activeType = (activeType === t) ? '' : t;
-  document.querySelectorAll('.type-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.type === activeType);
-  });
-  render();
-}
 
 let yMinFilter = -64;
 let yMaxFilter = 320;
@@ -1457,7 +1511,7 @@ function updateYDisplay() {
 }
 
 // ── Multi-select filter state ─────────────────────────────────────────────────
-const FILTERS = ['bucket', 'contexte', 'time', 'weather', 'special', 'ev'];
+const FILTERS = ['bucket', 'contexte', 'time', 'weather', 'special', 'ev', 'type'];
 const filterState = {};
 FILTERS.forEach(f => filterState[f] = { include: new Set(), exclude: new Set() });
 
@@ -1606,7 +1660,7 @@ function filteredData() {
     }, p)) return false;
 
     // Type filter
-    if (activeType && !(p.types || []).includes(activeType)) return false;
+    if (!matchFilter('type', p => (p.types || []), p)) return false;
 
     return true;
   });
@@ -1746,7 +1800,7 @@ function render() {
           ${p.forme_regionale ? `<span class="badge-forme-reg" style="color:${p.forme_regionale.color};border-color:${p.forme_regionale.color}44;background:${p.forme_regionale.color}18">🌏 ${p.forme_regionale.short}</span>` : ''}
           ${isSource ? '<span class="badge badge-grey" style="margin-left:6px">source</span>' : ''}
         </td>
-        <td>
+        <td style="white-space:nowrap;width:1%;vertical-align:middle">
           ${(p.types||[]).length
             ? `<div class="type-badges">${(p.types||[]).map(t=>`<span class="type-badge" style="background:${TYPE_COLORS[t]||'#6a6a88'}">${t}</span>`).join('')}</div>`
             : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}

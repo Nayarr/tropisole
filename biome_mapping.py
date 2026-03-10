@@ -1263,6 +1263,14 @@ COBBLEMON_TAG_HIERARCHY = {
     "#minecraft:is_nether":            [],  # alias vanilla → même niveau que is_nether
 }
 
+# ── Aliases Minecraft natifs → équivalent Cobblemon ──────────────────────────
+# Certains spawn files utilisent #minecraft:is_nether au lieu de #cobblemon:is_nether
+MINECRAFT_TAG_ALIASES = {
+    "#minecraft:is_nether":    "#cobblemon:is_nether",
+    "#minecraft:is_overworld": "#cobblemon:is_overworld",
+    "#minecraft:is_end":       "#cobblemon:is_end",
+}
+
 # ── Mapping tag FR -> tag Cobblemon brut ──────────────────────────────────────
 FR_TAG_TO_COBBLEMON = {
     "Monde de surface":           "#cobblemon:is_overworld",

@@ -10,6 +10,7 @@ from datetime import timedelta, datetime, timezone
 from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
 from pokemon_types import get_types, ALL_TYPES, TYPE_COLORS
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spawn_biomes_filtered,
+                           MINECRAFT_TAG_ALIASES,
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
                            get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
                            FR_TAG_TO_COBBLEMON, get_parent_cobblemon_tags)
@@ -63,7 +64,7 @@ init_db()
 
 @app.before_request
 def security_check():
-    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse', '/admin/logout', '/admin/set-expiry']
+    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse', '/admin/reset-device', '/admin/logout', '/admin/set-expiry']
     if request.path.startswith('/static') or request.path in public:
         return
 
@@ -83,7 +84,7 @@ def security_check():
         # On compare uniquement si les deux côtés ont un fingerprint JS robuste.
         # Si session_fp est absent (session legacy ou navigateur sans SubtleCrypto),
         # on skip la vérification matérielle — le token Firebase suffit.
-        if session_fp and device_id and session_fp != device_id:
+        if session_fp and device_id and device_id.strip() and session_fp != device_id:
             conn.close()
             return "🛑 Cet appareil n'est pas autorisé pour ce compte.", 403
         if not validated:
@@ -149,7 +150,7 @@ def firebase_auth():
 
         if client_fp:
             incoming_device_id = generate_hardware_id(client_fp)
-            if stored_device_id is None:
+            if not stored_device_id:
                 # Compte legacy sans device_id → on l'enregistre une seule fois, puis verrouillé
                 cursor.execute("UPDATE users SET device_id = ? WHERE firebase_uid = ?", (incoming_device_id, uid))
                 conn.commit()
@@ -642,15 +643,18 @@ def api_pokemon():
 
     where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
 
+    # Get one representative row per pokemon
     allowed_sorts = {"numero": "numero", "pokemon": "pokemon", "bucket": "bucket",
                      "niveau_min": "niveau_min", "poids": "poids"}
     sort_col = allowed_sorts.get(sort, "numero")
     order_dir = "ASC" if order == "asc" else "DESC"
 
+    # Subquery: pick one row per (numero, pokemon) combo
     base_query = f"""
         SELECT numero, pokemon,
                MAX(niveau_min) as niveau_min, MAX(niveau_max) as niveau_max,
                GROUP_CONCAT(DISTINCT bucket) as bucket,
+               GROUP_CONCAT(DISTINCT time) as time,
                COUNT(*) as nb_entrees
         FROM pokemon_spawns
         {where_sql}
@@ -868,6 +872,10 @@ def spawns_by_real_biome():
         if cobblemon_tag:
             cobblemon_tags_reel.add(cobblemon_tag)
             cobblemon_tags_reel |= get_parent_cobblemon_tags(cobblemon_tag)
+            # Inclure les aliases Minecraft natifs (ex: #minecraft:is_nether)
+            for mc_alias, cob_tag in MINECRAFT_TAG_ALIASES.items():
+                if cob_tag == cobblemon_tag:
+                    cobblemon_tags_reel.add(mc_alias)
 
     # Dériver l'ID Minecraft littéral (ex: "Frozen River" → "minecraft:frozen_river")
     # pour trouver les Pokémon qui l'ont en dur dans leurs biomes_tags
@@ -999,6 +1007,19 @@ def admin_validate():
     if uid:
         conn = sqlite3.connect(DB_PATH)
         conn.execute("UPDATE users SET validated = 1 WHERE firebase_uid = ?", (uid,))
+        conn.commit()
+        conn.close()
+    return redirect('/admin')
+
+
+@app.route('/admin/reset-device', methods=['POST'])
+def admin_reset_device():
+    if not session.get('is_admin'):
+        return redirect('/admin')
+    uid = request.form.get('uid')
+    if uid:
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute("UPDATE users SET device_id = '' WHERE firebase_uid = ?", (uid,))
         conn.commit()
         conn.close()
     return redirect('/admin')

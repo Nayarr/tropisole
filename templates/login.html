@@ -504,42 +504,19 @@
   async function getDeviceFingerprint() {
     const components = [];
 
-    // CPU / mémoire
+    // CPU / mémoire (stables, liés au matériel)
     components.push('cores:' + (navigator.hardwareConcurrency || 0));
     components.push('mem:'   + (navigator.deviceMemory       || 0));
 
-    // Écran
-    components.push('scr:'  + screen.width + 'x' + screen.height + 'x' + screen.colorDepth);
-    components.push('dpr:'  + (window.devicePixelRatio || 1).toFixed(2));
-
-    // OS / plateforme
+    // OS / plateforme / timezone (stables, liés au système)
     components.push('plat:' + (navigator.platform || ''));
     components.push('tz:'   + Intl.DateTimeFormat().resolvedOptions().timeZone);
     components.push('lang:' + navigator.language);
 
-    // Tactile
+    // Tactile (stable, lié au matériel)
     components.push('touch:' + navigator.maxTouchPoints);
 
-    // Canvas fingerprint (rendu unique par GPU + driver)
-    try {
-      const canvas = document.createElement('canvas');
-      canvas.width  = 200;
-      canvas.height = 50;
-      const ctx = canvas.getContext('2d');
-      ctx.textBaseline = 'top';
-      ctx.font = '14px "Arial"';
-      ctx.fillStyle = '#f60';
-      ctx.fillRect(0, 0, 200, 50);
-      ctx.fillStyle = '#069';
-      ctx.fillText('Tropisole🎮', 2, 4);
-      ctx.fillStyle = 'rgba(102,204,0,0.7)';
-      ctx.fillText('Tropisole🎮', 4, 6);
-      components.push('canvas:' + canvas.toDataURL().slice(-40));
-    } catch (e) {
-      components.push('canvas:n/a');
-    }
-
-    // WebGL renderer (nom du GPU)
+    // WebGL renderer (nom du GPU — stable, lié au matériel)
     try {
       const gl  = document.createElement('canvas').getContext('webgl');
       const ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
