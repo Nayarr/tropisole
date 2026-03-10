@@ -13,7 +13,7 @@ from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spa
                            MINECRAFT_TAG_ALIASES,
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
                            get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
-                           FR_TAG_TO_COBBLEMON, get_parent_cobblemon_tags)
+                           FR_TAG_TO_COBBLEMON, FR_TAG_TO_RAW_IDS, get_parent_cobblemon_tags)
 
 app = Flask(__name__)
 app.secret_key = "bfcdc97aed922f455ccac7c0af8833b776446cc8b13466187c0b4c6f6ca8ef33"
@@ -780,13 +780,19 @@ def spawns_by_biome():
             source_pokemon = dict(row)
 
     cobblemon_tags = get_cobblemon_tags_for_fr_biomes(biomes_list)
-    if cobblemon_tags:
+    # Ajouter les raw IDs (ex: aether:skyroot_forest, minecraft:frozen_river)
+    # qui correspondent aux mêmes tags FR mais ne sont pas des tags cobblemon
+    raw_ids = set()
+    for fr_tag in biomes_list:
+        raw_ids |= set(FR_TAG_TO_RAW_IDS.get(fr_tag, []))
+    all_ids = cobblemon_tags | raw_ids
+    if all_ids:
         # On entoure le champ avec des virgules pour éviter les faux positifs de substring
         # (ex: is_cold ne doit pas matcher is_cold_ocean)
         where_parts = " OR ".join(
-            ["(',' || biomes_tags || ',') LIKE ?" for _ in cobblemon_tags]
+            ["(',' || biomes_tags || ',') LIKE ?" for _ in all_ids]
         )
-        params = [f"%,{t},%" for t in cobblemon_tags]
+        params = [f"%,{t},%" for t in all_ids]
     else:
         where_parts = " OR ".join(["biomes LIKE ?" for _ in biomes_list])
         params = [f"%{b}%" for b in biomes_list]

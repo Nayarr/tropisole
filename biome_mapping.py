@@ -16,6 +16,10 @@ BIOME_MAP = {
         {"biome": "Warped Mesa", "mod": "Terralith"},
         {"biome": "White Mesa", "mod": "Terralith"},
         {"biome": "Danakil Desert", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Badlands Canyon", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Red Rock Canyon", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Savanna Badlands", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Bryce Canyon", "mod": "Terralith"},
     ],
     "Plage": [  # Beach
         {"biome": "Beach", "mod": "Vanilla Minecraft"},
@@ -23,6 +27,9 @@ BIOME_MAP = {
         {"biome": "Stony Shore", "mod": "Vanilla Minecraft"},
         {"biome": "Guelta", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Sand Dunes", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Black Beach", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Desert Beach", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Gravel Beach", "mod": "Terralith"},
     ],
     "Grotte": [  # Cave
         {"biome": "Dripstone Caves", "mod": "Vanilla Minecraft"},
@@ -35,6 +42,9 @@ BIOME_MAP = {
         {"biome": "Infested Caves", "mod": "Terralith"},
         {"biome": "Thermal Caves", "mod": "Terralith"},
         {"biome": "Underground Jungle", "mod": "Terralith"},
+        {"biome": "Deep Underground", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Mossy Caves", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Underground", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Côte": [  # Coast
         {"biome": "Stony Shore", "mod": "Vanilla Minecraft"},
@@ -99,6 +109,11 @@ BIOME_MAP = {
         {"biome": "Outback Desert", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Red Desert", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Sandy Jungle", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Cactus Desert", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Deep Desert", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Desert Pinnacles", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Wooded Desert", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Sandstone Valley", "mod": "Terralith"},
     ],
     "Stalactites": [  # Dripstone
         {"biome": "Dripstone Caves", "mod": "Vanilla Minecraft"},
@@ -163,6 +178,14 @@ BIOME_MAP = {
         # Biomes hybrides deep dark + forêt (Wythers) — ont les deux tags is_forest ET is_deep_dark
         {"biome": "Deep Dark Forest", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Deep Dark Incursion", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Copper Beech Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Emerald Beech Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Golden Beech Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Moss Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Cool Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Giant Sequoia Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Warm Birch Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Cloud Forest", "mod": "Terralith"},
     ],
     "Glacial": [  # Freezing (tag large, englobe tout le froid extrême)
         {"biome": "Frozen River", "mod": "Vanilla Minecraft"},
@@ -231,6 +254,8 @@ BIOME_MAP = {
         {"biome": "Highland Tropical Rainforest", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Jade Highlands", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Wistman Woods", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Highland Plains", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Painted Mountains", "mod": "Terralith"},
     ],
     "Collines": [  # Hills
         {"biome": "Stony Peaks", "mod": "Vanilla Minecraft"},
@@ -255,6 +280,8 @@ BIOME_MAP = {
         {"biome": "Temperate Rainforest Crags", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Thermal Taiga Crags", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Windswept Jungle", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Cool Stony Canyons", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Stony Canyon", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Île": [  # Island
         {"biome": "Mushroom Fields", "mod": "Vanilla Minecraft"},
@@ -293,6 +320,15 @@ BIOME_MAP = {
         {"biome": "Tropical Grassland", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Island", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Rainforest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Eucalyptus Jungle", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Eucalyptus Jungle Canyon", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Flooded Jungle", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Flooded Rainforest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Sparse Eucalyptus Jungle", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Tepui", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Jungle Mountains", "mod": "Terralith"},
+        {"biome": "Rocky Jungle", "mod": "Terralith"},
+        {"biome": "Tropical Jungle", "mod": "Terralith"},
     ],
     "Océan tiède": [  # Lukewarm Ocean
         {"biome": "Deep Lukewarm Ocean", "mod": "Vanilla Minecraft"},
@@ -321,6 +357,7 @@ BIOME_MAP = {
         {"biome": "Mirage Isles", "mod": "Terralith"},
         {"biome": "Moonlight Grove", "mod": "Terralith"},
         {"biome": "Moonlight Valley", "mod": "Terralith"},
+        {"biome": "Phantasmal Forest", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Montagne": [  # Mountain
         {"biome": "Frozen Peaks", "mod": "Vanilla Minecraft"},
@@ -336,6 +373,9 @@ BIOME_MAP = {
         {"biome": "Tropical Volcano", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tsingy Forest", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Volcano", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Cool Stony Peaks", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Maple Mountains", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Mountain Steppe", "mod": "Terralith"},
     ],
     "Champignon": [  # Mushroom
         {"biome": "Dark Forest", "mod": "Vanilla Minecraft"},
@@ -344,6 +384,7 @@ BIOME_MAP = {
         {"biome": "Mirage Isles", "mod": "Terralith"},
         {"biome": "Ancient Taiga", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Deep Dark Incursion", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Mushroom Caves", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Océan": [  # Ocean
         {"biome": "Cold Ocean", "mod": "Vanilla Minecraft"},
@@ -389,6 +430,8 @@ BIOME_MAP = {
         {"biome": "Spring Flower Fields", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Subtropical Forest Edge", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Grassland", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Cold Plains", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Cool Plains", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Plateau": [
         {"biome": "Savanna Plateau", "mod": "Vanilla Minecraft"},
@@ -400,6 +443,14 @@ BIOME_MAP = {
         {"biome": "Warm River", "mod": "Vanilla Minecraft"},
         {"biome": "Guelta", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Forest River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Badlands River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Black River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Deep Desert River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Desert River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Gravelly River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Jungle River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Savanna River", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Warm River", "mod": "Terralith"},
     ],
     "Sel": [  # Salt
         {"biome": "Calcite Caverns", "mod": "Wythers' Overhauled Overworld"},
@@ -432,12 +483,22 @@ BIOME_MAP = {
         {"biome": "Granite Canyon", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Forest Canyon", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Dry Savanna", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Eucalyptus Salubris Woodland", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Eucalyptus Woodland", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Flooded Savanna", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Outback", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Savanna Basaltic Incursions", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Scrub Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Sparse Eucalyptus Woodland", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Wooded Savanna", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Ciel": [  # Sky
         {"biome": "Skylands Autumn", "mod": "Terralith"},
         {"biome": "Skylands Spring", "mod": "Terralith"},
         {"biome": "Skylands Summer", "mod": "Terralith"},
         {"biome": "Skylands Winter", "mod": "Terralith"},
+        {"biome": "Skylands", "mod": "Terralith"},
     ],
     "Forêt enneigée": [  # Snowy Forest
         {"biome": "Grove", "mod": "Vanilla Minecraft"},
@@ -464,6 +525,8 @@ BIOME_MAP = {
         {"biome": "Ancient Taiga", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Bayou", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tangled Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Forbidden Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Phantasmal Swamp", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Marais": [  # Swamp
         {"biome": "Mangrove Swamp", "mod": "Vanilla Minecraft"},
@@ -474,6 +537,14 @@ BIOME_MAP = {
         {"biome": "Bayou", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Ice Marsh", "mod": "Terralith"},
         {"biome": "Orchid Swamp", "mod": "Terralith"},
+        {"biome": "Ancient Mossy Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Oak Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Bamboo Jungle Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Bamboo Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Birch Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Marsh", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Pantanal", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Waterlily Swamp", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Taïga": [  # Taiga
         {"biome": "Old Growth Pine Taiga", "mod": "Vanilla Minecraft"},
@@ -511,6 +582,8 @@ BIOME_MAP = {
         {"biome": "Thermal Taiga", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Thermal Taiga Crags", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Snowy Thermal Taiga", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Shield", "mod": "Terralith"},
+        {"biome": "Birch Taiga", "mod": "Terralith"},
     ],
     "Tempéré": [  # Temperate
         {"biome": "All Forest biomes", "mod": "Cobblemon"},
@@ -527,6 +600,7 @@ BIOME_MAP = {
         {"biome": "Thermal Taiga", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tibesti Mountains", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Danakil Desert", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Mud Pools", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Île tropicale": [  # Tropical Island
         {"biome": "Tropical Beach", "mod": "Wythers' Overhauled Overworld"},
@@ -775,17 +849,17 @@ BIOME_MAP = {
     "Champs pollinisés":      [{"biome": "Pollinated Fields", "mod": "The Bumblezone"}],
     "Constructions hurlantes":[{"biome": "Howling Constructs", "mod": "The Bumblezone"}],
     "Éther":                  [{"biome": "All Aether biomes", "mod": "Aether mod"}],
-    "Bambou":                 [{"biome": "Bamboo Jungle", "mod": "Vanilla Minecraft"}, {"biome": "Bamboo Jungle Hills", "mod": "Vanilla Minecraft"}],
+    "Bambou":                 [{"biome": "Bamboo Jungle", "mod": "Vanilla Minecraft"}, {"biome": "Bamboo Jungle Hills", "mod": "Vanilla Minecraft"}, {"biome": "Bamboo Jungle Canyon", "mod": "Wythers' Overhauled Overworld"}, {"biome": "Sparse Bamboo Jungle", "mod": "Wythers' Overhauled Overworld"}],
     "Boueux":                 [{"biome": "Mangrove Swamp", "mod": "Vanilla Minecraft"}],
     "Champs de champignons":  [{"biome": "Mushroom Fields", "mod": "Vanilla Minecraft"}],
-    "Fleurs de cerisier":     [{"biome": "Cherry Grove", "mod": "Vanilla Minecraft"}, {"biome": "Sakura Grove", "mod": "Terralith"}, {"biome": "Sakura Valley", "mod": "Terralith"}],
+    "Fleurs de cerisier":     [{"biome": "Cherry Grove", "mod": "Vanilla Minecraft"}, {"biome": "Sakura Grove", "mod": "Terralith"}, {"biome": "Sakura Valley", "mod": "Terralith"}, {"biome": "Snowy Cherry Grove", "mod": "Terralith"}],
     "Enneigé":                [{"biome": "Snowy Plains", "mod": "Vanilla Minecraft"}, {"biome": "Snowy Slopes", "mod": "Vanilla Minecraft"}, {"biome": "Ice Spikes", "mod": "Vanilla Minecraft"}, {"biome": "Grove", "mod": "Vanilla Minecraft"}, {"biome": "Snowy Taiga", "mod": "Vanilla Minecraft"}],
     "Plage enneigée":         [{"biome": "Snowy Beach", "mod": "Vanilla Minecraft"}],
     "Taïga enneigée":         [{"biome": "Snowy Taiga", "mod": "Vanilla Minecraft"}, {"biome": "Grove", "mod": "Vanilla Minecraft"}],
-    "Rivière gelée":          [{"biome": "Frozen River", "mod": "Vanilla Minecraft"}],
+    "Rivière gelée":          [{"biome": "Frozen River", "mod": "Vanilla Minecraft"}, {"biome": "Icy River", "mod": "Wythers' Overhauled Overworld"}],
     "Plaines de tournesols":  [{"biome": "Sunflower Plains", "mod": "Vanilla Minecraft"}],
     "Océan froid":            [{"biome": "Cold Ocean", "mod": "Vanilla Minecraft"}, {"biome": "Deep Cold Ocean", "mod": "Vanilla Minecraft"}],
-    "Maquis":                 [{"biome": "Hot Shrubland", "mod": "Terralith"}, {"biome": "Shrublands", "mod": "Terralith"}, {"biome": "Cold Shrubland", "mod": "Terralith"}, {"biome": "Rocky Shrubland", "mod": "Terralith"}],
+    "Maquis":                 [{"biome": "Hot Shrubland", "mod": "Terralith"}, {"biome": "Shrublands", "mod": "Terralith"}, {"biome": "Cold Shrubland", "mod": "Terralith"}, {"biome": "Rocky Shrubland", "mod": "Terralith"}, {"biome": "Chaparral", "mod": "Wythers' Overhauled Overworld"}, {"biome": "Scrubland", "mod": "Wythers' Overhauled Overworld"}, {"biome": "Shrubland", "mod": "Terralith"}],
     "Forêt aérienne":         [{"biome": "Skylands Summer", "mod": "Terralith"}],
     "Bosquet aérien":         [{"biome": "Skylands Autumn", "mod": "Terralith"}],
     "Prairie aérienne":       [{"biome": "Skylands Spring", "mod": "Terralith"}],
@@ -833,11 +907,21 @@ def get_real_biomes(tag_fr):
     """
     if tag_fr in BIOME_MAP:
         return BIOME_MAP[tag_fr]
-    # Cas où la BDD stocke un tag Cobblemon brut (#cobblemon:is_bamboo, etc.)
+    # Tags cobblemon bruts (#cobblemon:is_bamboo, etc.)
     if tag_fr.startswith("#"):
         fr_tag = COBBLEMON_TAG_TO_FR.get(tag_fr)
         if fr_tag and fr_tag in BIOME_MAP:
             return BIOME_MAP[fr_tag]
+        # Alias minecraft (#minecraft:is_nether → #cobblemon:is_nether → Nether)
+        cobblemon_tag = MINECRAFT_TAG_ALIASES.get(tag_fr)
+        if cobblemon_tag:
+            fr_tag = COBBLEMON_TAG_TO_FR.get(cobblemon_tag)
+            if fr_tag and fr_tag in BIOME_MAP:
+                return BIOME_MAP[fr_tag]
+    # Raw biome ID (minecraft:frozen_river, aether:skyroot_forest, etc.)
+    fr_tag = RAW_ID_TO_FR_TAG.get(tag_fr)
+    if fr_tag and fr_tag in BIOME_MAP:
+        return BIOME_MAP[fr_tag]
     return [{"biome": tag_fr, "mod": "Tag Cobblemon"}]
 
 def expand_spawn_biomes(biomes_str):
@@ -851,10 +935,16 @@ def expand_spawn_biomes(biomes_str):
         t = t.strip()
         if not t:
             continue
-        # Résoudre les tags Cobblemon bruts en tag FR
+        # Résoudre en tag FR d'affichage
         display_tag = t
-        if t.startswith("#") and t in COBBLEMON_TAG_TO_FR:
-            display_tag = COBBLEMON_TAG_TO_FR[t]
+        if t.startswith("#"):
+            if t in COBBLEMON_TAG_TO_FR:
+                display_tag = COBBLEMON_TAG_TO_FR[t]
+            elif t in MINECRAFT_TAG_ALIASES:
+                cobblemon_tag = MINECRAFT_TAG_ALIASES[t]
+                display_tag = COBBLEMON_TAG_TO_FR.get(cobblemon_tag, t)
+        elif t in RAW_ID_TO_FR_TAG:
+            display_tag = RAW_ID_TO_FR_TAG[t]
         result.append({"tag": display_tag, "biomes": get_real_biomes(t)})
     return result
 
@@ -1210,7 +1300,8 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_tropical_island": [],
     "#cobblemon:is_beach": [],
     "#cobblemon:is_river": [],
-    "#cobblemon:is_swamp": [],
+    "#cobblemon:is_swamp": ["#cobblemon:has_block/mud"],
+    "#cobblemon:has_block/mud": [],
     "#cobblemon:is_savanna": [],
     "#cobblemon:is_forest": [
         "#cobblemon:is_cherry_blossom",  # Fleurs de cerisier → forêt
@@ -1286,6 +1377,7 @@ FR_TAG_TO_COBBLEMON = {
     "Eau douce":                  "#cobblemon:is_freshwater",
     "Rivière":                    "#cobblemon:is_river",
     "Marais":                     "#cobblemon:is_swamp",
+    "Boueux":                     "#cobblemon:has_block/mud",
     "Prairie":                    "#cobblemon:is_grassland",
     "Plaines":                    "#cobblemon:is_plains",
     "Savane":                     "#cobblemon:is_savanna",
@@ -1364,6 +1456,37 @@ FR_TAG_TO_COBBLEMON = {
 # Reverse map : tag Cobblemon brut → tag FR (le plus précis)
 # Utilisé pour résoudre les tags #cobblemon:is_xxx stockés directement en BDD
 COBBLEMON_TAG_TO_FR = {v: k for k, v in FR_TAG_TO_COBBLEMON.items()}
+
+# ── Mapping raw biome IDs (minecraft:, aether:, etc.) → tag FR ───────────────
+# Utilisé quand la BDD contient un ID de biome littéral au lieu d'un tag cobblemon.
+RAW_ID_TO_FR_TAG = {
+    # Vanilla Minecraft IDs littéraux
+    "minecraft:frozen_river":      "Rivière gelée",
+    "minecraft:mushroom_fields":   "Champignon",
+    "minecraft:sunflower_plains":  "Plaines de tournesols",
+    "minecraft:snowy_beach":       "Plage enneigée",
+    # Aether mod — tous les biomes skyroot → "Éther"
+    "aether:skyroot_forest":       "Éther",
+    "aether:skyroot_woodland":     "Éther",
+    "aether:skyroot_grove":        "Éther",
+    "aether:skyroot_meadow":       "Éther",
+    # The Bumblezone — biomes individuels → tag FR dédié
+    "the_bumblezone:floral_meadow":       "Prairie fleurie",
+    "the_bumblezone:pollinated_fields":   "Champs pollinisés",
+    "the_bumblezone:crystal_canyon":      "Canyon de cristal",
+    "the_bumblezone:howling_constructs":  "Constructions hurlantes",
+    # BYG
+    "byg:warped_desert":           "Désert distordu",
+    # Biomes O' Plenty
+    "biomesoplenty:crystalline_chasm": "Gouffre cristallin",
+}
+
+# ── Reverse : tag FR → liste de raw IDs bruts ────────────────────────────────
+# Utilisé dans les requêtes SQL pour inclure les pokémon qui ont un ID littéral
+# en plus du tag cobblemon (ex: aether:skyroot_forest en sus de #aether:is_aether).
+FR_TAG_TO_RAW_IDS = {}
+for _raw_id, _fr_tag in RAW_ID_TO_FR_TAG.items():
+    FR_TAG_TO_RAW_IDS.setdefault(_fr_tag, []).append(_raw_id)
 
 def get_parent_cobblemon_tags(cobblemon_tag):
     """
