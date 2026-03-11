@@ -875,6 +875,7 @@
   <a href="/" class="nav-back">← Tropisole</a>
   {% endif %}
   <span class="nav-title">Pokémon du même spawn</span>
+  <a href="/bugreport" class="nav-back" style="margin-left:auto;font-size:.62rem;">🐛 Bug</a>
 </nav>
 
 <div class="hero">
@@ -1217,6 +1218,24 @@
     </div>
   </div>
 
+  <!-- Structure spécifique -->
+  <div class="ms-wrap" id="ms-structure">
+    <button class="ms-btn" onclick="toggleDropdown('structure')">
+      Structure <span class="ms-badge" id="ms-badge-incl-structure" style="display:none"></span>
+                <span class="ms-badge excl" id="ms-badge-excl-structure" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-structure" style="min-width:280px">
+      <div class="ms-dropdown-header">
+        <span>Structure spécifique</span>
+        <button class="ms-clear-btn" onclick="clearFilter('structure')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Structure</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options" id="structure-options-list">
+        <!-- Peuplé dynamiquement par JS -->
+      </div>
+    </div>
+  </div>
+
   <!-- EV -->
   <div class="ms-wrap" id="ms-ev">
     <button class="ms-btn" onclick="toggleDropdown('ev')">
@@ -1473,6 +1492,7 @@ const RAW_DATA = [
     peut_voir_ciel: {{ (p.peut_voir_ciel or '') | tojson }},
     forme_regionale: {{ (p.forme_regionale) | tojson }},
     types: {{ (p.types or []) | tojson }},
+    structure_ids: {{ (p.condition_tags | selectattr('type','eq','structure') | map(attribute='label') | map('replace','Structure : ','') | list) | tojson }},
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 ];
@@ -1511,7 +1531,7 @@ function updateYDisplay() {
 }
 
 // ── Multi-select filter state ─────────────────────────────────────────────────
-const FILTERS = ['bucket', 'contexte', 'time', 'weather', 'special', 'ev', 'type'];
+const FILTERS = ['bucket', 'contexte', 'time', 'weather', 'special', 'structure', 'ev', 'type'];
 const filterState = {};
 FILTERS.forEach(f => filterState[f] = { include: new Set(), exclude: new Set() });
 
@@ -1575,9 +1595,16 @@ function updateFilterUI(filter) {
   // Update individual option rows
   const allOptions = document.querySelectorAll(`#ms-dropdown-${filter} .ms-option`);
   allOptions.forEach(optEl => {
-    const idParts = optEl.id.split(`opt-${filter}-`);
-    if (idParts.length < 2) return;
-    const val = idParts[1];
+    // For structure filter, use data-structure-name attribute; otherwise parse from id
+    let val;
+    if (filter === 'structure') {
+      val = optEl.dataset.structureName;
+      if (!val) return;
+    } else {
+      const idParts = optEl.id.split(`opt-${filter}-`);
+      if (idParts.length < 2) return;
+      val = idParts[1];
+    }
 
     optEl.classList.remove('incl-active', 'excl-active');
     if (state.include.has(val)) optEl.classList.add('incl-active');
@@ -1653,6 +1680,9 @@ function filteredData() {
         if (!types.includes(v)) return false;
       }
     }
+
+    // Structure spécifique
+    if (!matchFilter('structure', p => p.structure_ids && p.structure_ids.length > 0 ? p.structure_ids : ['none'], p)) return false;
 
     // EV stats
     if (!matchFilter('ev', p => {
@@ -1864,6 +1894,37 @@ setTimeout(() => {
   const sourceRow = document.querySelector('tr.is-source');
   if (sourceRow) sourceRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }, 300);
+
+// ── Populate structure filter dynamically (after filterState/toggleOpt are defined) ──
+(function buildStructureFilter() {
+  const allStructures = new Set();
+  data.forEach(p => {
+    if (p.structure_ids) p.structure_ids.forEach(s => allStructures.add(s));
+  });
+
+  const container = document.getElementById('structure-options-list');
+  if (allStructures.size === 0) {
+    container.innerHTML = '<div style="padding:0.6rem 0.75rem;font-family:\'Space Mono\',monospace;font-size:0.72rem;color:var(--muted)">Aucune structure dans ces données</div>';
+    return;
+  }
+
+  const sorted = [...allStructures].sort((a, b) => a.localeCompare(b));
+
+  sorted.forEach(name => {
+    const safeId = name.replace(/[^a-zA-Z0-9]/g, '_');
+    const div = document.createElement('div');
+    div.className = 'ms-option';
+    div.id = `opt-structure-${safeId}`;
+    div.dataset.structureName = name;
+    div.innerHTML = `
+      <span class="ms-option-label">🏗️ ${name}</span>
+      <button class="ms-toggle incl">+</button>
+      <button class="ms-toggle excl">−</button>`;
+    div.querySelector('.ms-toggle.incl').addEventListener('click', () => toggleOpt('structure', name, 'incl'));
+    div.querySelector('.ms-toggle.excl').addEventListener('click', () => toggleOpt('structure', name, 'excl'));
+    container.appendChild(div);
+  });
+})();
 </script>
 </body>
 </html>

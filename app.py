@@ -68,6 +68,19 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS bug_reports (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            title      TEXT NOT NULL,
+            category   TEXT NOT NULL DEFAULT 'autre',
+            content    TEXT NOT NULL,
+            page_url   TEXT,
+            username   TEXT,
+            status     TEXT NOT NULL DEFAULT 'open',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -77,7 +90,8 @@ init_db()
 def security_check():
     public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse',
           '/admin/reset-device', '/admin/logout', '/admin/set-expiry',
-          '/admin/patchnote/add', '/admin/patchnote/delete', '/patchnotes']
+          '/admin/patchnote/add', '/admin/patchnote/delete', '/patchnotes',
+          '/bugreport', '/bugreport/submit']
     if request.path.startswith('/static') or request.path in public:
         return
 
@@ -997,6 +1011,7 @@ def admin():
     pending    = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 0 ORDER BY created_at DESC").fetchall()]
     validated  = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 1 ORDER BY created_at DESC").fetchall()]
     patchnotes = [dict(r) for r in conn.execute("SELECT * FROM patch_notes ORDER BY created_at DESC").fetchall()]  # ← ajouter
+    bug_reports = [dict(r) for r in conn.execute("SELECT * FROM bug_reports ORDER BY created_at DESC").fetchall()]
     conn.close()
 
     # Enrichir avec les emails Firebase si manquants
@@ -1016,7 +1031,8 @@ def admin():
     now_date  = now.strftime("%Y-%m-%d")
     warn_date = (now + timedelta(days=2)).strftime("%Y-%m-%d")
     return render_template('admin.html', pending=pending, validated=validated,
-                           now_date=now_date, warn_date=warn_date, patchnotes=patchnotes)  # ← ajouter patchnotes=patchnotes
+                           now_date=now_date, warn_date=warn_date, patchnotes=patchnotes,
+                           bug_reports=bug_reports)
 
 
 @app.route('/admin/validate', methods=['POST'])
@@ -1160,6 +1176,58 @@ def admin_delete_patch_note():
         conn.commit()
         conn.close()
     return redirect("/admin")
+
+# ── Bug Reports (public) ─────────────────────────────────────────────────────
+@app.route("/bugreport")
+def bugreport():
+    return render_template("bugreport.html")
+
+
+@app.route("/bugreport/submit", methods=["POST"])
+def bugreport_submit():
+    title    = request.form.get("title", "").strip()
+    category = request.form.get("category", "autre").strip()
+    content  = request.form.get("content", "").strip()
+    page_url = request.form.get("page_url", "").strip()
+    username = request.form.get("username", "").strip()
+    if title and content:
+        conn = get_db()
+        conn.execute(
+            "INSERT INTO bug_reports (title, category, content, page_url, username) VALUES (?, ?, ?, ?, ?)",
+            (title, category, content, page_url or None, username or None)
+        )
+        conn.commit()
+        conn.close()
+    return render_template("bugreport.html", submitted=True)
+
+
+# ── Admin : bug reports ───────────────────────────────────────────────────────
+@app.route("/admin/bugreport/status", methods=["POST"])
+def admin_bugreport_status():
+    if not session.get("is_admin"):
+        return redirect("/admin")
+    report_id = request.form.get("id", type=int)
+    status    = request.form.get("status", "open")
+    if report_id and status in ("open", "in_progress", "resolved"):
+        conn = get_db()
+        conn.execute("UPDATE bug_reports SET status = ? WHERE id = ?", (status, report_id))
+        conn.commit()
+        conn.close()
+    return redirect("/admin#bugreports")
+
+
+@app.route("/admin/bugreport/delete", methods=["POST"])
+def admin_bugreport_delete():
+    if not session.get("is_admin"):
+        return redirect("/admin")
+    report_id = request.form.get("id", type=int)
+    if report_id:
+        conn = get_db()
+        conn.execute("DELETE FROM bug_reports WHERE id = ?", (report_id,))
+        conn.commit()
+        conn.close()
+    return redirect("/admin#bugreports")
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

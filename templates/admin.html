@@ -375,6 +375,77 @@
     {% endif %}
   </div>
 
+  <!-- ── SECTION BUG REPORTS ── -->
+  <div id="bugreports">
+    <div class="section-title">
+      🐛 Bug Reports
+      <span class="badge" style="background:rgba(255,71,87,.12);border-color:rgba(255,71,87,.3);color:var(--red);">
+        {{ bug_reports | selectattr('status','eq','open') | list | length }} ouvert{{ 's' if (bug_reports | selectattr('status','eq','open') | list | length) != 1 else '' }}
+      </span>
+      <span class="badge valid">{{ bug_reports|length }} total</span>
+    </div>
+
+    {% if bug_reports %}
+    <div style="display:flex;flex-direction:column;gap:.75rem;">
+      {% for r in bug_reports %}
+      {% set status_color = {'open':'#ff4757','in_progress':'#ffab40','resolved':'#55efc4'}[r.status] %}
+      {% set status_label = {'open':'Ouvert','in_progress':'En cours','resolved':'Résolu'}[r.status] %}
+      {% set cat_icons = {'affichage':'🖼️','donnees':'📊','filtre':'🔍','navigation':'🗺️','performance':'⚡','autre':'❓'} %}
+      <div style="background:var(--card);border:1px solid var(--border);border-left:3px solid {{ status_color }};border-radius:10px;padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:.8rem;">
+
+        <!-- Header -->
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.5rem;">
+          <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;flex:1;">
+            <span style="font-size:1rem;">{{ cat_icons.get(r.category,'❓') }}</span>
+            <span style="font-weight:700;font-size:.95rem;">{{ r.title }}</span>
+            <span style="font-family:'Space Mono',monospace;font-size:.6rem;padding:.15rem .55rem;border-radius:20px;border:1px solid {{ status_color }}44;background:{{ status_color }}18;color:{{ status_color }};">{{ status_label }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0;">
+            <span style="font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);">{{ r.created_at[:16] }}</span>
+          </div>
+        </div>
+
+        <!-- Meta -->
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);">
+          {% if r.username %}<span>👤 {{ r.username }}</span>{% endif %}
+          {% if r.page_url %}<span>📍 {{ r.page_url }}</span>{% endif %}
+          <span style="color:var(--border)">|</span>
+          <span>cat: {{ r.category }}</span>
+          <span style="color:var(--border)">|</span>
+          <span>#{{ r.id }}</span>
+        </div>
+
+        <!-- Content -->
+        <div style="font-family:'Space Mono',monospace;font-size:.78rem;color:#b8b8cc;line-height:1.7;white-space:pre-wrap;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:6px;padding:.75rem 1rem;">{{ r.content }}</div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;padding-top:.2rem;border-top:1px solid var(--border);">
+          <span style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin-right:.25rem;">Statut :</span>
+          {% for s, lbl in [('open','Ouvert'),('in_progress','En cours'),('resolved','Résolu')] %}
+          <form method="POST" action="/admin/bugreport/status" style="display:inline;">
+            <input type="hidden" name="id" value="{{ r.id }}" />
+            <input type="hidden" name="status" value="{{ s }}" />
+            <button type="submit" class="btn-sm"
+              style="{% if r.status == s %}border-color:{{ status_color }};color:{{ status_color }};{% endif %}padding:.3rem .7rem;font-size:.67rem;">
+              {{ '✓ ' if r.status == s else '' }}{{ lbl }}
+            </button>
+          </form>
+          {% endfor %}
+          <form method="POST" action="/admin/bugreport/delete" style="display:inline;margin-left:auto;">
+            <input type="hidden" name="id" value="{{ r.id }}" />
+            <button type="submit" class="btn-refuse" style="padding:.3rem .7rem;font-size:.7rem;"
+              onclick="return confirm('Supprimer ce bug report #{{ r.id }} ?')">✕ Supprimer</button>
+          </form>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty"><span class="icon">🐛</span>Aucun bug report pour l'instant.</div>
+    {% endif %}
+  </div>
+
 </main>
 
 <!-- ── MODAL GESTION DATE D'ACCÈS ── -->

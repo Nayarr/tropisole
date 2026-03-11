@@ -1163,15 +1163,16 @@ COBBLEMON_TAG_HIERARCHY = {
         "#minecraft:is_nether",         # alias vanilla
     ],
 
-    # ARID = All Sandy + All Savanna  (← c'est un PARENT, pas une feuille !)
+    # ARID = All Sandy + All Savanna
+    # Source wiki: exactement ces 2 enfants — is_shrubland n'est PAS listé sous Arid
     "#cobblemon:is_arid": [
         "#cobblemon:is_sandy",
         "#cobblemon:is_savanna",
-        "#cobblemon:is_shrubland",  # Maquis → aride
     ],
 
     # OCEAN = vanilla + All Coast + All Cold Ocean + All Deep Ocean
     #       + All Frozen Ocean + All Lukewarm Ocean + All Warm Ocean
+    # Source wiki: 6 enfants — is_temperate_ocean n'existe PAS dans le wiki
     "#cobblemon:is_ocean": [
         "#cobblemon:is_coast",
         "#cobblemon:is_cold_ocean",
@@ -1182,12 +1183,18 @@ COBBLEMON_TAG_HIERARCHY = {
         "#cobblemon:is_warm_ocean",
     ],
 
-    # COAST = Stony Shore + All Beach biomes + biomes côtiers Wythers/Terralith
+    # COAST = Stony Shore + All Beach biomes + All Tropical Island biomes
+    # Source wiki: les biomes Wythers "Tropical Island" apparaissent sous Coast
+    # ET is_tropical_island est listé sous Island → is_tropical_island ⊂ is_coast aussi
     "#cobblemon:is_coast": [
         "#cobblemon:is_beach",
+        "#cobblemon:is_tropical_island",  # ← enfant manquant (signalé par wiki)
     ],
 
     # COLD = All Cold Ocean + All Freezing + All Peak + All Taiga + All Tundra
+    # Source wiki: exactement ces 5 enfants — is_snowy et is_snowy_taiga
+    # ne sont PAS des enfants directs de is_cold dans le wiki
+    # (is_snowy_taiga est atteignable via is_taiga → is_cold)
     "#cobblemon:is_cold": [
         "#cobblemon:is_cold_ocean",
         "#cobblemon:is_freezing",
@@ -1229,7 +1236,10 @@ COBBLEMON_TAG_HIERARCHY = {
         "#cobblemon:is_desert",
     ],
 
-    # MOUNTAIN = vanilla Mountain + All Hill biomes (qui inclut lui-même All Highlands)
+    # MOUNTAIN = vanilla Mountain + All Hill biomes
+    # Source wiki: Mountain Cobblemon = "All Hill biomes" UNIQUEMENT
+    # is_peak est enfant de is_cold (pas de is_mountain) selon le wiki
+    # is_plateau n'est pas listé comme enfant de is_mountain dans le wiki
     "#cobblemon:is_mountain": [
         "#cobblemon:is_hills",
         "#cobblemon:is_peak",
@@ -1295,6 +1305,7 @@ COBBLEMON_TAG_HIERARCHY = {
     ],
 
     # Feuilles (pas de sous-tags Cobblemon)
+    # NB: is_temperate_ocean supprimé — n'existe pas dans le wiki officiel
     "#cobblemon:is_cold_ocean": [],
     "#cobblemon:is_deep_ocean": [],
     "#cobblemon:is_frozen_ocean": [],
@@ -1460,6 +1471,43 @@ FR_TAG_TO_COBBLEMON = {
 # Reverse map : tag Cobblemon brut → tag FR (le plus précis)
 # Utilisé pour résoudre les tags #cobblemon:is_xxx stockés directement en BDD
 COBBLEMON_TAG_TO_FR = {v: k for k, v in FR_TAG_TO_COBBLEMON.items()}
+
+# ── Propagation parent → enfant dans BIOME_MAP ───────────────────────────────
+# Si is_coast est parent de is_beach, BIOME_MAP["Côte"] doit contenir tous les
+# biomes de BIOME_MAP["Plage"]. On itère jusqu'à convergence (chaînes multi-niveaux).
+def _propagate_children_to_parents():
+    cob_to_fr = {}
+    for fr, cob in FR_TAG_TO_COBBLEMON.items():
+        cob_to_fr.setdefault(cob, []).append(fr)
+
+    for _ in range(20):  # max profondeur hiérarchie
+        changed = False
+        for parent_cob, children_cob in COBBLEMON_TAG_HIERARCHY.items():
+            if not children_cob:
+                continue
+            parent_frs = cob_to_fr.get(parent_cob, [])
+            if not parent_frs:
+                continue
+            for child_cob in children_cob:
+                child_frs = cob_to_fr.get(child_cob, [])
+                for parent_fr in parent_frs:
+                    if parent_fr not in BIOME_MAP:
+                        continue
+                    parent_entries = BIOME_MAP[parent_fr]
+                    parent_keys = {(e["mod"], e["biome"]) for e in parent_entries}
+                    for child_fr in child_frs:
+                        if child_fr not in BIOME_MAP:
+                            continue
+                        for entry in BIOME_MAP[child_fr]:
+                            key = (entry["mod"], entry["biome"])
+                            if key not in parent_keys:
+                                parent_entries.append(entry)
+                                parent_keys.add(key)
+                                changed = True
+        if not changed:
+            break
+
+_propagate_children_to_parents()
 
 # ── Mapping raw biome IDs (minecraft:, aether:, etc.) → liste de tags FR ────
 # Un biome peut appartenir à plusieurs tags (ex: is_forest + is_taiga).
@@ -1680,22 +1728,58 @@ def get_children_cobblemon_tags(cobblemon_tag):
 
 def get_cobblemon_tags_for_fr_biomes(fr_biomes_list):
     """
-    Convertit une liste de tags FR en ensemble de tags Cobblemon bruts,
-    en incluant TOUS les tags parents ET enfants (hiérarchie complète).
-    Utilisé pour la requête /spawns/biome afin de ne rater aucun pokemon.
+    Convertit une liste de tags FR en ensemble de tags Cobblemon bruts.
+    Inclut le tag direct + ses enfants + les tags "frères" qui partagent
+    les mêmes virtual biomes (ex: 'All Wythers Dark Forest' → is_spooky ET is_magical).
+    N'inclut PAS les tags parents larges (is_overworld, is_nether) qui causeraient
+    des faux positifs massifs.
 
     Ex: ['Île tropicale'] -> {'#cobblemon:is_tropical_island',
-                               '#cobblemon:is_coast', '#cobblemon:is_ocean',
-                               '#cobblemon:is_overworld'}
-    Ex: ['Nether'] -> tous les sous-tags nether/* + #minecraft:is_nether
+                               '#cobblemon:is_coast', '#cobblemon:is_ocean'}
+    Ex: ['Forêt sombre (Wythers)'] -> {'#cobblemon:is_spooky', '#cobblemon:is_magical'}
     """
+    # Tags trop larges à exclure (couvrent presque tout le jeu)
+    OVERLY_BROAD = {
+        '#cobblemon:is_overworld',
+        '#cobblemon:is_nether',
+        '#cobblemon:is_end',
+        '#cobblemon:is_arid',
+        '#cobblemon:is_cold',
+        '#cobblemon:is_grassland',
+        '#cobblemon:is_sandy',
+        '#cobblemon:is_temperate',
+        '#cobblemon:is_sparse',
+        '#cobblemon:is_dense',
+        '#cobblemon:is_ocean',
+        '#cobblemon:is_mountain',
+        '#cobblemon:is_freshwater',
+    }
+
+    # Pré-calcul : virtual biome (ex: "All Wythers' Dark Forest biomes") → set de cobblemon tags
+    virtual_to_cob_tags = {}
+    for fr, biomes in BIOME_MAP.items():
+        cob = FR_TAG_TO_COBBLEMON.get(fr)
+        if not cob:
+            continue
+        for entry in biomes:
+            if entry['biome'].startswith('All '):
+                virtual_to_cob_tags.setdefault(entry['biome'], set()).add(cob)
+
     all_cobblemon_tags = set()
     for fr_tag in fr_biomes_list:
         cobblemon_tag = FR_TAG_TO_COBBLEMON.get(fr_tag)
         if cobblemon_tag:
             all_cobblemon_tags.add(cobblemon_tag)
-            # Parents (pokémon qui spawnen dans une zone plus large)
-            all_cobblemon_tags |= get_parent_cobblemon_tags(cobblemon_tag)
-            # Enfants (sous-tags inclus dans ce tag)
+            # Enfants directs seulement (pas les parents larges)
             all_cobblemon_tags |= get_children_cobblemon_tags(cobblemon_tag)
+            # Parents proches (exclure les trop larges)
+            for parent in get_parent_cobblemon_tags(cobblemon_tag):
+                if parent not in OVERLY_BROAD:
+                    all_cobblemon_tags.add(parent)
+            # Tags frères partageant les mêmes virtual biomes
+            for entry in BIOME_MAP.get(fr_tag, []):
+                if entry['biome'].startswith('All '):
+                    sibling_tags = virtual_to_cob_tags.get(entry['biome'], set()) - OVERLY_BROAD
+                    all_cobblemon_tags |= sibling_tags
+
     return all_cobblemon_tags
