@@ -75,7 +75,9 @@ init_db()
 
 @app.before_request
 def security_check():
-    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse', '/admin/reset-device', '/admin/logout', '/admin/set-expiry']
+    public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse',
+          '/admin/reset-device', '/admin/logout', '/admin/set-expiry',
+          '/admin/patchnote/add', '/admin/patchnote/delete', '/patchnotes']
     if request.path.startswith('/static') or request.path in public:
         return
 
@@ -169,7 +171,7 @@ def firebase_auth():
             elif incoming_device_id != stored_device_id:
                 conn.close()
                 return {"status": "error", "message": "Cet appareil n'est pas autorisé pour ce compte."}, 403
-        
+
         conn.close()
 
         session.permanent = True
@@ -992,8 +994,9 @@ def admin():
 
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
-    pending   = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 0 ORDER BY created_at DESC").fetchall()]
-    validated = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 1 ORDER BY created_at DESC").fetchall()]
+    pending    = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 0 ORDER BY created_at DESC").fetchall()]
+    validated  = [dict(r) for r in conn.execute("SELECT * FROM users WHERE validated = 1 ORDER BY created_at DESC").fetchall()]
+    patchnotes = [dict(r) for r in conn.execute("SELECT * FROM patch_notes ORDER BY created_at DESC").fetchall()]  # ← ajouter
     conn.close()
 
     # Enrichir avec les emails Firebase si manquants
@@ -1013,7 +1016,7 @@ def admin():
     now_date  = now.strftime("%Y-%m-%d")
     warn_date = (now + timedelta(days=2)).strftime("%Y-%m-%d")
     return render_template('admin.html', pending=pending, validated=validated,
-                           now_date=now_date, warn_date=warn_date)
+                           now_date=now_date, warn_date=warn_date, patchnotes=patchnotes)  # ← ajouter patchnotes=patchnotes
 
 
 @app.route('/admin/validate', methods=['POST'])
@@ -1127,9 +1130,9 @@ def patchnotes():
 
 
 # ── Admin : créer un patch note ───────────────────────────────────────────────
-@app.route("/admin/patch-notes/add", methods=["POST"])
+@app.route("/admin/patchnote/add", methods=["POST"])
 def admin_add_patch_note():
-    if not session.get("admin"):
+    if not session.get("is_admin"):
         return redirect("/admin")
     version = request.form.get("version", "").strip()
     title   = request.form.get("title", "").strip()
@@ -1146,14 +1149,16 @@ def admin_add_patch_note():
 
 
 # ── Admin : supprimer un patch note ──────────────────────────────────────────
-@app.route("/admin/patch-notes/delete/<int:note_id>", methods=["POST"])
-def admin_delete_patch_note(note_id):
-    if not session.get("admin"):
+@app.route("/admin/patchnote/delete", methods=["POST"])
+def admin_delete_patch_note():
+    if not session.get("is_admin"):
         return redirect("/admin")
-    conn = get_db()
-    conn.execute("DELETE FROM patch_notes WHERE id = ?", (note_id,))
-    conn.commit()
-    conn.close()
+    note_id = request.form.get("id", type=int)
+    if note_id:
+        conn = get_db()
+        conn.execute("DELETE FROM patch_notes WHERE id = ?", (note_id,))
+        conn.commit()
+        conn.close()
     return redirect("/admin")
 
 if __name__ == "__main__":

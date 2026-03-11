@@ -307,6 +307,7 @@ BIOME_MAP = {
         {"biome": "Jungle", "mod": "Vanilla Minecraft"},
         {"biome": "Sparse Jungle", "mod": "Vanilla Minecraft"},
         {"biome": "Underground Jungle", "mod": "Terralith"},
+        {"biome": "Sparse Bamboo Jungle", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Dripleaf Swamp", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Eucalyptus Deanei Forest", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Highland Tropical Rainforest", "mod": "Wythers' Overhauled Overworld"},
@@ -545,6 +546,7 @@ BIOME_MAP = {
         {"biome": "Marsh", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Pantanal", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Waterlily Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Phantasmal Swamp", "mod": "Wythers' Overhauled Overworld"},
     ],
     "Taïga": [  # Taiga
         {"biome": "Old Growth Pine Taiga", "mod": "Vanilla Minecraft"},
@@ -849,7 +851,7 @@ BIOME_MAP = {
     "Champs pollinisés":      [{"biome": "Pollinated Fields", "mod": "The Bumblezone"}],
     "Constructions hurlantes":[{"biome": "Howling Constructs", "mod": "The Bumblezone"}],
     "Éther":                  [{"biome": "All Aether biomes", "mod": "Aether mod"}],
-    "Bambou":                 [{"biome": "Bamboo Jungle", "mod": "Vanilla Minecraft"}, {"biome": "Bamboo Jungle Hills", "mod": "Vanilla Minecraft"}, {"biome": "Bamboo Jungle Canyon", "mod": "Wythers' Overhauled Overworld"}, {"biome": "Sparse Bamboo Jungle", "mod": "Wythers' Overhauled Overworld"}],
+    "Bambou":                 [{"biome": "Bamboo Jungle", "mod": "Vanilla Minecraft"}, {"biome": "Bamboo Jungle Hills", "mod": "Vanilla Minecraft"}, {"biome": "Bamboo Jungle Canyon", "mod": "Wythers' Overhauled Overworld"}, {"biome": "Sparse Bamboo Jungle", "mod": "Wythers' Overhauled Overworld"}, {"biome": "Bamboo Swamp", "mod": "Wythers' Overhauled Overworld"}],
     "Boueux":                 [{"biome": "Mangrove Swamp", "mod": "Vanilla Minecraft"}],
     "Champs de champignons":  [{"biome": "Mushroom Fields", "mod": "Vanilla Minecraft"}],
     "Fleurs de cerisier":     [{"biome": "Cherry Grove", "mod": "Vanilla Minecraft"}, {"biome": "Sakura Grove", "mod": "Terralith"}, {"biome": "Sakura Valley", "mod": "Terralith"}, {"biome": "Snowy Cherry Grove", "mod": "Terralith"}],
@@ -919,9 +921,11 @@ def get_real_biomes(tag_fr):
             if fr_tag and fr_tag in BIOME_MAP:
                 return BIOME_MAP[fr_tag]
     # Raw biome ID (minecraft:frozen_river, aether:skyroot_forest, etc.)
-    fr_tag = RAW_ID_TO_FR_TAG.get(tag_fr)
-    if fr_tag and fr_tag in BIOME_MAP:
-        return BIOME_MAP[fr_tag]
+    fr_tags = RAW_ID_TO_FR_TAG.get(tag_fr)
+    if fr_tags:
+        for fr_tag in fr_tags:
+            if fr_tag in BIOME_MAP:
+                return BIOME_MAP[fr_tag]
     return [{"biome": tag_fr, "mod": "Tag Cobblemon"}]
 
 def expand_spawn_biomes(biomes_str):
@@ -944,7 +948,7 @@ def expand_spawn_biomes(biomes_str):
                 cobblemon_tag = MINECRAFT_TAG_ALIASES[t]
                 display_tag = COBBLEMON_TAG_TO_FR.get(cobblemon_tag, t)
         elif t in RAW_ID_TO_FR_TAG:
-            display_tag = RAW_ID_TO_FR_TAG[t]
+            display_tag = RAW_ID_TO_FR_TAG[t][0]  # premier tag = principal
         result.append({"tag": display_tag, "biomes": get_real_biomes(t)})
     return result
 
@@ -1457,36 +1461,199 @@ FR_TAG_TO_COBBLEMON = {
 # Utilisé pour résoudre les tags #cobblemon:is_xxx stockés directement en BDD
 COBBLEMON_TAG_TO_FR = {v: k for k, v in FR_TAG_TO_COBBLEMON.items()}
 
-# ── Mapping raw biome IDs (minecraft:, aether:, etc.) → tag FR ───────────────
-# Utilisé quand la BDD contient un ID de biome littéral au lieu d'un tag cobblemon.
+# ── Mapping raw biome IDs (minecraft:, aether:, etc.) → liste de tags FR ────
+# Un biome peut appartenir à plusieurs tags (ex: is_forest + is_taiga).
+# Le premier élément est le tag principal d'affichage.
 RAW_ID_TO_FR_TAG = {
     # Vanilla Minecraft IDs littéraux
-    "minecraft:frozen_river":      "Rivière gelée",
-    "minecraft:mushroom_fields":   "Champignon",
-    "minecraft:sunflower_plains":  "Plaines de tournesols",
-    "minecraft:snowy_beach":       "Plage enneigée",
-    # Aether mod — tous les biomes skyroot → "Éther"
-    "aether:skyroot_forest":       "Éther",
-    "aether:skyroot_woodland":     "Éther",
-    "aether:skyroot_grove":        "Éther",
-    "aether:skyroot_meadow":       "Éther",
-    # The Bumblezone — biomes individuels → tag FR dédié
-    "the_bumblezone:floral_meadow":       "Prairie fleurie",
-    "the_bumblezone:pollinated_fields":   "Champs pollinisés",
-    "the_bumblezone:crystal_canyon":      "Canyon de cristal",
-    "the_bumblezone:howling_constructs":  "Constructions hurlantes",
+    "minecraft:frozen_river":      ["Rivière gelée"],
+    "minecraft:mushroom_fields":   ["Champignon"],
+    "minecraft:sunflower_plains":  ["Plaines de tournesols"],
+    "minecraft:snowy_beach":       ["Plage enneigée"],
+    # Aether mod
+    "aether:skyroot_forest":       ["Éther"],
+    "aether:skyroot_woodland":     ["Éther"],
+    "aether:skyroot_grove":        ["Éther"],
+    "aether:skyroot_meadow":       ["Éther"],
+    # The Bumblezone
+    "the_bumblezone:floral_meadow":       ["Prairie fleurie"],
+    "the_bumblezone:pollinated_fields":   ["Champs pollinisés"],
+    "the_bumblezone:crystal_canyon":      ["Canyon de cristal"],
+    "the_bumblezone:howling_constructs":  ["Constructions hurlantes"],
     # BYG
-    "byg:warped_desert":           "Désert distordu",
+    "byg:warped_desert":           ["Désert distordu"],
     # Biomes O' Plenty
-    "biomesoplenty:crystalline_chasm": "Gouffre cristallin",
+    "biomesoplenty:crystalline_chasm": ["Gouffre cristallin"],
+
+    # ── terralith ──
+    "terralith:alpine_grove": ["Forêt"],
+    "terralith:amethyst_canyon": ["Jungle"],
+    "terralith:amethyst_rainforest": ["Jungle"],
+    "terralith:birch_taiga": ["Forêt", "Taïga"],
+    "terralith:bryce_canyon": ["Terres arides"],
+    "terralith:caldera": ["Montagne"],
+    "terralith:cloud_forest": ["Forêt", "Collines"],
+    "terralith:emerald_peaks": ["Montagne"],
+    "terralith:forested_highlands": ["Forêt", "Taïga"],
+    "terralith:fractured_savanna": ["Savane", "Collines"],
+    "terralith:gravel_beach": ["Plage"],
+    "terralith:haze_mountain": ["Collines"],
+    "terralith:jungle_mountains": ["Jungle", "Collines"],
+    "terralith:lavender_forest": ["Forêt"],
+    "terralith:lavender_valley": ["Forêt"],
+    "terralith:lush_valley": ["Forêt", "Taïga"],
+    "terralith:mirage_isles": ["Forêt"],
+    "terralith:moonlight_grove": ["Forêt"],
+    "terralith:moonlight_valley": ["Forêt"],
+    "terralith:painted_mountains": ["Terres arides"],
+    "terralith:rocky_jungle": ["Jungle"],
+    "terralith:rocky_mountains": ["Montagne"],
+    "terralith:sakura_grove": ["Forêt"],
+    "terralith:sakura_valley": ["Forêt"],
+    "terralith:savanna_badlands": ["Terres arides"],
+    "terralith:savanna_slopes": ["Savane"],
+    "terralith:scarlet_mountains": ["Montagne"],
+    "terralith:shield": ["Forêt", "Taïga"],
+    "terralith:siberian_grove": ["Forêt"],
+    "terralith:siberian_taiga": ["Forêt"],
+    "terralith:snowy_cherry_grove": ["Forêt", "Montagne"],
+    "terralith:snowy_maple_forest": ["Forêt"],
+    "terralith:snowy_shield": ["Forêt"],
+    "terralith:temperate_highlands": ["Forêt"],
+    "terralith:tropical_jungle": ["Jungle"],
+    "terralith:volcanic_peaks": ["Montagne"],
+    "terralith:warm_river": ["Rivière"],
+    "terralith:white_cliffs": ["Forêt"],
+    "terralith:wintry_forest": ["Forêt", "Taïga"],
+    "terralith:wintry_lowlands": ["Forêt"],
+    "terralith:yellowstone": ["Taïga"],
+    "terralith:yosemite_lowlands": ["Forêt", "Taïga"],
+
+    # ── wythers ──
+    "wythers:ancient_copper_beech_forest": ["Forêt"],
+    "wythers:ancient_emerald_beech_forest": ["Forêt"],
+    "wythers:ancient_golden_beech_forest": ["Forêt"],
+    "wythers:ancient_moss_forest": ["Forêt"],
+    "wythers:andesite_crags": ["Collines"],
+    "wythers:aspen_crags": ["Collines"],
+    "wythers:autumnal_birch_forest": ["Forêt"],
+    "wythers:autumnal_flower_forest": ["Forêt"],
+    "wythers:autumnal_forest": ["Forêt"],
+    "wythers:autumnal_forest_edge": ["Forêt"],
+    "wythers:ayers_rock": ["Terres arides"],
+    "wythers:badlands_canyon": ["Terres arides"],
+    "wythers:badlands_desert": ["Terres arides"],
+    "wythers:badlands_river": ["Rivière"],
+    "wythers:bamboo_jungle_canyon": ["Jungle"],
+    "wythers:bamboo_jungle_highlands": ["Jungle"],
+    "wythers:bamboo_jungle_swamp": ["Jungle"],
+    "wythers:bamboo_swamp": ["Jungle"],
+    "wythers:billabong": ["Rivière"],
+    "wythers:birch_taiga": ["Taïga"],
+    "wythers:black_beach": ["Plage"],
+    "wythers:black_river": ["Rivière"],
+    "wythers:boreal_forest_red": ["Taïga"],
+    "wythers:boreal_forest_yellow": ["Taïga"],
+    "wythers:chaparral": ["Savane"],
+    "wythers:coastal_mangroves": ["Plage"],
+    "wythers:cold_island": ["Taïga"],
+    "wythers:cool_forest": ["Forêt"],
+    "wythers:cool_forest_edge": ["Forêt"],
+    "wythers:cool_plains": ["Montagne"],
+    "wythers:cool_stony_peaks": ["Montagne"],
+    "wythers:crimson_tundra": ["Montagne"],
+    "wythers:deep_dark_forest": ["Forêt"],
+    "wythers:deep_desert_river": ["Rivière"],
+    "wythers:deep_icy_ocean": ["Grand océan"],
+    "wythers:deep_snowy_taiga": ["Taïga"],
+    "wythers:desert_beach": ["Plage"],
+    "wythers:desert_river": ["Rivière"],
+    "wythers:dry_savanna": ["Savane"],
+    "wythers:dry_tropical_forest": ["Savane"],
+    "wythers:dry_tropical_grassland": ["Savane", "Jungle"],
+    "wythers:eucalyptus_deanei_forest": ["Forêt"],
+    "wythers:eucalyptus_jungle": ["Jungle"],
+    "wythers:eucalyptus_jungle_canyon": ["Jungle"],
+    "wythers:eucalyptus_salubris_woodland": ["Savane"],
+    "wythers:eucalyptus_woodland": ["Savane"],
+    "wythers:fen": ["Taïga"],
+    "wythers:flooded_jungle": ["Jungle"],
+    "wythers:flooded_rainforest": ["Jungle"],
+    "wythers:flooded_savanna": ["Rivière", "Savane"],
+    "wythers:flooded_temperate_rainforest": ["Taïga"],
+    "wythers:flowering_pantanal": ["Forêt"],
+    "wythers:forbidden_forest": ["Forêt"],
+    "wythers:forested_highlands": ["Taïga"],
+    "wythers:giant_sequoia_forest": ["Savane"],
+    "wythers:gravelly_beach": ["Plage"],
+    "wythers:gravelly_river": ["Rivière"],
+    "wythers:highland_plains": ["Montagne"],
+    "wythers:highland_tropical_rainforest": ["Jungle"],
+    "wythers:highlands": ["Montagne"],
+    "wythers:huangshan_highlands": ["Montagne"],
+    "wythers:humid_tropical_grassland": ["Savane"],
+    "wythers:icy_ocean": ["Océan"],
+    "wythers:icy_river": ["Rivière"],
+    "wythers:icy_shore": ["Plage"],
+    "wythers:jacaranda_savanna": ["Savane"],
+    "wythers:jade_highlands": ["Taïga"],
+    "wythers:jungle_island": ["Jungle"],
+    "wythers:jungle_river": ["Rivière"],
+    "wythers:kwongan_heath": ["Terres arides"],
+    "wythers:lantern_river": ["Rivière"],
+    "wythers:larch_taiga": ["Taïga"],
+    "wythers:maple_mountains": ["Taïga", "Montagne"],
+    "wythers:mushroom_island": ["Jungle"],
+    "wythers:old_growth_taiga_crags": ["Taïga"],
+    "wythers:old_growth_taiga_swamp": ["Taïga"],
+    "wythers:outback": ["Terres arides"],
+    "wythers:outback_desert": ["Terres arides"],
+    "wythers:pantanal": ["Jungle"],
+    "wythers:phantasmal_forest": ["Forêt"],
+    "wythers:pine_barrens": ["Taïga"],
+    "wythers:red_desert": ["Terres arides"],
+    "wythers:red_rock_canyon": ["Terres arides"],
+    "wythers:sakura_forest": ["Forêt"],
+    "wythers:sand_dunes": ["Plage"],
+    "wythers:sandy_jungle": ["Jungle"],
+    "wythers:savanna_badlands": ["Terres arides", "Savane"],
+    "wythers:savanna_basaltic_incursions": ["Savane"],
+    "wythers:savanna_river": ["Rivière"],
+    "wythers:scrub_forest": ["Savane"],
+    "wythers:scrubland": ["Savane"],
+    "wythers:sparse_bamboo_jungle": ["Jungle"],
+    "wythers:sparse_eucalyptus_jungle": ["Jungle"],
+    "wythers:sparse_eucalyptus_woodland": ["Jungle"],
+    "wythers:spring_flower_forest": ["Forêt"],
+    "wythers:subtropical_forest": ["Forêt"],
+    "wythers:subtropical_forest_edge": ["Forêt"],
+    "wythers:taiga_crags": ["Taïga"],
+    "wythers:temperate_rainforest": ["Taïga"],
+    "wythers:temperate_rainforest_crags": ["Taïga"],
+    "wythers:tepui": ["Collines"],
+    "wythers:thermal_taiga": ["Taïga"],
+    "wythers:thermal_taiga_crags": ["Taïga"],
+    "wythers:tropical_beach": ["Plage"],
+    "wythers:tropical_forest": ["Savane"],
+    "wythers:tropical_grassland": ["Savane"],
+    "wythers:tropical_rainforest": ["Jungle"],
+    "wythers:tropical_volcano": ["Montagne"],
+    "wythers:tsingy_forest": ["Savane"],
+    "wythers:volcano": ["Montagne"],
+    "wythers:warm_birch_forest": ["Forêt"],
+    "wythers:windswept_jungle": ["Jungle"],
+    "wythers:wistman_woods": ["Forêt"],
+    "wythers:wooded_savanna": ["Savane"],
 }
 
 # ── Reverse : tag FR → liste de raw IDs bruts ────────────────────────────────
+FR_TAG_TO_RAW_IDS = {}
+for _raw_id, _fr_tags in RAW_ID_TO_FR_TAG.items():
+    for _fr_tag in _fr_tags:
+        FR_TAG_TO_RAW_IDS.setdefault(_fr_tag, []).append(_raw_id)
+
 # Utilisé dans les requêtes SQL pour inclure les pokémon qui ont un ID littéral
 # en plus du tag cobblemon (ex: aether:skyroot_forest en sus de #aether:is_aether).
-FR_TAG_TO_RAW_IDS = {}
-for _raw_id, _fr_tag in RAW_ID_TO_FR_TAG.items():
-    FR_TAG_TO_RAW_IDS.setdefault(_fr_tag, []).append(_raw_id)
 
 def get_parent_cobblemon_tags(cobblemon_tag):
     """
