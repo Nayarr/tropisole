@@ -149,6 +149,19 @@
     .hero-right {
       margin-left: auto;
       text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+    }
+
+    .hero-sprite {
+      width: 80px;
+      height: 80px;
+      image-rendering: pixelated;
+      object-fit: contain;
+      filter: drop-shadow(0 0 12px rgba(232,255,71,0.25));
+      opacity: 0.95;
     }
 
     .big-num {
@@ -495,6 +508,9 @@
     </div>
   </div>
   <div class="hero-right">
+    {% if sprite_url %}
+    <img class="hero-sprite" src="{{ sprite_url }}" alt="{{ name }}" />
+    {% endif %}
     <div class="big-num">{{ '%04d' % numero }}</div>
   </div>
 </div>

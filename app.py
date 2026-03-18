@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, abort, session, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, abort, session, redirect, url_for, flash, send_from_directory
 import firebase_admin
 from firebase_admin import credentials, auth
 import json
@@ -9,6 +9,8 @@ import hashlib
 from datetime import timedelta, datetime, timezone
 from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
 from pokemon_types import get_types, ALL_TYPES, TYPE_COLORS
+from pokemon_sprites import get_sprite
+from pokemon_hitboxes import get_height
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spawn_biomes_filtered,
                            MINECRAFT_TAG_ALIASES,
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
@@ -85,6 +87,11 @@ def init_db():
     conn.close()
 
 init_db()
+
+@app.route('/static/pokemon_icons/<path:filename>')
+def pokemon_icon(filename):
+    icons_dir = os.path.join(os.path.dirname(__file__), 'static', 'pokemon_icons')
+    return send_from_directory(icons_dir, filename)
 
 @app.before_request
 def security_check():
@@ -577,6 +584,9 @@ def _build_spawn_list(filtered_rows):
         p["ev"], p["ev_str"] = ev_cache[num]
         p["ev_total"] = p["ev"]["total"]
         p["types"] = get_types(num)
+        p["sprite"] = get_sprite(num, p.get("forme"))
+        h = get_height(num, p.get("forme"))
+        p["hitbox_height"] = round(h, 3) if h else None
         pokemon_list.append(p)
     pokemon_list.sort(key=lambda x: (-x["ev_total"], x["numero"]))
     return pokemon_list
@@ -720,6 +730,7 @@ def api_pokemon():
             "niveau_max": r["niveau_max"],
             "nb_entrees": r["nb_entrees"],
             "types": get_types(r["numero"]),
+            "sprite": get_sprite(r["numero"]),
         })
 
     return jsonify({
@@ -767,10 +778,16 @@ def pokemon_detail(numero):
     ).fetchone()
     conn.close()
 
+    # Sprite : on prend la forme de la première entrée de spawn
+    first_forme = spawns[0].get("forme") if spawns else None
+    sprite_file = get_sprite(numero, first_forme)
+    sprite_url  = f"/static/pokemon_icons/{sprite_file}" if sprite_file else None
+
     return render_template("detail.html",
                            name=name,
                            numero=numero,
                            spawns=spawns,
+                           sprite_url=sprite_url,
                            prev_num=prev_row[0] if prev_row else None,
                            next_num=next_row[0] if next_row else None,
                            bucket_fr=BUCKET_FR,

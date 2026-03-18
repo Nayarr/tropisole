@@ -228,7 +228,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
-      padding: 1rem 2rem;
+      padding: 0.75rem 0.75rem;
       border-bottom: 1px solid var(--border);
       background: rgba(17,17,24,0.7);
       backdrop-filter: blur(10px);
@@ -486,8 +486,69 @@
       cursor: pointer;
     }
     #y-reset:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    .height-filter-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      min-width: 220px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
+    }
+    .height-filter-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-family: 'Space Mono', monospace;
+    }
+    .height-filter-label span { color: #47ffe8; font-weight: 700; }
+    .height-slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .height-slider-row input[type=range] {
+      width: 100%;
+      accent-color: #47ffe8;
+      height: 4px;
+    }
+    #height-reset {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    #height-reset:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+    .td-height {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: #47ffe8;
+      white-space: nowrap;
+    }
+    .td-height.unknown { color: var(--muted); }
+    .height-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .height-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: #47ffe8;
+      opacity: 0.55;
+      min-width: 2px;
+      flex-shrink: 0;
+    }
+    .height-val {
+      min-width: 44px;
+      text-align: right;
+    }
     .cond-tag {
       display: inline-block;
+      width: fit-content;
       font-size: 0.68rem;
       padding: 0.15rem 0.4rem;
       border-radius: 4px;
@@ -502,7 +563,7 @@
     .cond-tag.dark { border-color: #6c5ce744; background: #6c5ce715; }
     .cond-tag.height { border-color: #fdcb6e44; background: #fdcb6e15; }
     .cond-tag.y_range { border-color: #e8ff4744; background: #e8ff4710; }
-    .cond-tags-cell { display: flex; flex-wrap: wrap; gap: 3px; }
+    .cond-tags-cell { display: inline-flex; flex-direction: column; gap: 3px; align-items: flex-start; }
 
     /* Anti-conditions : rose/rouge */
     .anti-tag {
@@ -559,9 +620,7 @@
     .content {
       position: relative;
       z-index: 5;
-      padding: 1.5rem 2rem 3rem;
-      max-width: 1800px;
-      margin: 0 auto;
+      padding: 0.75rem 0.5rem 2rem;
     }
 
     .table-wrap {
@@ -571,7 +630,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.875rem;
+      font-size: 0.82rem;
     }
 
     thead tr {
@@ -584,7 +643,7 @@
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--muted);
-      padding: 0.8rem 0.8rem;
+      padding: 0.55rem 0.5rem;
       text-align: left;
       cursor: pointer;
       white-space: nowrap;
@@ -610,7 +669,7 @@
     tbody tr:hover { background: rgba(232,255,71,0.03); }
 
     td {
-      padding: 0.7rem 0.8rem;
+      padding: 0.45rem 0.5rem;
       vertical-align: middle;
     }
 
@@ -625,10 +684,20 @@
       color: var(--text);
       text-decoration: none;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.82rem;
       transition: color 0.15s;
     }
     .td-name a:hover { color: var(--accent); }
+
+    .row-sprite {
+      width: 26px;
+      height: 26px;
+      image-rendering: pixelated;
+      object-fit: contain;
+      flex-shrink: 0;
+      opacity: 0.92;
+      filter: drop-shadow(0 0 4px rgba(232,255,71,0.15));
+    }
 
     .badge {
       font-family: 'Space Mono', monospace;
@@ -709,8 +778,10 @@
 
     .td-poids {
       font-family: 'Space Mono', monospace;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--accent2);
+      white-space: nowrap;
+      width: 1%;
     }
 
     .empty {
@@ -848,12 +919,12 @@
 
     /* TYPE FILTER BUTTONS */
     /* TYPE BADGES dans la table */
-    .type-badges { display: flex; gap: 3px; flex-wrap: nowrap; }
+    .type-badges { display: flex; gap: 2px; flex-wrap: nowrap; }
     .type-badge {
       font-family: 'Space Mono', monospace;
       font-size: 0.55rem;
       font-weight: 700;
-      padding: 0.12rem 0.4rem;
+      padding: 0.1rem 0.28rem;
       border-radius: 3px;
       color: #fff;
       text-shadow: 0 1px 2px rgba(0,0,0,0.4);
@@ -1398,14 +1469,16 @@
     <button id="y-reset" onclick="resetYFilter()">Réinitialiser Y</button>
   </div>
 
-  <div class="ev-legend">
-    <div class="ev-dot"><div class="ev-dot-circle" style="background:#ff6b81"></div>PV</div>
-    <div class="ev-dot"><div class="ev-dot-circle" style="background:#ffa07a"></div>Atk</div>
-    <div class="ev-dot"><div class="ev-dot-circle" style="background:#74b9ff"></div>Déf</div>
-    <div class="ev-dot"><div class="ev-dot-circle" style="background:#a29bfe"></div>Att.S</div>
-    <div class="ev-dot"><div class="ev-dot-circle" style="background:#55efc4"></div>Déf.S</div>
-    <div class="ev-dot"><div class="ev-dot-circle" style="background:#e8ff47"></div>Vit</div>
+  <div class="height-filter-wrap" id="height-filter-section">
+    <label class="height-filter-label">📏 Hauteur hitbox <span id="height-range-display">0.00 → 10.00 m</span></label>
+    <div class="height-slider-row">
+      <input type="range" id="height-min-slider" min="0" max="1000" value="0" step="1">
+      <input type="range" id="height-max-slider" min="0" max="1000" value="1000" step="1">
+    </div>
+    <button id="height-reset" onclick="resetHeightFilter()">Réinitialiser</button>
   </div>
+
+
 
   <span class="results-count" id="results-count"></span>
 </div>
@@ -1416,21 +1489,20 @@
       <thead>
         <tr>
           <th data-col="rank">#<span class="sort-arrow">↓</span></th>
-          <th data-col="numero">N°<span class="sort-arrow"></span></th>
+          <th data-col="numero" class="sorted">N°<span class="sort-arrow">↑</span></th>
           <th data-col="pokemon">Pokémon<span class="sort-arrow"></span></th>
           <th>Type</th>
           <th data-col="bucket">Rareté<span class="sort-arrow"></span></th>
-          <th data-col="ev_total" class="sorted">EVs lâchés<span class="sort-arrow">↓</span></th>
           <th>Répartition EVs</th>
+
           <th>Lieu de spawn</th>
           <th>Presets</th>
-          <th>Ciel visible</th>
           <th>Conditions</th>
           <th>Anti-conditions</th>
           <th data-col="time">Moment<span class="sort-arrow"></span></th>
           <th data-col="weather">Météo<span class="sort-arrow"></span></th>
           <th data-col="poids">Poids spawn<span class="sort-arrow"></span></th>
-          <th data-col="niveau">Niveau<span class="sort-arrow"></span></th>
+          <th data-col="hitbox_height">📏 Hauteur<span class="sort-arrow"></span></th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -1469,8 +1541,6 @@ const RAW_DATA = [
     pokemon: {{ p.pokemon | tojson }},
     bucket: {{ (p.bucket or '') | tojson }},
     poids: {{ p.poids or 0 }},
-    niveau_min: {{ p.niveau_min or 0 }},
-    niveau_max: {{ p.niveau_max or 0 }},
     contextes: {{ p.contextes | tojson }},
     times: {{ (p.times or []) | tojson }},
     weathers: {{ (p.weathers or []) | tojson }},
@@ -1492,6 +1562,8 @@ const RAW_DATA = [
     peut_voir_ciel: {{ (p.peut_voir_ciel or '') | tojson }},
     forme_regionale: {{ (p.forme_regionale) | tojson }},
     types: {{ (p.types or []) | tojson }},
+    sprite: {{ (p.sprite or '') | tojson }},
+    hitbox_height: {{ p.hitbox_height | tojson }},
     structure_ids: {{ (p.condition_tags | selectattr('type','eq','structure') | map(attribute='label') | map('replace','Structure : ','') | list) | tojson }},
   }{% if not loop.last %},{% endif %}
   {% endfor %}
@@ -1509,11 +1581,47 @@ const CONTEXTE_LABELS = {
 
 const TYPE_COLORS = {{ type_colors | tojson }};
 
-let currentSort = { col: 'ev_total', dir: 'desc' };
+let currentSort = { col: 'numero', dir: 'asc' };
 let data = [...RAW_DATA];
 
 let yMinFilter = -64;
 let yMaxFilter = 320;
+let heightMinCm = 0;
+let heightMaxCm = 1000;
+let HEIGHT_PAGE_MIN = 0;
+let HEIGHT_PAGE_MAX = 1000;
+let HEIGHT_PAGE_MAX_M = 10.0;
+
+function initHeightSlider() {
+  const heights = data.map(p => p.hitbox_height).filter(h => h !== null && h > 0);
+  if (heights.length === 0) return;
+  HEIGHT_PAGE_MIN = Math.floor(Math.min(...heights) * 100);
+  HEIGHT_PAGE_MAX = Math.ceil(Math.max(...heights) * 100);
+  const minEl = document.getElementById('height-min-slider');
+  const maxEl = document.getElementById('height-max-slider');
+  minEl.min = HEIGHT_PAGE_MIN; minEl.max = HEIGHT_PAGE_MAX; minEl.value = HEIGHT_PAGE_MIN;
+  maxEl.min = HEIGHT_PAGE_MIN; maxEl.max = HEIGHT_PAGE_MAX; maxEl.value = HEIGHT_PAGE_MAX;
+  heightMinCm = HEIGHT_PAGE_MIN;
+  heightMaxCm = HEIGHT_PAGE_MAX;
+  HEIGHT_PAGE_MAX_M = HEIGHT_PAGE_MAX / 100;
+  updateHeightDisplay();
+}
+
+function updateHeightDisplay() {
+  heightMinCm = parseInt(document.getElementById('height-min-slider').value);
+  heightMaxCm = parseInt(document.getElementById('height-max-slider').value);
+  document.getElementById('height-range-display').textContent =
+    `${(heightMinCm/100).toFixed(2)} → ${(heightMaxCm/100).toFixed(2)} m`;
+}
+
+function resetHeightFilter() {
+  document.getElementById('height-min-slider').value = HEIGHT_PAGE_MIN;
+  document.getElementById('height-max-slider').value = HEIGHT_PAGE_MAX;
+  heightMinCm = HEIGHT_PAGE_MIN;
+  heightMaxCm = HEIGHT_PAGE_MAX;
+  updateHeightDisplay();
+  render();
+}
 
 function resetYFilter() {
   yMinFilter = -64; yMaxFilter = 320;
@@ -1692,6 +1800,17 @@ function filteredData() {
     // Type filter
     if (!matchFilter('type', p => (p.types || []), p)) return false;
 
+    // Height filter — actif seulement si les sliders sont bougés depuis la plage de la page
+    if (heightMinCm > HEIGHT_PAGE_MIN || heightMaxCm < HEIGHT_PAGE_MAX) {
+      const ph = p.hitbox_height;
+      if (ph === null || ph === 0) {
+        if (heightMinCm > HEIGHT_PAGE_MIN) return false;
+      } else {
+        const phCm = Math.round(ph * 100);
+        if (phCm < heightMinCm || phCm > heightMaxCm) return false;
+      }
+    }
+
     return true;
   });
 }
@@ -1706,9 +1825,9 @@ function sortData(rows) {
     else if (col === 'numero') { va = a.numero; vb = b.numero; }
     else if (col === 'pokemon') { va = a.pokemon; vb = b.pokemon; }
     else if (col === 'bucket') { va = a.bucket; vb = b.bucket; }
-    else if (col === 'niveau') { va = a.niveau_min; vb = b.niveau_min; }
     else if (col === 'time') { va = a.times.join(','); vb = b.times.join(','); }
     else if (col === 'weather') { va = a.weathers.join(','); vb = b.weathers.join(','); }
+    else if (col === 'hitbox_height') { va = a.hitbox_height ?? -1; vb = b.hitbox_height ?? -1; }
     else { va = a.numero; vb = b.numero; }
     if (typeof va === 'string') return mult * va.localeCompare(vb);
     return mult * (va - vb);
@@ -1793,23 +1912,28 @@ function render() {
                   : '<span class="badge-sky-any">—</span>';
 
     // Conditions
-    const condTagsHtml = p.condition_tags && p.condition_tags.length > 0
-      ? `<div class="cond-tags-cell">${p.condition_tags.map(t =>
-          `<span class="cond-tag ${t.type}" title="${t.label}">${t.icon} <span style="font-size:0.62rem">${t.label}</span></span>`
-        ).join('')}</div>`
+    // Y level tag (sera injecté dans le cond-tags-cell)
+    const yTag = (p.y_min !== null || p.y_max !== null)
+      ? `<span class="cond-tag y_range">Y: ${p.y_min ?? '?'} → ${p.y_max ?? '?'}</span>`
+      : '';
+
+    const allCondTags = [
+      ...(p.condition_tags || []).map(t =>
+        `<span class="cond-tag ${t.type}" title="${t.label}">${t.icon} <span style="font-size:0.62rem">${t.label}</span></span>`
+      ),
+      ...(yTag ? [yTag] : []),
+    ];
+    const condTagsHtml = allCondTags.length > 0
+      ? `<div class="cond-tags-cell">${allCondTags.join('')}</div>`
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
 
-    // Anti-conditions
     const antiTagsHtml = p.anticondition_tags && p.anticondition_tags.length > 0
       ? `<div class="cond-tags-cell">${p.anticondition_tags.map(t =>
           `<span class="cond-tag anti-tag" title="${t.label}">${t.icon} <span style="font-size:0.62rem">${t.label}</span></span>`
         ).join('')}</div>`
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
 
-    // Y level
-    const yHtml = (p.y_min !== null || p.y_max !== null)
-      ? `<div style="font-size:0.7rem;color:#e8ff47;font-family:'Space Mono',monospace;margin-top:3px">Y: ${p.y_min ?? '?'} → ${p.y_max ?? '?'}</div>`
-      : '';
+    const yHtml = '';  // intégré dans condTagsHtml
 
     // Temps : [] = pas de contrainte = toujours
     const timeHtml = p.times.length
@@ -1826,32 +1950,42 @@ function render() {
         <td class="rank-num">${i + 1}</td>
         <td class="td-num">#${String(p.numero).padStart(4,'0')}</td>
         <td class="td-name">
-          <a href="/pokemon/${p.numero}">${p.pokemon}</a>
-          ${p.forme_regionale ? `<span class="badge-forme-reg" style="color:${p.forme_regionale.color};border-color:${p.forme_regionale.color}44;background:${p.forme_regionale.color}18">🌏 ${p.forme_regionale.short}</span>` : ''}
-          ${isSource ? '<span class="badge badge-grey" style="margin-left:6px">source</span>' : ''}
+          <div style="display:flex;align-items:center;gap:5px">
+            ${p.sprite ? `<img src="/static/pokemon_icons/${p.sprite}" alt="${p.pokemon}" class="row-sprite" />` : ''}
+            <div>
+              <a href="/pokemon/${p.numero}">${p.pokemon}</a>
+              ${p.forme_regionale ? `<span class="badge-forme-reg" style="color:${p.forme_regionale.color};border-color:${p.forme_regionale.color}44;background:${p.forme_regionale.color}18">🌏 ${p.forme_regionale.short}</span>` : ''}
+              ${isSource ? '<span class="badge badge-grey" style="margin-left:6px">source</span>' : ''}
+            </div>
+          </div>
         </td>
-        <td style="white-space:nowrap;width:1%;vertical-align:middle">
+        <td style="white-space:nowrap;width:1%;vertical-align:middle;padding-left:3px;padding-right:3px">
           ${(p.types||[]).length
             ? `<div class="type-badges">${(p.types||[]).map(t=>`<span class="type-badge" style="background:${TYPE_COLORS[t]||'#6a6a88'}">${t}</span>`).join('')}</div>`
             : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}
         </td>
         <td><span class="badge ${bClass}">${bLabel}</span></td>
-        <td><span class="ev-total ${p.ev.total === 0 ? 'zero' : ''}">${p.ev.total}</span></td>
         <td>
           <div style="display:flex;align-items:flex-end;gap:4px">
             <div class="ev-bars">${renderEVBars(p.ev)}</div>
-            <span class="ev-str ${p.ev.total === 0 ? 'none' : ''}" style="margin-left:6px">${p.ev_str}</span>
           </div>
         </td>
+
         <td><div class="contextes-list">${contextesHtml}</div></td>
-        <td>${presetsHtml}</td>
-        <td>${skyHtml}</td>
-        <td style="min-width:140px">${condTagsHtml}${yHtml}</td>
-        <td style="min-width:140px">${antiTagsHtml}</td>
+        <td style="width:1%;white-space:nowrap">${presetsHtml}</td>
+        <td style="width:1%;white-space:nowrap">${condTagsHtml}</td>
+        <td style="width:1%;white-space:nowrap">${antiTagsHtml}</td>
         <td class="td-time">${timeHtml}</td>
         <td class="td-weather">${weatherHtml}</td>
         <td class="td-poids">${p.poids || '—'}</td>
-        <td class="td-level">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</td>
+        <td class="td-height ${p.hitbox_height ? '' : 'unknown'}">
+          ${p.hitbox_height
+            ? `<div class="height-bar-wrap">
+                <div class="height-bar" style="width:${Math.round((p.hitbox_height/HEIGHT_PAGE_MAX_M)*60)}px"></div>
+                <span class="height-val">${p.hitbox_height.toFixed(2)} m</span>
+               </div>`
+            : '—'}
+        </td>
       </tr>`;
   }).join('');
 }
@@ -1884,10 +2018,19 @@ document.getElementById('search').addEventListener('input', () => {
   clearTimeout(debounce);
   debounce = setTimeout(render, 200);
 });
-document.getElementById('y-min-slider').addEventListener('input', () => { updateYDisplay(); render(); });
-document.getElementById('y-max-slider').addEventListener('input', () => { updateYDisplay(); render(); });
+// Sliders : mise à jour de l'affichage en temps réel, render() seulement au relâchement
+document.getElementById('y-min-slider').addEventListener('input', () => updateYDisplay());
+document.getElementById('y-max-slider').addEventListener('input', () => updateYDisplay());
+document.getElementById('y-min-slider').addEventListener('change', () => render());
+document.getElementById('y-max-slider').addEventListener('change', () => render());
+
+document.getElementById('height-min-slider').addEventListener('input', () => updateHeightDisplay());
+document.getElementById('height-max-slider').addEventListener('input', () => updateHeightDisplay());
+document.getElementById('height-min-slider').addEventListener('change', () => render());
+document.getElementById('height-max-slider').addEventListener('change', () => render());
 
 render();
+initHeightSlider();
 
 // Scroll to source pokemon after render
 setTimeout(() => {

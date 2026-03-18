@@ -446,6 +446,19 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    .poke-card-sprite {
+      position: absolute;
+      bottom: 0.5rem;
+      right: 0.5rem;
+      width: 52px;
+      height: 52px;
+      image-rendering: pixelated;
+      object-fit: contain;
+      opacity: 0.85;
+      filter: drop-shadow(0 0 6px rgba(232,255,71,0.2));
+      pointer-events: none;
+    }
+
     .poke-card::after {
       content: '';
       position: absolute;
@@ -2556,6 +2569,7 @@
           </div>
           ${p.types && p.types.length ? `<div class="poke-types">${p.types.map(t => `<span class="type-badge" style="background:${TYPE_COLORS[t]||'#6a6a88'}">${t}</span>`).join('')}</div>` : ''}
           <div class="poke-lvl">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</div>
+          ${p.sprite ? `<img class="poke-card-sprite" src="/static/pokemon_icons/${p.sprite}" alt="${p.pokemon}" />` : ''}
         </a>`;
     }).join('');
 
