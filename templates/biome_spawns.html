@@ -1470,7 +1470,7 @@
   </div>
 
   <div class="height-filter-wrap" id="height-filter-section">
-    <label class="height-filter-label">📏 Hauteur hitbox <span id="height-range-display">0.00 → 10.00 m</span></label>
+    <label class="height-filter-label">Hauteur hitbox <span id="height-range-display">0.00 → 10.00 bloc</span></label>
     <div class="height-slider-row">
       <input type="range" id="height-min-slider" min="0" max="1000" value="0" step="1">
       <input type="range" id="height-max-slider" min="0" max="1000" value="1000" step="1">
@@ -1611,7 +1611,7 @@ function updateHeightDisplay() {
   heightMinCm = parseInt(document.getElementById('height-min-slider').value);
   heightMaxCm = parseInt(document.getElementById('height-max-slider').value);
   document.getElementById('height-range-display').textContent =
-    `${(heightMinCm/100).toFixed(2)} → ${(heightMaxCm/100).toFixed(2)} m`;
+    `${(heightMinCm/100).toFixed(2)} → ${(heightMaxCm/100).toFixed(2)} bloc(s)`;
 }
 
 function resetHeightFilter() {

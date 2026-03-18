@@ -11,11 +11,13 @@ from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
 from pokemon_types import get_types, ALL_TYPES, TYPE_COLORS
 from pokemon_sprites import get_sprite
 from pokemon_hitboxes import get_height
+from pokemon_evochains import get_evo_chain
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spawn_biomes_filtered,
                            MINECRAFT_TAG_ALIASES,
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
                            get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
-                           FR_TAG_TO_COBBLEMON, FR_TAG_TO_RAW_IDS, get_parent_cobblemon_tags)
+                           FR_TAG_TO_COBBLEMON, FR_TAG_TO_RAW_IDS, get_parent_cobblemon_tags,
+                           COBBLEMON_TAG_TO_FR)
 
 app = Flask(__name__)
 app.secret_key = "bfcdc97aed922f455ccac7c0af8833b776446cc8b13466187c0b4c6f6ca8ef33"
@@ -1246,5 +1248,293 @@ def admin_bugreport_delete():
     return redirect("/admin#bugreports")
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# ORACLE D'ISOLATION
+# ──────────────────────────────────────────────────────────────────────────────
+
+import numpy as _np
+import math as _math
+
+EV_LABELS_ORACLE = {
+    'hp': 'PV', 'atk': 'Attaque', 'def': 'Defense',
+    'spa': 'Att. Spe', 'spd': 'Def. Spe', 'spe': 'Vitesse'
+}
+
+def _oracle_build_real_biome_map():
+    """
+    Construit {biome_reel: set_de_TOUS_les_tags_cobblemon_qui_le_couvrent} depuis BIOME_MAP.
+    Inclut les tags broad (is_overworld, is_arid...) pour avoir le vrai pool de concurrents.
+    """
+    mapping = {}
+    mods    = {}
+    for fr_tag, biomes in BIOME_MAP.items():
+        cob_tag = FR_TAG_TO_COBBLEMON.get(fr_tag)
+        if not cob_tag:
+            continue
+        for entry in biomes:
+            bname = entry['biome']
+            mapping.setdefault(bname, set()).add(cob_tag)
+            mods[bname] = entry['mod']
+    return mapping, mods
+
+
+def _oracle_load_spawns():
+    conn = get_db()
+    rows = conn.execute("""
+        SELECT numero, pokemon, biomes_tags, biomes_exclus_tags,
+               contexte, time, weather, conditions, peut_voir_ciel,
+               structures, lune, presets
+        FROM pokemon_spawns WHERE est_actif = 1
+    """).fetchall()
+    conn.close()
+    COLS = ['numero','pokemon','biomes_tags','biomes_exclus_tags',
+            'contexte','time','weather','conditions','peut_voir_ciel',
+            'structures','lune','presets']
+    spawns = []
+    for r in rows:
+        s = dict(zip(COLS, r))
+        s['ev'] = get_ev(s['numero'])
+        s['hitbox_height'] = get_height(s['numero'])
+        cond = json.loads(s['conditions']) if s['conditions'] else {}
+        s['minY']     = cond.get('minY')
+        s['maxY']     = cond.get('maxY')
+        s['maxLight'] = cond.get('maxLight')
+        s['preset_set'] = set(p.strip() for p in (s['presets'] or '').split(',') if p.strip())
+        try:
+            s['struct_list'] = json.loads(s['structures']) if s['structures'] else []
+        except Exception:
+            s['struct_list'] = []
+        s['has_required_struct'] = len(s['struct_list']) > 0
+        s['tag_set']  = set(t.strip() for t in (s['biomes_tags']       or '').split(',') if t.strip())
+        s['excl_set'] = set(t.strip() for t in (s['biomes_exclus_tags'] or '').split(',') if t.strip())
+        spawns.append(s)
+    return spawns
+
+
+def _oracle_beam_refine(subset, base_combo, chain):
+    """
+    Affine une sous-liste avec beam search sur les filtres optionnels.
+    Contexte et EV déjà appliqués — ici : weather, preset, sky, Y, light, time, hmax.
+    """
+    ns = len(subset)
+    if ns == 0:
+        return 0, ns, base_combo, subset
+    is_t = _np.array([s['numero'] in chain for s in subset])
+    if is_t.sum() == 0:
+        return 0, ns, base_combo, subset
+
+    fc = {}
+    for w in sorted({s['weather'] for s in subset if s['weather']}):
+        fc['weather:' + w] = _np.array([s['weather'] == w for s in subset])
+    all_presets = set()
+    for s in subset: all_presets |= s['preset_set']
+    for p in sorted(all_presets):
+        fc['preset:' + p] = _np.array([p in s['preset_set'] for s in subset])
+    # sky:true  = exclure ceux qui NÉCESSITENT l'absence de ciel (peut_voir_ciel='false')
+    # sky:false = exclure ceux qui NÉCESSITENT le ciel (peut_voir_ciel='true')
+    fc['sky:true']  = _np.array([s['peut_voir_ciel'] != 'false' for s in subset])
+    fc['sky:false'] = _np.array([s['peut_voir_ciel'] != 'true'  for s in subset])
+    for ym in sorted({s['minY'] for s in subset if s['minY'] is not None}):
+        fc['ymin:' + str(ym)] = _np.array([s['maxY'] is None or s['maxY'] >= ym for s in subset])
+    for ym in sorted({s['maxY'] for s in subset if s['maxY'] is not None}):
+        fc['ymax:' + str(ym)] = _np.array([s['minY'] is None or s['minY'] <= ym for s in subset])
+    for ml in sorted({s['maxLight'] for s in subset if s['maxLight'] is not None}):
+        fc['light:' + str(ml)] = _np.array([s['maxLight'] is None or s['maxLight'] <= ml for s in subset])
+    for t in sorted({s['time'] for s in subset if s['time']}):
+        fc['time:' + t] = _np.array([s['time'] == t for s in subset])
+    chain_hs = [s['hitbox_height'] for s in subset if s['numero'] in chain and s['hitbox_height']]
+    if chain_hs:
+        h_ceil = float(_math.ceil(max(chain_hs)))
+        fc['hmax:' + str(h_ceil)] = _np.array(
+            [s['hitbox_height'] is not None and s['hitbox_height'] <= h_ceil for s in subset]
+        )
+
+    if not fc:
+        tgt = int(is_t.sum())
+        return round(tgt / ns * 100, 1), ns, base_combo, subset
+
+    fn = list(fc.keys())
+    fa = [fc[k] for k in fn]
+    best_pct  = float(is_t.sum()) / ns * 100
+    best_mask = _np.ones(ns, dtype=bool)
+    best_keys = []
+    beam = [(_np.ones(ns, dtype=bool), [])]
+
+    for _d in range(3):
+        nb = []
+        for mask, active in beam:
+            for name, arr in zip(fn, fa):
+                if name in active: continue
+                nm  = mask & arr
+                cnt = int(nm.sum())
+                if cnt == 0: continue
+                t2  = int((nm & is_t).sum())
+                if t2 == 0: continue
+                nb.append((t2 / cnt * 100, cnt, nm, active + [name]))
+        if not nb: break
+        nb.sort(key=lambda x: (-x[0], x[1]))
+        top = nb[0]
+        if top[0] > best_pct or (top[0] == best_pct and top[1] < int(best_mask.sum())):
+            best_pct  = top[0]
+            best_mask = top[2]
+            best_keys = top[3]
+        beam = [(m, a) for _, _, m, a in nb[:5]]
+        if best_pct == 100.0 and int(best_mask.sum()) <= len(chain):
+            break
+
+    combo = dict(base_combo)
+    for key in best_keys:
+        cat, val = key.split(':', 1)
+        if cat == 'weather': combo['weather']  = val
+        elif cat == 'preset': combo['preset']  = val
+        elif cat == 'sky':    combo['sky']      = val
+        elif cat == 'ymin':   combo['y_min']   = float(val)
+        elif cat == 'ymax':   combo['y_max']   = float(val)
+        elif cat == 'light':  combo['maxLight']= float(val)
+        elif cat == 'time':   combo['time']    = val
+        elif cat == 'hmax':   combo['h_max']   = float(val)
+
+    return round(best_pct, 1), int(best_mask.sum()), combo, [s for s, m in zip(subset, best_mask) if m]
+
+
+def _oracle_best_combo(in_biome, chain):
+    """
+    Calcule la meilleure isolation pour un biome.
+    Pool = spawns sans structure requise (les structures faussent le biome réel).
+    Filtres obligatoires : contexte + stat EV.
+    Filtres optionnels via beam search : sky, météo, preset, Y, lumière, time, hitbox.
+    """
+    pool = [s for s in in_biome if not s['has_required_struct']]
+    if not pool:
+        return 0, 0, 0, {}, []
+
+    total_base = len(pool)
+    ctxs = sorted({s['contexte'] for s in pool if s['contexte']})
+    ev_stats = ['hp', 'atk', 'def', 'spa', 'spd', 'spe']
+
+    best_pct  = 0.0
+    best_tf   = total_base
+    best_combo = {}
+    best_filt  = pool
+
+    for ctx in ctxs:
+        ctx_sub = [s for s in pool if s['contexte'] == ctx]
+        if not any(s['numero'] in chain for s in ctx_sub):
+            continue
+
+        for ev_s in ev_stats:
+            ev_sub = [s for s in ctx_sub if s['ev'][ev_s] > 0]
+            if not ev_sub:
+                continue
+            if not any(s['numero'] in chain for s in ev_sub):
+                continue
+
+            base = {'contexte': ctx, 'ev': ev_s, 'ev_label': EV_LABELS_ORACLE.get(ev_s, ev_s)}
+            pct, tf, combo, filt = _oracle_beam_refine(ev_sub, base, chain)
+
+            if pct > best_pct or (pct == best_pct and tf < best_tf):
+                best_pct  = pct
+                best_tf   = tf
+                best_combo = combo
+                best_filt  = filt
+
+    return best_pct, total_base, best_tf, best_combo, best_filt
+
+
+@app.route('/oracle')
+def oracle():
+    conn = get_db()
+    pokemon_list = conn.execute(
+        "SELECT DISTINCT numero, pokemon FROM pokemon_spawns ORDER BY numero"
+    ).fetchall()
+    conn.close()
+    return render_template('oracle.html', pokemon_list=pokemon_list)
+
+
+@app.route('/api/oracle/stream')
+def api_oracle_stream():
+    numero = request.args.get('numero', type=int)
+    if not numero:
+        return jsonify({'error': 'numero requis'}), 400
+
+    def generate():
+        chain      = get_evo_chain(numero)
+        all_spawns = _oracle_load_spawns()
+        real_biome_map, biome_mods = _oracle_build_real_biome_map()
+
+        conn = get_db()
+        num_to_name = {r[0]: r[1] for r in conn.execute(
+            "SELECT DISTINCT numero, pokemon FROM pokemon_spawns"
+        ).fetchall()}
+        conn.close()
+
+        chain_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(chain)]
+
+        # Biomes réels où la chaîne peut spawner
+        target_biomes = []
+        for bname, all_tags in real_biome_map.items():
+            for s in all_spawns:
+                if s['numero'] in chain and all_tags & s['tag_set'] and not (all_tags & s['excl_set']):
+                    target_biomes.append((bname, all_tags))
+                    break
+
+        _msg = json.dumps({'type': 'init', 'chain': chain_names, 'total_biomes': len(target_biomes)})
+        yield "data: " + _msg + "\n\n"
+
+        results = []
+        seen_combos = set()
+
+        for i, (bname, all_tags) in enumerate(target_biomes):
+            in_biome = [s for s in all_spawns
+                        if all_tags & s['tag_set'] and not (all_tags & s['excl_set'])]
+            if not in_biome: continue
+
+            pct, total_base, total_filt, combo, filtered = _oracle_best_combo(in_biome, chain)
+            if pct == 0: continue
+
+            # Dédupliquer : même combo + mêmes concurrents = même résultat, garder le premier
+            competitor_nums = frozenset(s['numero'] for s in filtered if s['numero'] not in chain)
+            combo_key = (
+                combo.get('contexte'), combo.get('ev'), combo.get('sky'),
+                combo.get('preset'), combo.get('time'),
+                round(combo.get('y_min') or 0), round(combo.get('y_max') or 0),
+                competitor_nums,
+            )
+            if combo_key in seen_combos:
+                continue
+            seen_combos.add(combo_key)
+
+            competitors_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(competitor_nums)]
+
+            result = {
+                'biome_name':      bname,
+                'biome_fr':        bname,
+                'mod':             biome_mods.get(bname, '?'),
+                'pct':             pct,
+                'total_base':      total_base,
+                'total_filtered':  total_filt,
+                'target_spawns':   sum(1 for s in filtered if s['numero'] in chain),
+                'combo':           combo,
+                'competitors_names': competitors_names,
+            }
+            results.append(result)
+            results_sorted = sorted(results, key=lambda x: (-x['pct'], x['total_filtered']))
+            _msg = json.dumps({
+                'type': 'update',
+                'results': results_sorted[:10],
+                'progress': i + 1,
+                'total_biomes': len(target_biomes),
+            })
+            yield "data: " + _msg + "\n\n"
+
+        yield "data: " + json.dumps({'type': 'done'}) + "\n\n"
+
+    return app.response_class(
+        generate(),
+        mimetype='text/event-stream',
+        headers={'Cache-Control': 'no-cache', 'X-Accel-Buffering': 'no'},
+    )
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, threaded=True)
