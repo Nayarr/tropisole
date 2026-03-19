@@ -193,6 +193,9 @@
     .filter-tag.time  { border-color: #fdcb6e44; background: #fdcb6e12; color: #fdcb6e; }
     .filter-tag.sky   { border-color: #a29bfe44; background: #a29bfe12; color: #a29bfe; }
     .filter-tag.lume  { border-color: #e8ff4744; background: #e8ff4712; color: var(--accent); }
+    .filter-tag.removed { border-color: #ff475744; background: #ff475710; color: #ff6b81; }
+    .badge-ultra-only { font-family: 'Space Mono',monospace; font-size:.6rem; padding:.2rem .55rem; border-radius:20px; background:rgba(162,155,254,.15); border:1px solid rgba(162,155,254,.35); color:#a29bfe; white-space:nowrap; }
+    .result-pct.ponly { color: #a29bfe; }
     .filter-tag.wthr  { border-color: #74b9ff44; background: #74b9ff12; color: #74b9ff; }
     .filter-tag.lune  { border-color: #a29bfe44; background: #a29bfe12; color: #a29bfe; }
 
@@ -413,35 +416,50 @@ const PRESET_LABELS = {
 };
 
 function renderCard(r, i) {
-  const pct = r.pct;
-  const pctClass = pct === 100 ? 'p100' : pct >= 75 ? 'p75' : pct >= 50 ? 'p50' : 'plow';
-  const cardClass = pct === 100 ? 'perfect' : pct >= 75 ? 'great' : '';
-  const barColor = pct === 100 ? '#55efc4' : pct >= 75 ? '#e8ff47' : pct >= 50 ? '#ffab40' : '#6a6a88';
+  const pct     = r.pct;       // score pondéré (tri)
+  const rawPct  = r.raw_pct ?? r.pct;  // % affiché
+  const onlyUltra = r.only_ultra || false;
+  const pctClass = rawPct === 100 ? 'p100' : onlyUltra ? 'ponly' : rawPct >= 75 ? 'p75' : rawPct >= 50 ? 'p50' : 'plow';
+  const cardClass = rawPct === 100 ? 'perfect' : onlyUltra ? 'great' : rawPct >= 75 ? 'great' : '';
+  const barColor  = rawPct === 100 ? '#55efc4' : onlyUltra ? '#a29bfe' : rawPct >= 75 ? '#e8ff47' : rawPct >= 50 ? '#ffab40' : '#6a6a88';
 
   const combo = r.combo || {};
-  const filterTags = [];
-  if (combo.contexte)  filterTags.push(`<span class="filter-tag ctx">${CTX_LABELS[combo.contexte]  || combo.contexte}</span>`);
-  if (combo.time)      filterTags.push(`<span class="filter-tag time">${TIME_LABELS[combo.time]    || combo.time}</span>`);
-  if (combo.weather)   filterTags.push(`<span class="filter-tag wthr">${WTHR_LABELS[combo.weather] || combo.weather}</span>`);
-  if (combo.preset)    filterTags.push(`<span class="filter-tag ctx">${PRESET_LABELS[combo.preset] || combo.preset}</span>`);
-  if (combo.structure) filterTags.push(`<span class="filter-tag lume">🏗️ ${combo.structure.replace(/.*[:/]/, '')}</span>`);
-  if (combo.sky === 'true')  filterTags.push(`<span class="filter-tag sky">☀️ Ciel visible</span>`);
-  if (combo.sky === 'false') filterTags.push(`<span class="filter-tag sky">🚫 Sans ciel</span>`);
-  if (combo.ev_label)  filterTags.push(`<span class="filter-tag lume">⚡ EV ${combo.ev_label}</span>`);
-  if (combo.y_above != null)  filterTags.push(`<span class="filter-tag lume">Y > ${combo.y_above}</span>`);
-  if (combo.y_below != null)  filterTags.push(`<span class="filter-tag lume">Y < ${combo.y_below}</span>`);
-  if (combo.maxLight != null) filterTags.push(`<span class="filter-tag sky">💡 Lumière ≤ ${combo.maxLight}</span>`);
-  if (combo.h_max != null)    filterTags.push(`<span class="filter-tag sky">📏 Hauteur ≤ ${combo.h_max} m</span>`);
 
-  const filtersHtml = filterTags.length
-    ? `<div class="filters-row"><span class="filter-label">Filtres</span>${filterTags.join('')}</div>`
-    : `<div class="filters-row"><span class="filter-label" style="color:var(--muted)">Aucun filtre nécessaire</span></div>`;
+  // Conditions OBLIGATOIRES
+  const mandatoryTags = [];
+  if (combo.contexte) mandatoryTags.push(`<span class="filter-tag ctx">${CTX_LABELS[combo.contexte] || combo.contexte}</span>`);
+  if (combo.ev_label) mandatoryTags.push(`<span class="filter-tag lume">⚡ EV ${combo.ev_label}</span>`);
+  if (combo.structure) mandatoryTags.push(`<span class="filter-tag lume">🏗️ ${combo.structure.replace(/.*[:/]/, '')}</span>`);
+  if (combo.require_preset) {
+    const PRESET_LABELS = { 'treetop': '🌲 Cimes d\'arbres', 'water': '💧 Eau', 'lava': '🌋 Lave' };
+    mandatoryTags.push(`<span class="filter-tag ctx">${PRESET_LABELS[combo.require_preset] || combo.require_preset}</span>`);
+  }
 
+  // Conditions SUPPRIMÉES pour isoler (envoyées directement par le serveur)
+  const removedTags = (combo.removed || []).map(msg =>
+    `<span class="filter-tag removed">🚫 ${msg}</span>`
+  );
+
+  const filtersHtml = `
+    <div class="filters-row">
+      <span class="filter-label">Obligatoire</span>${mandatoryTags.join('')}
+    </div>
+    ${removedTags.length
+      ? `<div class="filters-row"><span class="filter-label">À bloquer</span>${removedTags.join('')}</div>`
+      : `<div class="filters-row"><span class="filter-label" style="color:var(--green)">Aucun blocage supplémentaire ✓</span></div>`
+    }`;
+
+
+  const BUCKET_COLORS = { 'ultra-rare': '#a29bfe', 'rare': '#e8ff47', 'uncommon': '#55efc4', 'common': '#6a6a88' };
   const compHtml = r.competitors_names.length === 0
     ? `<span class="no-competitors">✅ Isolation parfaite avec la chaîne</span>`
     : `<div class="competitors-wrap">
         <span class="filter-label">Concurrents</span>
-        ${r.competitors_names.slice(0, 8).map(n => `<span class="competitor-chip">${n}</span>`).join('')}
+        ${r.competitors_names.slice(0, 8).map((n, i) => {
+          const bkt = (r.competitors_buckets || [])[i];
+          const col = BUCKET_COLORS[bkt] || '#6a6a88';
+          return `<span class="competitor-chip" style="border-color:${col}44;color:${col}">${n}</span>`;
+        }).join('')}
         ${r.competitors_names.length > 8 ? `<span class="competitor-chip">+${r.competitors_names.length - 8}</span>` : ''}
        </div>`;
 
@@ -468,7 +486,10 @@ function renderCard(r, i) {
           </a>
           <div style="font-family:'Space Mono',monospace;font-size:.6rem;margin-top:2px;color:${modColor}">${r.mod || ""}</div>
         </div>
-        <span class="result-pct ${pctClass}">${pct}%</span>
+        <div style="text-align:right">
+          <span class="result-pct ${pctClass}">${rawPct}%</span>
+          ${onlyUltra ? '<div class="badge-ultra-only">⭐ Ultra-rares</div>' : ''}
+        </div>
       </div>
       <div class="pct-bar-wrap">
         <div class="pct-bar" style="width:${pct}%;background:${barColor}"></div>

@@ -1283,13 +1283,13 @@ def _oracle_load_spawns():
     rows = conn.execute("""
         SELECT numero, pokemon, biomes_tags, biomes_exclus_tags,
                contexte, time, weather, conditions, peut_voir_ciel,
-               structures, lune, presets, bucket
+               structures, lune, presets, bucket, lumiere_min, lumiere_max
         FROM pokemon_spawns WHERE est_actif = 1
     """).fetchall()
     conn.close()
     COLS = ['numero','pokemon','biomes_tags','biomes_exclus_tags',
             'contexte','time','weather','conditions','peut_voir_ciel',
-            'structures','lune','presets','bucket']
+            'structures','lune','presets','bucket','lumiere_min','lumiere_max']
     spawns = []
     for r in rows:
         s = dict(zip(COLS, r))
@@ -1298,7 +1298,11 @@ def _oracle_load_spawns():
         cond = json.loads(s['conditions']) if s['conditions'] else {}
         s['minY']     = cond.get('minY')
         s['maxY']     = cond.get('maxY')
-        s['maxLight'] = cond.get('maxLight')
+        s['maxLight']     = cond.get('maxLight')
+        s['needed_blocks']      = bool(cond.get('neededNearbyBlocks'))
+        s['needed_base_blocks'] = bool(cond.get('neededBaseBlocks'))
+        s['lumiere_min']   = s.get('lumiere_min')   # None si pas de contrainte
+        s['lumiere_max']   = s.get('lumiere_max')   # None si pas de contrainte
         s['preset_set'] = set(p.strip() for p in (s['presets'] or '').split(',') if p.strip())
         try:
             s['struct_list'] = json.loads(s['structures']) if s['structures'] else []
@@ -1307,14 +1311,15 @@ def _oracle_load_spawns():
         s['has_required_struct'] = len(s['struct_list']) > 0
         # Manoir = spawn strictement interne, pas de mélange avec biome général
         s['is_mansion'] = any('woodland_mansion' in st for st in s['struct_list'])
-        s['is_filler'] = s.get('bucket') == 'filler'
+        s['is_filler']      = s.get('bucket') == 'filler'
+        s['is_ultra_rare']  = s.get('bucket') == 'ultra-rare'
         s['tag_set']  = set(t.strip() for t in (s['biomes_tags']       or '').split(',') if t.strip())
         s['excl_set'] = set(t.strip() for t in (s['biomes_exclus_tags'] or '').split(',') if t.strip())
         spawns.append(s)
     return spawns
 
 
-def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False):
+def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, chain_lum_min=None, chain_lum_max=None):
     """
     Affine une sous-liste avec beam search sur les filtres optionnels.
     Contexte et EV déjà appliqués — ici : weather, preset, sky, Y, light, time, hmax.
@@ -1326,34 +1331,122 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False):
     if is_t.sum() == 0:
         return 0, ns, base_combo, subset
 
+    # ── Chaque filtre = BLOQUER une condition = ÉLIMINER les spawns qui la requièrent ──
+    # Les spawns sans contrainte (None) restent dans le pool dans TOUS les cas.
     fc = {}
-    for w in sorted({s['weather'] for s in subset if s['weather']}):
-        fc['weather:' + w] = _np.array([s['weather'] == w for s in subset])
+
+    # MÉTÉO : bloquer clear → éliminer weather='clear', garder rain+None
+    #         bloquer rain  → éliminer weather='rain',  garder clear+None
+    all_weathers = sorted({s['weather'] for s in subset if s['weather']})
+    for w in all_weathers:
+        other = [x for x in all_weathers if x != w]
+        if other:  # seulement si ça élimine quelque chose
+            fc['block_weather:' + w] = _np.array(
+                [s['weather'] is None or s['weather'] == w for s in subset]
+            )
+
+    # PRESET : bloquer l'absence d'un preset = éliminer spawns qui ONT ce preset
+    # Ex: "pas de treetop" → éliminer spawns avec 'treetop' dans preset_set
+    # PRESETS : un spawn peut avoir plusieurs presets (ex: 'natural, treetop')
+    # Bloquer 'treetop' n'exclut un spawn QUE si tous ses presets sont bloqués
+    # On crée un filtre par preset p : exclure les spawns dont preset_set ⊆ {p}
+    # (= ils n'ont que p comme preset, donc sans p ils ne peuvent plus spawner)
     all_presets = set()
     for s in subset: all_presets |= s['preset_set']
+    # 'natural' et 'wild' sont des presets omniprésents qu'on ne peut pas bloquer
+    UNBLOCABLE_PRESETS = {'natural', 'wild'}
+    # Seuls ces presets sont des emplacements physiquement exclusifs :
+    # on peut se limiter strictement a treetop (sur feuilles), water (dans l'eau)
+    # ou lava (pres de lave) sans ambiguite avec natural/wild.
+    # Tous les autres presets (foliage, urban, derelict...) coexistent avec
+    # natural/wild et ne peuvent pas etre "requis" sans faux positifs.
+    REQUIREABLE_PRESETS = {'treetop', 'water', 'lava'}
     for p in sorted(all_presets):
-        fc['preset:' + p] = _np.array([p in s['preset_set'] for s in subset])
-    # sky:true  = exclure ceux qui NÉCESSITENT l'absence de ciel (peut_voir_ciel='false')
-    # sky:false = exclure ceux qui NÉCESSITENT le ciel (peut_voir_ciel='true')
-    fc['sky:true']  = _np.array([s['peut_voir_ciel'] != 'false' for s in subset])
-    fc['sky:false'] = _np.array([s['peut_voir_ciel'] != 'true'  for s in subset])
-    # ymin : "au-dessus de Y=v" → exclut les spawns dont maxY <= v (ils ne montent pas jusque là)
-    for ym in sorted({s['maxY'] for s in subset if s['maxY'] is not None}):
-        fc['ymin:' + str(ym)] = _np.array([s['maxY'] is None or s['maxY'] > ym for s in subset])
-    # ymax : "en-dessous de Y=v" → exclut les spawns dont minY >= v
-    for ym in sorted({s['minY'] for s in subset if s['minY'] is not None}):
-        fc['ymax:' + str(ym)] = _np.array([s['minY'] is None or s['minY'] < ym for s in subset])
-    for ml in sorted({s['maxLight'] for s in subset if s['maxLight'] is not None}):
-        fc['light:' + str(ml)] = _np.array([s['maxLight'] is None or s['maxLight'] <= ml for s in subset])
-    for t in sorted({s['time'] for s in subset if s['time']}):
-        fc['time:' + t] = _np.array([s['time'] == t for s in subset])
-    if not skip_hmax:
-        chain_hs = [s['hitbox_height'] for s in subset if s['numero'] in chain and s['hitbox_height']]
-        if chain_hs:
-            h_ceil = float(_math.ceil(max(chain_hs)))
-            fc['hmax:' + str(h_ceil)] = _np.array(
-                [s['hitbox_height'] is not None and s['hitbox_height'] <= h_ceil for s in subset]
+        if p in UNBLOCABLE_PRESETS:
+            continue
+        # Exclure uniquement les spawns qui n'ont QUE ce preset (pas d'autre preset alternatif)
+        # ex: block_preset:treetop exclut {treetop} mais garde {natural, treetop}
+        fc['block_preset:' + p] = _np.array(
+            [(p not in s['preset_set']) or (len(s['preset_set']) > 1) for s in subset]
+        )
+        # REQUIRE PRESET : se limiter strictement a un emplacement exclusif.
+        # Uniquement pour treetop/water/lava car ce sont des locations mutuellement
+        # exclusives avec natural/wild — les autres presets se chevauchent.
+        if p in REQUIREABLE_PRESETS and any(p in s['preset_set'] for s in subset if s['numero'] in chain):
+            fc['require_preset:' + p] = _np.array(
+                [p in s['preset_set'] for s in subset]
             )
+
+    # CIEL : bloquer ciel visible → éliminer peut_voir_ciel='true', garder false+None
+    #        bloquer ciel absent  → éliminer peut_voir_ciel='false', garder true+None
+    fc['block_sky:open']    = _np.array([s['peut_voir_ciel'] != 'true'  for s in subset])
+    fc['block_sky:covered'] = _np.array([s['peut_voir_ciel'] != 'false' for s in subset])
+
+    # Y : "au-dessus de Y=v" → éliminer spawns dont maxY <= v
+    for ym in sorted({s['maxY'] for s in subset if s['maxY'] is not None}):
+        fc['block_ybelow:' + str(ym)] = _np.array([s['maxY'] is None or s['maxY'] > ym for s in subset])
+    # Y : "en-dessous de Y=v" → éliminer spawns dont minY >= v
+    for ym in sorted({s['minY'] for s in subset if s['minY'] is not None}):
+        fc['block_yabove:' + str(ym)] = _np.array([s['minY'] is None or s['minY'] < ym for s in subset])
+
+    # LUMIÈRE : bloquer lumière forte → éliminer spawns avec maxLight > seuil
+    for ml in sorted({s['maxLight'] for s in subset if s['maxLight'] is not None}):
+        fc['block_light:' + str(ml)] = _np.array(
+            [s['maxLight'] is None or s['maxLight'] <= ml for s in subset]
+        )
+    # Bloquer les spawns qui nécessitent des blocs proches spécifiques (nénuphars, eau, etc.)
+    if any(s['needed_blocks'] for s in subset):
+        fc['block_neededBlocks:1'] = _np.array([not s['needed_blocks'] for s in subset])
+    # Bloquer les spawns qui nécessitent un sol spécifique (herbe, pierre, etc.)
+    if any(s['needed_base_blocks'] for s in subset):
+        fc['block_baseBlocks:1'] = _np.array([not s['needed_base_blocks'] for s in subset])
+    # Filtres luminosité basés sur la plage de lumière de la CIBLE
+    # block_darkness : si la cible a besoin de lumière (lum_min>0), exclure les spawns d'obscurité
+    if chain_lum_min is not None and chain_lum_min > 0:
+        fc['block_darkness:1'] = _np.array(
+            [s['lumiere_max'] is None or s['lumiere_max'] >= chain_lum_min for s in subset]
+        )
+    # block_brightness : si la cible a besoin d'obscurité (lum_max<15), exclure les spawns lumineux
+    if chain_lum_max is not None and chain_lum_max < 15:
+        fc['block_brightness:1'] = _np.array(
+            [s['lumiere_min'] is None or s['lumiere_min'] <= chain_lum_max for s in subset]
+        )
+
+    # MOMENT : tester les 3 creneaux, meme si non representes dans le subset.
+    # farm_time:night -> exclut les spawns jour/crepuscule only
+    all_times_in_subset = sorted({s['time'] for s in subset if s['time']})
+    if all_times_in_subset:
+        for farm_t in ['day', 'night', 'dusk']:
+            excluded_by_farm = [s for s in subset if s['time'] and s['time'] != farm_t]
+            if excluded_by_farm:
+                fc['farm_time:' + farm_t] = _np.array(
+                    [s['time'] is None or s['time'] == farm_t for s in subset]
+                )
+    # Pour chaque hauteur unique des membres de la chaine, on cree un filtre hmax.
+    # Ex: Ouistempo(0.6)->1.0, Badabouin(1.32)->2.0, Gorythmic(2.185)->3.0
+    # IMPORTANT: les membres de la chaine exclus par ce plafond ne sont pas des
+    # "cibles perdues" - ils ne peuvent simplement pas spawner dans cet espace.
+    # On stocke un is_t local par filtre hmax qui redefinit la chaine effective.
+    fc_is_t_override = {}
+    if not skip_hmax:
+        chain_hs_unique = sorted({
+            float(_math.ceil(s['hitbox_height']))
+            for s in subset if s['numero'] in chain and s['hitbox_height']
+        })
+        for h_ceil in chain_hs_unique:
+            if ctx in ('submerged', 'seafloor'):
+                h_ceil = max(h_ceil, 2.0)
+            key = 'hmax:' + str(h_ceil)
+            # Garde: hitbox inconnue (None) OU hitbox <= plafond
+            fc[key] = _np.array(
+                [s['hitbox_height'] is None or s['hitbox_height'] <= h_ceil for s in subset]
+            )
+            # is_t local: membres de la chaine qui RENTRENT dans ce plafond
+            fc_is_t_override[key] = _np.array([
+                s['numero'] in chain and
+                (s['hitbox_height'] is None or s['hitbox_height'] <= h_ceil)
+                for s in subset
+            ])
 
     if not fc:
         tgt = int(is_t.sum())
@@ -1361,7 +1454,12 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False):
 
     fn = list(fc.keys())
     fa = [fc[k] for k in fn]
-    best_pct  = float(is_t.sum()) / ns * 100
+    is_ultra  = _np.array([s['is_ultra_rare'] for s in subset])
+    n_tgt_init  = int(is_t.sum())
+    n_ultra_init= int((is_ultra & ~is_t).sum())
+    n_norm_init = ns - n_tgt_init - n_ultra_init
+    _wd = n_tgt_init + n_norm_init + n_ultra_init * 0.1
+    best_pct  = (n_tgt_init / _wd * 100) if _wd > 0 else 0
     best_mask = _np.ones(ns, dtype=bool)
     best_keys = []
     beam = [(_np.ones(ns, dtype=bool), [])]
@@ -1371,12 +1469,36 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False):
         for mask, active in beam:
             for name, arr in zip(fn, fa):
                 if name in active: continue
+                # Filtres mutuellement exclusifs : on ne peut pas bloquer les deux côtés en même temps
+                cat_name = name.split(':')[0]
+                if cat_name == 'block_sky' and any(k.startswith('block_sky:') for k in active): continue
+                if cat_name == 'farm_time' and any(k.startswith('farm_time:') for k in active): continue
+                if cat_name == 'block_weather' and any(k.startswith('block_weather:') for k in active): continue
+                # require_preset et block_preset sont incompatibles entre eux
+                if cat_name == 'require_preset' and any(k.startswith('require_preset:') for k in active): continue
+                if cat_name == 'require_preset' and any(k.startswith('block_preset:') for k in active): continue
+                if cat_name == 'block_preset' and any(k.startswith('require_preset:') for k in active): continue
                 nm  = mask & arr
                 cnt = int(nm.sum())
                 if cnt == 0: continue
-                t2  = int((nm & is_t).sum())
+                # Pour les filtres hmax, la chaine effective = membres qui rentrent dans le plafond.
+                # Les membres exclus par la hauteur ne sont pas des cibles perdues.
+                new_active_combo = active + [name]
+                hmax_in_combo = [k for k in new_active_combo if k.startswith('hmax:')]
+                if hmax_in_combo:
+                    most_restrictive = min(hmax_in_combo, key=lambda k: float(k[5:]))
+                    eff_is_t = fc_is_t_override.get(most_restrictive, is_t)
+                else:
+                    eff_is_t = is_t
+                t2  = int((nm & eff_is_t).sum())
                 if t2 == 0: continue
-                nb.append((t2 / cnt * 100, cnt, nm, active + [name]))
+                # Score pondéré : les ultra-rare comptent 0.1 comme concurrent
+                is_ultra_arr = _np.array([s['is_ultra_rare'] for s in subset])
+                n_ultra = int((nm & is_ultra_arr).sum()) - int((nm & eff_is_t & is_ultra_arr).sum())
+                n_norm  = cnt - t2 - n_ultra
+                weighted_denom = t2 + n_norm + n_ultra * 0.1
+                weighted_pct = (t2 / weighted_denom * 100) if weighted_denom > 0 else 0
+                nb.append((weighted_pct, cnt, nm, new_active_combo))
         if not nb: break
         nb.sort(key=lambda x: (-x[0], x[1]))
         top = nb[0]
@@ -1388,19 +1510,80 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False):
         if best_pct == 100.0 and int(best_mask.sum()) <= len(chain):
             break
 
+    # Construire le combo en termes de conditions BLOQUÉES/SUPPRIMÉES
+    EV_LBL = {'hp':'PV','atk':'Attaque','def':'Défense','spa':'Att. Spé','spd':'Déf. Spé','spe':'Vitesse'}
+    WTHR_LBL = {'clear':'beau temps', 'rain':'pluie'}
+    TIME_LBL  = {'day':'jour', 'night':'nuit', 'dusk':'crépuscule'}
+    PRESET_LBL = {
+        'treetop':'cimes d\'arbres','foliage':'feuillage','wild':'zones sauvages',
+        'urban':'zones urbaines','derelict':'zones délabrées','lava':'lave',
+        'redstone':'redstone','mansion':'manoir','illager_structures':'structures pillards',
+        'trail_ruins':'ruines de sentier','webs':'toiles','salt':'sel',
+        'ancient_city':'cité ancienne','stronghold':'forteresse',
+        'end_city':'cité de l\'End','nether_fossil':'fossile Nether',
+        'nether_structures':'structures Nether','jungle_pyramid':'pyramide jungle',
+        'desert_pyramid':'pyramide désert','pillager_outpost':'avant-poste pillard',
+        'ruined_portal':'portail ruiné','ocean_ruins':'ruines océaniques',
+        'ocean_monument':'monument océanique',
+    }
     combo = dict(base_combo)
+    removed = []  # conditions supprimées pour affichage
+    # Si on a exclu les spawns en structure du pool, le signaler
+    if base_combo.get('no_struct_filter'):
+        removed.append('Spawns en structure exclus')
     for key in best_keys:
+        # hmax:2.0 → un seul ':' contrairement aux block_xxx:yyy
+        if key.startswith('hmax:'):
+            hval = key[5:]  # après 'hmax:'
+            combo['h_max'] = float(hval)
+            removed.append(f"Hauteur > {hval}m bloquée (dalles/blocs)")
+            continue
         cat, val = key.split(':', 1)
-        if cat == 'weather': combo['weather']  = val
-        elif cat == 'preset': combo['preset']  = val
-        elif cat == 'sky':    combo['sky']      = val
-        elif cat == 'ymin':   combo['y_above'] = float(val)  # au-dessus de cette Y
-        elif cat == 'ymax':   combo['y_below'] = float(val)  # en-dessous de cette Y
-        elif cat == 'light':  combo['maxLight']= float(val)
-        elif cat == 'time':   combo['time']    = val
-        elif cat == 'hmax':   combo['h_max']   = float(val)
+        if cat == 'block_weather':
+            combo['block_weather'] = val
+            removed.append('Météo ' + WTHR_LBL.get(val,val) + ' bloquée')
+        elif cat == 'block_preset':
+            combo.setdefault('block_presets', []).append(val)
+            removed.append('Preset ' + PRESET_LBL.get(val,val) + ' bloqué')
+        elif cat == 'require_preset':
+            combo['require_preset'] = val
+        elif cat == 'block_sky':
+            combo['block_sky'] = val
+            if val == 'open':    removed.append("Ciel visible bloqué (toit/caverne)")
+            else:                removed.append("Ciel absent bloqué (à l\'air libre)")
+        elif cat == 'block_ybelow':
+            combo['y_above'] = float(val)
+            removed.append(f"Spawns sous Y={val} bloqués")
+        elif cat == 'block_yabove':
+            combo['y_below'] = float(val)
+            removed.append(f"Spawns au-dessus Y={val} bloqués")
+        elif cat == 'block_light':
+            combo['maxLight'] = float(val)
+            removed.append(f"Lumière > {val} bloquée")
+        elif cat == 'block_neededBlocks':
+            removed.append("Blocs requis bloqués (nénuphars, eau profonde, etc.)")
+        elif cat == 'block_baseBlocks':
+            removed.append("Sol spécifique bloqué (herbe, pierre, etc.)")
+        elif cat == 'block_darkness':
+            removed.append("Obscurité bloquée (lumière suffisante requise)")
+        elif cat == 'block_brightness':
+            removed.append("Luminosité bloquée (obscurité requise)")
+        elif cat == 'farm_time':
+            combo['farm_time'] = val
+            excluded_times = [t for t in all_times_in_subset if t != val]
+            if excluded_times:
+                excl_names = ' / '.join(TIME_LBL.get(t, t) for t in excluded_times)
+                removed.append(f"Pokémon {excl_names} uniquement exclus (farmer {TIME_LBL.get(val, val)})")
 
-    return round(best_pct, 1), int(best_mask.sum()), combo, [s for s, m in zip(subset, best_mask) if m]
+    combo['removed'] = removed
+
+    filtered_final = [s for s, m in zip(subset, best_mask) if m]
+    competitors_final = [s for s in filtered_final if s['numero'] not in chain]
+    raw_pct = round(sum(1 for s in filtered_final if s['numero'] in chain) / len(filtered_final) * 100, 1) if filtered_final else 0
+    only_ultra = len(competitors_final) > 0 and all(s['is_ultra_rare'] for s in competitors_final)
+    combo['raw_pct']    = raw_pct
+    combo['only_ultra'] = only_ultra
+    return round(best_pct, 1), int(best_mask.sum()), combo, filtered_final
 
 
 def _oracle_best_combo(in_biome, chain):
@@ -1413,11 +1596,20 @@ def _oracle_best_combo(in_biome, chain):
     Filtres optionnels via beam search : sky, météo, preset, Y, lumière, time, hitbox.
     Note : filtre hitbox désactivé pour le contexte fishing.
     """
-    # Pool général : sans structure + structures non-manoir, fillers exclus
-    pool_general = [s for s in in_biome
-                    if (not s['has_required_struct'] or
-                       (s['has_required_struct'] and not s['is_mansion']))
-                    and not s['is_filler']]
+    # Si la chaîne cible ne spawn jamais en structure → exclure tous les spawns
+    # qui nécessitent une structure (ils n'apparaîtront pas dans le biome sans structure)
+    chain_has_struct = any(s['has_required_struct'] for s in in_biome if s['numero'] in chain)
+
+    if chain_has_struct:
+        # Chaîne avec structure : pool = sans struct + non-manoir (comportement précédent)
+        pool_general = [s for s in in_biome
+                        if (not s['has_required_struct'] or not s['is_mansion'])
+                        and not s['is_filler']]
+    else:
+        # Chaîne sans structure : pool = UNIQUEMENT spawns sans structure
+        pool_general = [s for s in in_biome
+                        if not s['has_required_struct']
+                        and not s['is_filler']]
 
     # Pool manoir : strictement les spawns du manoir, fillers exclus
     pool_mansion = [s for s in in_biome if s['is_mansion'] and not s['is_filler']]
@@ -1465,8 +1657,18 @@ def _oracle_best_combo(in_biome, chain):
                 base = {'contexte': ctx, 'ev': ','.join(ev_combo), 'ev_label': label}
                 if pool_label == 'mansion':
                     base['pool'] = 'mansion'
+                if not chain_has_struct:
+                    base['no_struct_filter'] = True
+                # Lumière min/max de la chaîne pour ce pool (via colonnes DB)
+                lum_mins = [s['lumiere_min'] for s in pool if s['numero'] in chain and s['lumiere_min'] is not None]
+                lum_maxs = [s['lumiere_max'] for s in pool if s['numero'] in chain and s['lumiere_max'] is not None]
+                c_lum_min = min(lum_mins) if lum_mins else None
+                c_lum_max = max(lum_maxs) if lum_maxs else None
                 pct, tf, combo, filt = _oracle_beam_refine(ev_sub, base, chain,
-                                                            skip_hmax=(ctx == 'fishing'))
+                                                            skip_hmax=(ctx == 'fishing'),
+                                                            ctx=ctx,
+                                                            chain_lum_min=c_lum_min,
+                                                            chain_lum_max=c_lum_max)
                 results.append((pct, total_base, tf, combo, filt))
 
     if not results:
@@ -1534,11 +1736,14 @@ def api_oracle_stream():
                 'biome_fr':        bname,
                 'mod':             biome_mods.get(bname, '?'),
                 'pct':             pct,
+                'raw_pct':         combo.pop('raw_pct', pct),
+                'only_ultra':      combo.pop('only_ultra', False),
                 'total_base':      total_base,
                 'total_filtered':  total_filt,
                 'target_spawns':   sum(1 for s in filtered if s['numero'] in chain),
                 'combo':           combo,
                 'competitors_names': competitors_names,
+                'competitors_buckets': [s['bucket'] for s in filtered if s['numero'] not in chain],
             }
             results.append(result)
             results_sorted = sorted(results, key=lambda x: (-x['pct'], x['total_filtered']))
