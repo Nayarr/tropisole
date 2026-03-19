@@ -428,8 +428,8 @@ function renderCard(r, i) {
   if (combo.sky === 'true')  filterTags.push(`<span class="filter-tag sky">☀️ Ciel visible</span>`);
   if (combo.sky === 'false') filterTags.push(`<span class="filter-tag sky">🚫 Sans ciel</span>`);
   if (combo.ev_label)  filterTags.push(`<span class="filter-tag lume">⚡ EV ${combo.ev_label}</span>`);
-  if (combo.y_min != null)    filterTags.push(`<span class="filter-tag lume">Y ≥ ${combo.y_min}</span>`);
-  if (combo.y_max != null)    filterTags.push(`<span class="filter-tag lume">Y ≤ ${combo.y_max}</span>`);
+  if (combo.y_above != null)  filterTags.push(`<span class="filter-tag lume">Y > ${combo.y_above}</span>`);
+  if (combo.y_below != null)  filterTags.push(`<span class="filter-tag lume">Y < ${combo.y_below}</span>`);
   if (combo.maxLight != null) filterTags.push(`<span class="filter-tag sky">💡 Lumière ≤ ${combo.maxLight}</span>`);
   if (combo.h_max != null)    filterTags.push(`<span class="filter-tag sky">📏 Hauteur ≤ ${combo.h_max} m</span>`);
 

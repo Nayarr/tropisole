@@ -1283,13 +1283,13 @@ def _oracle_load_spawns():
     rows = conn.execute("""
         SELECT numero, pokemon, biomes_tags, biomes_exclus_tags,
                contexte, time, weather, conditions, peut_voir_ciel,
-               structures, lune, presets
+               structures, lune, presets, bucket
         FROM pokemon_spawns WHERE est_actif = 1
     """).fetchall()
     conn.close()
     COLS = ['numero','pokemon','biomes_tags','biomes_exclus_tags',
             'contexte','time','weather','conditions','peut_voir_ciel',
-            'structures','lune','presets']
+            'structures','lune','presets','bucket']
     spawns = []
     for r in rows:
         s = dict(zip(COLS, r))
@@ -1305,13 +1305,16 @@ def _oracle_load_spawns():
         except Exception:
             s['struct_list'] = []
         s['has_required_struct'] = len(s['struct_list']) > 0
+        # Manoir = spawn strictement interne, pas de mélange avec biome général
+        s['is_mansion'] = any('woodland_mansion' in st for st in s['struct_list'])
+        s['is_filler'] = s.get('bucket') == 'filler'
         s['tag_set']  = set(t.strip() for t in (s['biomes_tags']       or '').split(',') if t.strip())
         s['excl_set'] = set(t.strip() for t in (s['biomes_exclus_tags'] or '').split(',') if t.strip())
         spawns.append(s)
     return spawns
 
 
-def _oracle_beam_refine(subset, base_combo, chain):
+def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False):
     """
     Affine une sous-liste avec beam search sur les filtres optionnels.
     Contexte et EV déjà appliqués — ici : weather, preset, sky, Y, light, time, hmax.
@@ -1334,20 +1337,23 @@ def _oracle_beam_refine(subset, base_combo, chain):
     # sky:false = exclure ceux qui NÉCESSITENT le ciel (peut_voir_ciel='true')
     fc['sky:true']  = _np.array([s['peut_voir_ciel'] != 'false' for s in subset])
     fc['sky:false'] = _np.array([s['peut_voir_ciel'] != 'true'  for s in subset])
-    for ym in sorted({s['minY'] for s in subset if s['minY'] is not None}):
-        fc['ymin:' + str(ym)] = _np.array([s['maxY'] is None or s['maxY'] >= ym for s in subset])
+    # ymin : "au-dessus de Y=v" → exclut les spawns dont maxY <= v (ils ne montent pas jusque là)
     for ym in sorted({s['maxY'] for s in subset if s['maxY'] is not None}):
-        fc['ymax:' + str(ym)] = _np.array([s['minY'] is None or s['minY'] <= ym for s in subset])
+        fc['ymin:' + str(ym)] = _np.array([s['maxY'] is None or s['maxY'] > ym for s in subset])
+    # ymax : "en-dessous de Y=v" → exclut les spawns dont minY >= v
+    for ym in sorted({s['minY'] for s in subset if s['minY'] is not None}):
+        fc['ymax:' + str(ym)] = _np.array([s['minY'] is None or s['minY'] < ym for s in subset])
     for ml in sorted({s['maxLight'] for s in subset if s['maxLight'] is not None}):
         fc['light:' + str(ml)] = _np.array([s['maxLight'] is None or s['maxLight'] <= ml for s in subset])
     for t in sorted({s['time'] for s in subset if s['time']}):
         fc['time:' + t] = _np.array([s['time'] == t for s in subset])
-    chain_hs = [s['hitbox_height'] for s in subset if s['numero'] in chain and s['hitbox_height']]
-    if chain_hs:
-        h_ceil = float(_math.ceil(max(chain_hs)))
-        fc['hmax:' + str(h_ceil)] = _np.array(
-            [s['hitbox_height'] is not None and s['hitbox_height'] <= h_ceil for s in subset]
-        )
+    if not skip_hmax:
+        chain_hs = [s['hitbox_height'] for s in subset if s['numero'] in chain and s['hitbox_height']]
+        if chain_hs:
+            h_ceil = float(_math.ceil(max(chain_hs)))
+            fc['hmax:' + str(h_ceil)] = _np.array(
+                [s['hitbox_height'] is not None and s['hitbox_height'] <= h_ceil for s in subset]
+            )
 
     if not fc:
         tgt = int(is_t.sum())
@@ -1388,8 +1394,8 @@ def _oracle_beam_refine(subset, base_combo, chain):
         if cat == 'weather': combo['weather']  = val
         elif cat == 'preset': combo['preset']  = val
         elif cat == 'sky':    combo['sky']      = val
-        elif cat == 'ymin':   combo['y_min']   = float(val)
-        elif cat == 'ymax':   combo['y_max']   = float(val)
+        elif cat == 'ymin':   combo['y_above'] = float(val)  # au-dessus de cette Y
+        elif cat == 'ymax':   combo['y_below'] = float(val)  # en-dessous de cette Y
         elif cat == 'light':  combo['maxLight']= float(val)
         elif cat == 'time':   combo['time']    = val
         elif cat == 'hmax':   combo['h_max']   = float(val)
@@ -1400,45 +1406,74 @@ def _oracle_beam_refine(subset, base_combo, chain):
 def _oracle_best_combo(in_biome, chain):
     """
     Calcule la meilleure isolation pour un biome.
-    Pool = spawns sans structure requise (les structures faussent le biome réel).
+    Pool = spawns sans structure requise + spawns de structure non-manoir
+           (ils coexistent dans le chunk avec les spawns normaux).
+    Exception : manoir = pool strictement les spawns du manoir.
     Filtres obligatoires : contexte + stat EV.
     Filtres optionnels via beam search : sky, météo, preset, Y, lumière, time, hitbox.
+    Note : filtre hitbox désactivé pour le contexte fishing.
     """
-    pool = [s for s in in_biome if not s['has_required_struct']]
-    if not pool:
-        return 0, 0, 0, {}, []
+    # Pool général : sans structure + structures non-manoir, fillers exclus
+    pool_general = [s for s in in_biome
+                    if (not s['has_required_struct'] or
+                       (s['has_required_struct'] and not s['is_mansion']))
+                    and not s['is_filler']]
 
-    total_base = len(pool)
-    ctxs = sorted({s['contexte'] for s in pool if s['contexte']})
-    ev_stats = ['hp', 'atk', 'def', 'spa', 'spd', 'spe']
+    # Pool manoir : strictement les spawns du manoir, fillers exclus
+    pool_mansion = [s for s in in_biome if s['is_mansion'] and not s['is_filler']]
 
-    best_pct  = 0.0
-    best_tf   = total_base
-    best_combo = {}
-    best_filt  = pool
+    results = []
 
-    for ctx in ctxs:
-        ctx_sub = [s for s in pool if s['contexte'] == ctx]
-        if not any(s['numero'] in chain for s in ctx_sub):
+    for pool_label, pool in [('general', pool_general), ('mansion', pool_mansion)]:
+        if not pool:
+            continue
+        if pool_label == 'mansion' and not any(s['numero'] in chain for s in pool):
             continue
 
-        for ev_s in ev_stats:
-            ev_sub = [s for s in ctx_sub if s['ev'][ev_s] > 0]
-            if not ev_sub:
+        total_base = len(pool)
+        ctxs = sorted({s['contexte'] for s in pool if s['contexte']})
+
+        # Collecter toutes les stats EV lâchées par la chaîne cible
+        chain_ev_stats = set()
+        for s in pool:
+            if s['numero'] in chain:
+                for stat in ['hp','atk','def','spa','spd','spe']:
+                    if s['ev'][stat] > 0:
+                        chain_ev_stats.add(stat)
+
+        if not chain_ev_stats:
+            continue
+
+        # Tester chaque stat EV individuellement
+        ev_combos_to_test = [(stat,) for stat in sorted(chain_ev_stats)]
+
+        for ctx in ctxs:
+            ctx_sub = [s for s in pool if s['contexte'] == ctx]
+            if not any(s['numero'] in chain for s in ctx_sub):
                 continue
-            if not any(s['numero'] in chain for s in ev_sub):
-                continue
 
-            base = {'contexte': ctx, 'ev': ev_s, 'ev_label': EV_LABELS_ORACLE.get(ev_s, ev_s)}
-            pct, tf, combo, filt = _oracle_beam_refine(ev_sub, base, chain)
+            for ev_combo in ev_combos_to_test:
+                # Garder les spawns qui ont AU MOINS UNE des stats EV du combo
+                # (le joueur filtre par "donne des EVs dans ces stats")
+                ev_sub = [s for s in ctx_sub if any(s['ev'][stat] > 0 for stat in ev_combo)]
+                if not ev_sub:
+                    continue
+                if not any(s['numero'] in chain for s in ev_sub):
+                    continue
 
-            if pct > best_pct or (pct == best_pct and tf < best_tf):
-                best_pct  = pct
-                best_tf   = tf
-                best_combo = combo
-                best_filt  = filt
+                label = ' + '.join(EV_LABELS_ORACLE.get(s, s) for s in ev_combo)
+                base = {'contexte': ctx, 'ev': ','.join(ev_combo), 'ev_label': label}
+                if pool_label == 'mansion':
+                    base['pool'] = 'mansion'
+                pct, tf, combo, filt = _oracle_beam_refine(ev_sub, base, chain,
+                                                            skip_hmax=(ctx == 'fishing'))
+                results.append((pct, total_base, tf, combo, filt))
 
-    return best_pct, total_base, best_tf, best_combo, best_filt
+    if not results:
+        return 0, 0, 0, {}, []
+
+    results.sort(key=lambda x: (-x[0], x[2]))
+    return results[0]
 
 
 @app.route('/oracle')
@@ -1482,7 +1517,6 @@ def api_oracle_stream():
         yield "data: " + _msg + "\n\n"
 
         results = []
-        seen_combos = set()
 
         for i, (bname, all_tags) in enumerate(target_biomes):
             in_biome = [s for s in all_spawns
@@ -1492,18 +1526,7 @@ def api_oracle_stream():
             pct, total_base, total_filt, combo, filtered = _oracle_best_combo(in_biome, chain)
             if pct == 0: continue
 
-            # Dédupliquer : même combo + mêmes concurrents = même résultat, garder le premier
             competitor_nums = frozenset(s['numero'] for s in filtered if s['numero'] not in chain)
-            combo_key = (
-                combo.get('contexte'), combo.get('ev'), combo.get('sky'),
-                combo.get('preset'), combo.get('time'),
-                round(combo.get('y_min') or 0), round(combo.get('y_max') or 0),
-                competitor_nums,
-            )
-            if combo_key in seen_combos:
-                continue
-            seen_combos.add(combo_key)
-
             competitors_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(competitor_nums)]
 
             result = {
@@ -1521,7 +1544,7 @@ def api_oracle_stream():
             results_sorted = sorted(results, key=lambda x: (-x['pct'], x['total_filtered']))
             _msg = json.dumps({
                 'type': 'update',
-                'results': results_sorted[:10],
+                'results': results_sorted[:50],
                 'progress': i + 1,
                 'total_biomes': len(target_biomes),
             })
