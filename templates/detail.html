@@ -456,10 +456,16 @@
       transform: translateY(-1px);
     }
 
-    .biome-chip::after {
-      content: ' ↗';
+    .biome-count {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.52rem;
+      opacity: 0.55;
+      margin-left: 0.25rem;
+    }
+    .biome-arrow {
       opacity: 0.5;
       font-size: 0.5rem;
+      margin-left: 0.15rem;
     }
   </style>
 </head>
@@ -610,15 +616,16 @@
                   <a class="biome-chip"
                      href="/spawns/biome?biomes={{ fr_tag | urlencode }}&from={{ numero }}&entry={{ s.entree }}"
                      style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }};opacity:0.8"
-                     title="Voir tous les Pokémon : {{ fr_tag }}">{{ b }}</a>
+                     title="Voir tous les Pokémon : {{ fr_tag }}">{{ b }}<span class="biome-arrow">↗</span></a>
                     {% else %}
                   <span class="biome-chip" style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }};opacity:0.4;cursor:default;font-style:italic" title="Tag groupé sans correspondance">{{ b }}</span>
                     {% endif %}
                   {% else %}
+                  {% set cnt = biome_spawn_counts.get(b) %}
                   <a class="biome-chip"
                      href="/spawns/biome-reel?biome={{ b | urlencode }}&mod={{ mod | urlencode }}&from={{ numero }}&entry={{ s.entree }}"
                      style="border-color:{{ get_mod_color(mod) }}22;color:{{ get_mod_color(mod) }}"
-                     title="Voir tous les Pokémon de {{ b }}">{{ b }}</a>
+                     title="Voir tous les Pokémon de {{ b }}">{{ b }}{% if cnt is not none %}<span class="biome-count">({{ cnt }})</span>{% endif %}<span class="biome-arrow">↗</span></a>
                   {% endif %}
                   {% endfor %}
                 </div>

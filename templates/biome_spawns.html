@@ -2032,6 +2032,68 @@ document.getElementById('height-max-slider').addEventListener('change', () => re
 render();
 initHeightSlider();
 
+// ── Pré-application des filtres Oracle (depuis URL) ───────────────────────────
+(function applyOracleFilters() {
+  const p = new URLSearchParams(window.location.search);
+  let dirty = false;
+
+  // Contexte
+  if (p.has('ctx')) {
+    toggleOpt('contexte', p.get('ctx'), 'incl');
+    dirty = true;
+  }
+
+  // EV stats (ex: "spe" ou "atk,spe")
+  const evStats = (p.get('ev') || '').split(',').filter(Boolean);
+  evStats.forEach(stat => { toggleOpt('ev', stat, 'incl'); dirty = true; });
+
+  // Moment (farm_time)
+  if (p.has('time')) {
+    toggleOpt('time', p.get('time'), 'incl');
+    dirty = true;
+  }
+
+  // Météo exclue
+  if (p.has('excl_weather')) {
+    toggleOpt('weather', p.get('excl_weather'), 'excl');
+    dirty = true;
+  }
+
+  // Special inclus (require_preset: treetop, water, lava)
+  const inclSpecials = (p.get('incl_special') || '').split(',').filter(Boolean);
+  inclSpecials.forEach(v => { toggleOpt('special', v, 'incl'); dirty = true; });
+
+  // Special exclus (sky, no_sky, dark, bright, treetop…)
+  const exclSpecials = (p.get('excl_special') || '').split(',').filter(Boolean);
+  exclSpecials.forEach(v => { toggleOpt('special', v, 'excl'); dirty = true; });
+
+  // Hauteur max (hmax en blocs → cm)
+  if (p.has('hmax')) {
+    const hmaxCm = Math.round(parseFloat(p.get('hmax')) * 100);
+    const el = document.getElementById('height-max-slider');
+    if (el) {
+      el.value = Math.min(hmaxCm, parseInt(el.max));
+      heightMaxCm = Math.min(hmaxCm, parseInt(el.max));
+      updateHeightDisplay();
+      dirty = true;
+    }
+  }
+
+  // Y min
+  if (p.has('y_min')) {
+    const el = document.getElementById('y-min-slider');
+    if (el) { el.value = p.get('y_min'); updateYDisplay(); dirty = true; }
+  }
+
+  // Y max
+  if (p.has('y_max')) {
+    const el = document.getElementById('y-max-slider');
+    if (el) { el.value = p.get('y_max'); updateYDisplay(); dirty = true; }
+  }
+
+  if (dirty) render();
+})();
+
 // Scroll to source pokemon after render
 setTimeout(() => {
   const sourceRow = document.querySelector('tr.is-source');

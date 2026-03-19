@@ -743,6 +743,43 @@ def api_pokemon():
         "per_page": per_page,
     })
 
+def _biome_spawn_counts(biome_names):
+    """
+    Retourne {biome_name: nb_lignes_spawn_actives} pour une liste de biomes réels.
+    Utilise le même matching tag que l'oracle.
+    """
+    if not biome_names:
+        return {}
+    real_biome_map, _ = _oracle_build_real_biome_map()
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT biomes_tags, biomes_exclus_tags FROM pokemon_spawns WHERE est_actif = 1"
+    ).fetchall()
+    conn.close()
+
+    # Pré-parser les sets de tags une seule fois
+    spawn_tag_sets = [
+        (
+            frozenset(t.strip() for t in (r[0] or '').split(',') if t.strip()),
+            frozenset(t.strip() for t in (r[1] or '').split(',') if t.strip()),
+        )
+        for r in rows
+    ]
+
+    counts = {}
+    for bname in biome_names:
+        all_tags = real_biome_map.get(bname)
+        if not all_tags:
+            counts[bname] = 0
+            continue
+        count = sum(
+            1 for tag_set, excl_set in spawn_tag_sets
+            if all_tags & tag_set and not (all_tags & excl_set)
+        )
+        counts[bname] = count
+    return counts
+
+
 @app.route("/pokemon/<int:numero>")
 def pokemon_detail(numero):
     conn = get_db()
@@ -785,6 +822,16 @@ def pokemon_detail(numero):
     sprite_file = get_sprite(numero, first_forme)
     sprite_url  = f"/static/pokemon_icons/{sprite_file}" if sprite_file else None
 
+    # Collecter tous les biomes réels affichés pour calculer leurs counts
+    all_real_biomes = set()
+    for s in spawns:
+        for group in s.get('biomes_by_mod', []):
+            for mod, blist in group['by_mod'].items():
+                for b in blist:
+                    if not b.startswith('All '):
+                        all_real_biomes.add(b)
+    biome_spawn_counts = _biome_spawn_counts(all_real_biomes)
+
     return render_template("detail.html",
                            name=name,
                            numero=numero,
@@ -799,7 +846,8 @@ def pokemon_detail(numero):
                            get_mod_color=get_mod_color,
                            all_biomes_to_fr=ALL_BIOMES_TO_FR_TAG,
                            all_types=ALL_TYPES,
-                           type_colors=TYPE_COLORS)
+                           type_colors=TYPE_COLORS,
+                           biome_spawn_counts=biome_spawn_counts)
 
 @app.route("/spawns/biome")
 def spawns_by_biome():
@@ -1299,7 +1347,9 @@ def _oracle_load_spawns():
         s['minY']     = cond.get('minY')
         s['maxY']     = cond.get('maxY')
         s['maxLight']     = cond.get('maxLight')
-        s['needed_blocks']      = bool(cond.get('neededNearbyBlocks'))
+        needed_nearby           = cond.get('neededNearbyBlocks', [])
+        s['needed_blocks']      = bool(needed_nearby)
+        s['needed_blocks_list'] = needed_nearby if isinstance(needed_nearby, list) else ([needed_nearby] if needed_nearby else [])
         s['needed_base_blocks'] = bool(cond.get('neededBaseBlocks'))
         s['lumiere_min']   = s.get('lumiere_min')   # None si pas de contrainte
         s['lumiere_max']   = s.get('lumiere_max')   # None si pas de contrainte
@@ -1411,6 +1461,37 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
         fc['block_brightness:1'] = _np.array(
             [s['lumiere_min'] is None or s['lumiere_min'] <= chain_lum_max for s in subset]
         )
+    # Filtres luminosité généraux : même si la cible n'a pas de contrainte lumière,
+    # on peut CHOISIR de farmer en lumière ou dans l'obscurité pour exclure des concurrents.
+    # "block_darkness_gen" = farmer en lumière → exclure les spawns dark-only (lum_max <= 7)
+    # "block_brightness_gen" = farmer dans le noir → exclure les spawns bright-only (lum_min >= 8)
+    # Ces filtres ne s'appliquent que si la cible elle-même ne serait pas exclue.
+    if 'block_darkness:1' not in fc:
+        # Cible sans contrainte de luminosité OU avec lum_max > 7 → peut spawner en lumière
+        chain_allows_light = all(
+            s['lumiere_max'] is None or s['lumiere_max'] > 7
+            for s in subset if s['numero'] in chain
+        )
+        if chain_allows_light and any(
+            s['lumiere_max'] is not None and s['lumiere_max'] <= 7
+            for s in subset if s['numero'] not in chain
+        ):
+            fc['block_darkness:1'] = _np.array(
+                [s['lumiere_max'] is None or s['lumiere_max'] > 7 for s in subset]
+            )
+    if 'block_brightness:1' not in fc:
+        # Cible sans contrainte OU avec lum_min < 8 → peut spawner dans l'obscurité
+        chain_allows_dark = all(
+            s['lumiere_min'] is None or s['lumiere_min'] < 8
+            for s in subset if s['numero'] in chain
+        )
+        if chain_allows_dark and any(
+            s['lumiere_min'] is not None and s['lumiere_min'] >= 8
+            for s in subset if s['numero'] not in chain
+        ):
+            fc['block_brightness:1'] = _np.array(
+                [s['lumiere_min'] is None or s['lumiere_min'] < 8 for s in subset]
+            )
 
     # MOMENT : tester les 3 creneaux, meme si non representes dans le subset.
     # farm_time:night -> exclut les spawns jour/crepuscule only
@@ -1463,8 +1544,9 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     best_mask = _np.ones(ns, dtype=bool)
     best_keys = []
     beam = [(_np.ones(ns, dtype=bool), [])]
+    is_ultra_arr = _np.array([s['is_ultra_rare'] for s in subset])
 
-    for _d in range(3):
+    for _d in range(5):
         nb = []
         for mask, active in beam:
             for name, arr in zip(fn, fa):
@@ -1478,6 +1560,10 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 if cat_name == 'require_preset' and any(k.startswith('require_preset:') for k in active): continue
                 if cat_name == 'require_preset' and any(k.startswith('block_preset:') for k in active): continue
                 if cat_name == 'block_preset' and any(k.startswith('require_preset:') for k in active): continue
+                # block_darkness et block_brightness sont mutuellement exclusifs :
+                # on ne peut pas exiger lumière ET obscurité en même temps
+                if name == 'block_darkness:1' and 'block_brightness:1' in active: continue
+                if name == 'block_brightness:1' and 'block_darkness:1' in active: continue
                 nm  = mask & arr
                 cnt = int(nm.sum())
                 if cnt == 0: continue
@@ -1493,7 +1579,6 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 t2  = int((nm & eff_is_t).sum())
                 if t2 == 0: continue
                 # Score pondéré : les ultra-rare comptent 0.1 comme concurrent
-                is_ultra_arr = _np.array([s['is_ultra_rare'] for s in subset])
                 n_ultra = int((nm & is_ultra_arr).sum()) - int((nm & eff_is_t & is_ultra_arr).sum())
                 n_norm  = cnt - t2 - n_ultra
                 weighted_denom = t2 + n_norm + n_ultra * 0.1
@@ -1509,6 +1594,55 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
         beam = [(m, a) for _, _, m, a in nb[:5]]
         if best_pct == 100.0 and int(best_mask.sum()) <= len(chain):
             break
+
+    # ── Pass final : tenter d'ajouter UN filtre supplémentaire ──
+    # On explore le meilleur masque trouvé ET les 5 états finaux du beam.
+    # Couvre le cas où 4 filtres sont nécessaires (ex: Ouistempo dans Tropical Beach :
+    # require_treetop + farm_time:night + block_neededBlocks + hmax:1.0 → 100%).
+    if best_pct < 100.0:
+        is_ultra_arr_fp = _np.array([s['is_ultra_rare'] for s in subset])
+        # Candidats : meilleur état global + derniers états du beam (peuvent diverger)
+        fp_candidates = [(best_mask, best_keys)] + [
+            (m, a) for m, a in beam if list(a) != list(best_keys)
+        ]
+        for fp_mask, fp_keys in fp_candidates:
+            if best_pct == 100.0 and int(best_mask.sum()) <= len(chain):
+                break
+            for name, arr in zip(fn, fa):
+                if name in fp_keys:
+                    continue
+                cat_name = name.split(':')[0]
+                if cat_name == 'block_sky'      and any(k.startswith('block_sky:')      for k in fp_keys): continue
+                if cat_name == 'farm_time'      and any(k.startswith('farm_time:')      for k in fp_keys): continue
+                if cat_name == 'block_weather'  and any(k.startswith('block_weather:')  for k in fp_keys): continue
+                if cat_name == 'require_preset' and any(k.startswith('require_preset:') or k.startswith('block_preset:') for k in fp_keys): continue
+                if cat_name == 'block_preset'   and any(k.startswith('require_preset:') for k in fp_keys): continue
+                if name == 'block_darkness:1'   and 'block_brightness:1' in fp_keys: continue
+                if name == 'block_brightness:1' and 'block_darkness:1'   in fp_keys: continue
+                nm  = fp_mask & arr
+                cnt = int(nm.sum())
+                if cnt == 0:
+                    continue
+                new_keys = list(fp_keys) + [name]
+                hmax_in_combo = [k for k in new_keys if k.startswith('hmax:')]
+                if hmax_in_combo:
+                    most_restrictive = min(hmax_in_combo, key=lambda k: float(k[5:]))
+                    eff_is_t_fp = fc_is_t_override.get(most_restrictive, is_t)
+                else:
+                    eff_is_t_fp = is_t
+                t2 = int((nm & eff_is_t_fp).sum())
+                if t2 == 0:
+                    continue
+                n_ultra_fp = int((nm & is_ultra_arr_fp).sum()) - int((nm & eff_is_t_fp & is_ultra_arr_fp).sum())
+                n_norm_fp  = cnt - t2 - n_ultra_fp
+                wd = t2 + n_norm_fp + n_ultra_fp * 0.1
+                wpct = (t2 / wd * 100) if wd > 0 else 0
+                if wpct > best_pct or (wpct == best_pct and cnt < int(best_mask.sum())):
+                    best_pct  = wpct
+                    best_mask = nm
+                    best_keys = new_keys
+                if best_pct == 100.0 and int(best_mask.sum()) <= len(chain):
+                    break
 
     # Construire le combo en termes de conditions BLOQUÉES/SUPPRIMÉES
     EV_LBL = {'hp':'PV','atk':'Attaque','def':'Défense','spa':'Att. Spé','spd':'Déf. Spé','spe':'Vitesse'}
@@ -1561,13 +1695,29 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
             combo['maxLight'] = float(val)
             removed.append(f"Lumière > {val} bloquée")
         elif cat == 'block_neededBlocks':
-            removed.append("Blocs requis bloqués (nénuphars, eau profonde, etc.)")
+            combo['block_needed_blocks'] = True
+            excl_blocks = set()
+            for s in subset:
+                if s['needed_blocks']:
+                    for b in s.get('needed_blocks_list', []):
+                        excl_blocks.add(b)
+            water_blocks = {'minecraft:water', 'minecraft:water_source', '#minecraft:water'}
+            if excl_blocks & water_blocks:
+                removed.append("Eau à proximité exclue — rester loin de l'eau")
+            elif excl_blocks:
+                clean = [_clean_block(b) for b in list(excl_blocks)[:3]]
+                removed.append(f"Blocs requis à proximité exclus : {', '.join(clean)}")
+            else:
+                removed.append("Blocs requis à proximité exclus")
         elif cat == 'block_baseBlocks':
+            combo['block_base_blocks'] = True
             removed.append("Sol spécifique bloqué (herbe, pierre, etc.)")
         elif cat == 'block_darkness':
-            removed.append("Obscurité bloquée (lumière suffisante requise)")
+            combo['block_darkness'] = True
+            removed.append("Spawns d'obscurité exclus — farmer en lumière (lumière > 7)")
         elif cat == 'block_brightness':
-            removed.append("Luminosité bloquée (obscurité requise)")
+            combo['block_brightness'] = True
+            removed.append("Spawns lumineux exclus — farmer dans l'obscurité (lumière ≤ 7)")
         elif cat == 'farm_time':
             combo['farm_time'] = val
             excluded_times = [t for t in all_times_in_subset if t != val]
@@ -1731,6 +1881,18 @@ def api_oracle_stream():
             competitor_nums = frozenset(s['numero'] for s in filtered if s['numero'] not in chain)
             competitors_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(competitor_nums)]
 
+            # Fillers du biome dans le même contexte ET avec les mêmes EVs que la chaîne :
+            # ce sont les seuls fillers inévitables dans ce setup précis.
+            best_ctx  = combo.get('contexte')
+            best_ev   = set(combo.get('ev', '').split(',')) if combo.get('ev') else set()
+            filler_nums = frozenset(
+                s['numero'] for s in in_biome
+                if s['is_filler'] and s['numero'] not in chain
+                and (best_ctx is None or s['contexte'] == best_ctx)
+                and (not best_ev or any(s['ev'].get(stat, 0) > 0 for stat in best_ev))
+            )
+            filler_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(filler_nums)]
+
             result = {
                 'biome_name':      bname,
                 'biome_fr':        bname,
@@ -1744,9 +1906,16 @@ def api_oracle_stream():
                 'combo':           combo,
                 'competitors_names': competitors_names,
                 'competitors_buckets': [s['bucket'] for s in filtered if s['numero'] not in chain],
+                'filler_names':      filler_names,
             }
             results.append(result)
-            results_sorted = sorted(results, key=lambda x: (-x['pct'], x['total_filtered']))
+            results_sorted = sorted(
+                results,
+                key=lambda x: (
+                    -(x['total_base'] - x['total_filtered']) / x['total_base'] if x['total_base'] > 0 else 0,
+                    x['total_filtered']
+                )
+            )
             _msg = json.dumps({
                 'type': 'update',
                 'results': results_sorted[:50],

@@ -146,6 +146,19 @@
     .result-card:hover { border-color: rgba(255,255,255,.15); }
     .result-card.perfect { border-color: rgba(85,239,196,.35); background: rgba(85,239,196,.04); }
     .result-card.great   { border-color: rgba(232,255,71,.25); }
+    .result-card.gold {
+      border-color: rgba(255,196,57,.55);
+      background: linear-gradient(135deg, rgba(255,196,57,.07) 0%, rgba(255,168,0,.04) 100%);
+      box-shadow: 0 0 24px rgba(255,196,57,.08), inset 0 1px 0 rgba(255,220,100,.1);
+    }
+    .result-card.gold:hover { border-color: rgba(255,196,57,.75); }
+    .result-pct.pgold { color: #ffc439; }
+    .badge-gold {
+      font-family: 'Space Mono', monospace; font-size: .6rem; letter-spacing: .1em;
+      padding: .2rem .6rem; border-radius: 20px; text-transform: uppercase;
+      background: rgba(255,196,57,.15); border: 1px solid rgba(255,196,57,.4);
+      color: #ffc439; white-space: nowrap;
+    }
 
     .result-top {
       display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
@@ -165,6 +178,11 @@
     .result-pct.p75  { color: var(--accent); }
     .result-pct.p50  { color: var(--orange); }
     .result-pct.plow { color: var(--muted); }
+    .result-pct-sub {
+      font-family: 'Space Mono', monospace; font-size: .68rem; color: var(--muted);
+      text-align: right; margin-top: .15rem;
+    }
+    .result-pct-sub span { color: var(--text); }
 
     /* Barre de progression */
     .pct-bar-wrap {
@@ -210,6 +228,14 @@
     }
     .no-competitors {
       font-family: 'Space Mono', monospace; font-size: .68rem; color: var(--green);
+    }
+    .fillers-wrap {
+      display: flex; flex-wrap: wrap; gap: .35rem; align-items: center; margin-top: .25rem;
+    }
+    .filler-chip {
+      font-family: 'Space Mono', monospace; font-size: .62rem;
+      padding: .15rem .5rem; border-radius: 20px;
+      background: rgba(106,106,136,.12); border: 1px solid rgba(106,106,136,.3); color: var(--muted);
     }
 
     /* Stat */
@@ -415,13 +441,56 @@ const PRESET_LABELS = {
   "ocean_monument": "🔱 Monument océan",
 };
 
+function buildBiomeUrl(r) {
+  const combo = r.combo || {};
+  const p = new URLSearchParams();
+  p.set('biome', r.biome_name);
+  p.set('mod',   r.mod || '');
+
+  // Filtres obligatoires
+  if (combo.contexte)      p.set('ctx',  combo.contexte);
+  if (combo.ev)            p.set('ev',   combo.ev);          // ex: "spe" ou "atk,spe"
+
+  // Filtres optionnels issus du beam
+  if (combo.farm_time)     p.set('time', combo.farm_time);
+  if (combo.block_weather) p.set('excl_weather', combo.block_weather);
+  if (combo.block_sky) {
+    // open = bloquer ciel visible → exclure les spawns sky
+    // covered = bloquer ciel absent → exclure les spawns no_sky
+    p.set('excl_special', combo.block_sky === 'open' ? 'sky' : 'no_sky');
+  }
+  if (combo.require_preset) p.set('incl_special', combo.require_preset);
+  if (combo.block_presets?.length) {
+    const existing = p.get('excl_special');
+    const list = [...(existing ? [existing] : []), ...combo.block_presets].join(',');
+    p.set('excl_special', list);
+  }
+  if (combo.h_max  !== undefined) p.set('hmax',  combo.h_max);
+  if (combo.y_above !== undefined) p.set('y_min', combo.y_above + 1);
+  if (combo.y_below !== undefined) p.set('y_max', combo.y_below - 1);
+
+  // Construire la liste excl_special en partant de ce qui est déjà posé (block_sky etc.)
+  const exclSp = (p.get('excl_special') || '').split(',').filter(Boolean);
+  if (combo.no_struct_filter)    exclSp.push('structure');
+  if (combo.block_needed_blocks) exclSp.push('water', 'block');
+  if (combo.block_base_blocks)   exclSp.push('base_block');
+  if (combo.block_darkness)      exclSp.push('dark');
+  if (combo.block_brightness)    exclSp.push('bright');
+  if (exclSp.length) p.set('excl_special', [...new Set(exclSp)].join(','));
+
+  return `/spawns/biome-reel?${p.toString()}`;
+}
+
+
 function renderCard(r, i) {
   const pct     = r.pct;       // score pondéré (tri)
   const rawPct  = r.raw_pct ?? r.pct;  // % affiché
-  const onlyUltra = r.only_ultra || false;
-  const pctClass = rawPct === 100 ? 'p100' : onlyUltra ? 'ponly' : rawPct >= 75 ? 'p75' : rawPct >= 50 ? 'p50' : 'plow';
-  const cardClass = rawPct === 100 ? 'perfect' : onlyUltra ? 'great' : rawPct >= 75 ? 'great' : '';
-  const barColor  = rawPct === 100 ? '#55efc4' : onlyUltra ? '#a29bfe' : rawPct >= 75 ? '#e8ff47' : rawPct >= 50 ? '#ffab40' : '#6a6a88';
+  const onlyUltra  = r.only_ultra || false;
+  const fillerNames = r.filler_names || [];
+  const isGold  = rawPct === 100 && r.competitors_names.length === 0 && fillerNames.length === 0;
+  const pctClass = isGold ? 'pgold' : rawPct === 100 ? 'p100' : onlyUltra ? 'ponly' : rawPct >= 75 ? 'p75' : rawPct >= 50 ? 'p50' : 'plow';
+  const cardClass = isGold ? 'gold' : rawPct === 100 ? 'perfect' : onlyUltra ? 'great' : rawPct >= 75 ? 'great' : '';
+  const barColor  = isGold ? '#ffc439' : rawPct === 100 ? '#55efc4' : onlyUltra ? '#a29bfe' : rawPct >= 75 ? '#e8ff47' : rawPct >= 50 ? '#ffab40' : '#6a6a88';
 
   const combo = r.combo || {};
 
@@ -472,13 +541,22 @@ function renderCard(r, i) {
     "BetterNether": "#ff7675", "Cobblemon": "#e8ff47",
   }[r.mod] || "#6a6a88";
 
+  const reductPct = totalBase > 0 ? ((totalBase - totalFilt) / totalBase * 100).toFixed(1) : '0.0';
+
+  const fillerHtml = fillerNames.length === 0 ? '' :
+    `<div class="fillers-wrap">
+      <span class="filter-label" style="color:var(--muted)">Fillers inévitables</span>
+      ${fillerNames.slice(0, 6).map(n => `<span class="filler-chip">⚠ ${n}</span>`).join('')}
+      ${fillerNames.length > 6 ? `<span class="filler-chip">+${fillerNames.length - 6}</span>` : ''}
+    </div>`;
+
   return `
     <div class="result-card ${cardClass}">
       <div class="result-top">
         <span class="result-rank">#${i+1}</span>
         <div style="flex:1">
           <a class="result-biome"
-             href="/spawns/biome-reel?biome=${encodeURIComponent(r.biome_name)}&mod=${encodeURIComponent(r.mod)}"
+             href="${buildBiomeUrl(r)}"
              target="_blank"
              style="text-decoration:none;color:inherit;cursor:pointer"
              onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='inherit'">
@@ -487,19 +565,21 @@ function renderCard(r, i) {
           <div style="font-family:'Space Mono',monospace;font-size:.6rem;margin-top:2px;color:${modColor}">${r.mod || ""}</div>
         </div>
         <div style="text-align:right">
-          <span class="result-pct ${pctClass}">${rawPct}%</span>
-          ${onlyUltra ? '<div class="badge-ultra-only">⭐ Ultra-rares</div>' : ''}
+          <span class="result-pct ${pctClass}">−${reductPct}%</span>
+          <div class="result-pct-sub">pureté <span>${rawPct}%</span></div>
+          ${isGold ? '<div class="badge-gold" style="margin-top:.3rem">✦ Isolation totale</div>' : onlyUltra ? '<div class="badge-ultra-only" style="margin-top:.3rem">⭐ Ultra-rares</div>' : ''}
         </div>
       </div>
       <div class="pct-bar-wrap">
-        <div class="pct-bar" style="width:${pct}%;background:${barColor}"></div>
+        <div class="pct-bar" style="width:${parseFloat(reductPct)}%;background:${barColor}"></div>
       </div>
       ${filtersHtml}
       ${compHtml}
+      ${fillerHtml}
       <div class="result-stat">
-        <span>${r.target_spawns}</span> spawn${r.target_spawns > 1 ? 's' : ''} cibles /
-        <span>${totalFilt}</span> après filtres
-        (${totalBase} total dans le biome)
+        <span>${r.target_spawns}</span> spawn${r.target_spawns > 1 ? 's' : ''} cibles
+        sur <span>${totalFilt}</span> restants
+        <span style="color:var(--muted)">·</span> ${totalBase} total dans le biome
       </div>
     </div>`;
 }
