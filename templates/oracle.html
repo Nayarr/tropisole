@@ -244,6 +244,22 @@
     }
     .result-stat span { color: var(--text); }
 
+    .btn-focus {
+      font-family: 'Space Mono', monospace; font-size: .68rem; text-transform: uppercase;
+      letter-spacing: .08em; padding: .65rem 1rem; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--card); color: var(--muted);
+      cursor: pointer; transition: all .2s; white-space: nowrap;
+    }
+    .btn-focus:hover { border-color: var(--accent2); color: var(--accent2); }
+    .btn-focus.active {
+      border-color: var(--accent2); background: rgba(71,255,232,.1);
+      color: var(--accent2);
+    }
+    .focus-hint {
+      font-family: 'Space Mono', monospace; font-size: .65rem; color: var(--muted);
+      margin-top: .3rem;
+    }
+
     .empty-state {
       text-align: center; padding: 3rem; color: var(--muted);
       font-family: 'Space Mono', monospace; font-size: .82rem;
@@ -274,10 +290,14 @@
         <input type="text" id="poke-input" placeholder="Rechercher un Pokémon…" autocomplete="off" />
         <div class="autocomplete-list" id="ac-list"></div>
       </div>
+      <button class="btn-focus" id="btn-focus" onclick="toggleFocus()">
+        🎯 Chaîne
+      </button>
       <button class="btn-analyze" id="btn-analyze" disabled onclick="analyze()">
         Analyser →
       </button>
     </div>
+    <div class="focus-hint" id="focus-hint">Mode chaîne : optimise pour toute la lignée évolutive</div>
     <div class="loading" id="loading">
       <div class="spinner"></div>
       <span>Analyse en cours…</span>
@@ -298,6 +318,22 @@ const POKEMON_LIST = [
 const SPRITE_BASE = '/static/pokemon_icons/';
 
 let selectedNum = null;
+let focusMode = false;
+
+function toggleFocus() {
+  focusMode = !focusMode;
+  const btn = document.getElementById('btn-focus');
+  const hint = document.getElementById('focus-hint');
+  if (focusMode) {
+    btn.textContent = '🎯 Focus';
+    btn.classList.add('active');
+    hint.textContent = 'Mode focus : optimise uniquement pour le Pokémon sélectionné (ignore l\'évolution)';
+  } else {
+    btn.textContent = '🎯 Chaîne';
+    btn.classList.remove('active');
+    hint.textContent = 'Mode chaîne : optimise pour toute la lignée évolutive';
+  }
+}
 
 // ── Autocomplete ──
 const searchInput = document.getElementById('poke-input');
@@ -380,7 +416,7 @@ function analyze() {
   section.innerHTML = '';
   document.getElementById('btn-analyze').disabled = true;
 
-  currentSSE = new EventSource(`/api/oracle/stream?numero=${selectedNum}`);
+  currentSSE = new EventSource(`/api/oracle/stream?numero=${selectedNum}&focus=${focusMode ? 1 : 0}`);
   let chainHtml = '';
 
   currentSSE.onmessage = (e) => {
@@ -453,13 +489,24 @@ function buildBiomeUrl(r) {
 
   // Filtres optionnels issus du beam
   if (combo.farm_time)     p.set('time', combo.farm_time);
-  if (combo.block_weather) p.set('excl_weather', combo.block_weather);
+  if (combo.block_weather_excl) p.set('excl_weather', combo.block_weather_excl);
+  else if (combo.block_weather) {
+    // Fallback : si pas de clé _excl, inverser manuellement (clear→rain, rain→clear)
+    const inv = { clear: 'rain', rain: 'clear' };
+    if (inv[combo.block_weather]) p.set('excl_weather', inv[combo.block_weather]);
+  }
   if (combo.block_sky) {
     // open = bloquer ciel visible → exclure les spawns sky
     // covered = bloquer ciel absent → exclure les spawns no_sky
     p.set('excl_special', combo.block_sky === 'open' ? 'sky' : 'no_sky');
   }
   if (combo.require_preset) p.set('incl_special', combo.require_preset);
+  // require_struct : on EXCLUT toutes les autres structures sauf celle choisie
+  // → biome_spawns recevra la liste des structures à exclure
+  // Structure : struct_keep = label FR de la structure à garder
+  // biome_spawns exclut dynamiquement tout le reste
+  const structKeep = combo.struct_keep_fr || combo.require_struct_fr;
+  if (structKeep) p.set('struct_keep', structKeep);
   if (combo.block_presets?.length) {
     const existing = p.get('excl_special');
     const list = [...(existing ? [existing] : []), ...combo.block_presets].join(',');
@@ -469,9 +516,8 @@ function buildBiomeUrl(r) {
   if (combo.y_above !== undefined) p.set('y_min', combo.y_above + 1);
   if (combo.y_below !== undefined) p.set('y_max', combo.y_below - 1);
 
-  // Construire la liste excl_special en partant de ce qui est déjà posé (block_sky etc.)
+  // Construire la liste excl_special (NE PAS inclure 'structure' ici — géré via excl_structures)
   const exclSp = (p.get('excl_special') || '').split(',').filter(Boolean);
-  if (combo.no_struct_filter)    exclSp.push('structure');
   if (combo.block_needed_blocks) exclSp.push('water', 'block');
   if (combo.block_base_blocks)   exclSp.push('base_block');
   if (combo.block_darkness)      exclSp.push('dark');
@@ -502,6 +548,9 @@ function renderCard(r, i) {
   if (combo.require_preset) {
     const PRESET_LABELS = { 'treetop': '🌲 Cimes d\'arbres', 'water': '💧 Eau', 'lava': '🌋 Lave' };
     mandatoryTags.push(`<span class="filter-tag ctx">${PRESET_LABELS[combo.require_preset] || combo.require_preset}</span>`);
+  }
+  if (combo.require_struct_label) {
+    mandatoryTags.push(`<span class="filter-tag ctx">${combo.require_struct_label}</span>`);
   }
 
   // Conditions SUPPRIMÉES pour isoler (envoyées directement par le serveur)

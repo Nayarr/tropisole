@@ -1466,6 +1466,14 @@
       <input type="range" id="y-min-slider" min="-64" max="320" value="-64" step="1">
       <input type="range" id="y-max-slider" min="-64" max="320" value="320" step="1">
     </div>
+    <div style="display:flex;gap:0.4rem;margin-top:0.2rem;">
+      <input type="number" id="y-min-input" value="-64" min="-64" max="320" step="1"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        oninput="syncYFromInput()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      <input type="number" id="y-max-input" value="320" min="-64" max="320" step="1"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        oninput="syncYFromInput()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    </div>
     <button id="y-reset" onclick="resetYFilter()">Réinitialiser Y</button>
   </div>
 
@@ -1474,6 +1482,14 @@
     <div class="height-slider-row">
       <input type="range" id="height-min-slider" min="0" max="1000" value="0" step="1">
       <input type="range" id="height-max-slider" min="0" max="1000" value="1000" step="1">
+    </div>
+    <div style="display:flex;gap:0.4rem;margin-top:0.2rem;">
+      <input type="number" id="height-min-input" value="0" min="0" max="10" step="0.01"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        oninput="syncHeightFromInput()" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'">
+      <input type="number" id="height-max-input" value="10" min="0" max="10" step="0.01"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        oninput="syncHeightFromInput()" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'">
     </div>
     <button id="height-reset" onclick="resetHeightFilter()">Réinitialiser</button>
   </div>
@@ -1612,6 +1628,29 @@ function updateHeightDisplay() {
   heightMaxCm = parseInt(document.getElementById('height-max-slider').value);
   document.getElementById('height-range-display').textContent =
     `${(heightMinCm/100).toFixed(2)} → ${(heightMaxCm/100).toFixed(2)} bloc(s)`;
+  // Sync number inputs
+  const minIn = document.getElementById('height-min-input');
+  const maxIn = document.getElementById('height-max-input');
+  if (minIn) minIn.value = (heightMinCm/100).toFixed(2);
+  if (maxIn) maxIn.value = (heightMaxCm/100).toFixed(2);
+}
+
+function syncHeightFromInput() {
+  const minIn = document.getElementById('height-min-input');
+  const maxIn = document.getElementById('height-max-input');
+  const minEl = document.getElementById('height-min-slider');
+  const maxEl = document.getElementById('height-max-slider');
+  let minV = Math.round(parseFloat(minIn.value) * 100);
+  let maxV = Math.round(parseFloat(maxIn.value) * 100);
+  if (isNaN(minV)) minV = HEIGHT_PAGE_MIN;
+  if (isNaN(maxV)) maxV = HEIGHT_PAGE_MAX;
+  minV = Math.max(HEIGHT_PAGE_MIN, Math.min(HEIGHT_PAGE_MAX, minV));
+  maxV = Math.max(HEIGHT_PAGE_MIN, Math.min(HEIGHT_PAGE_MAX, maxV));
+  minEl.value = minV; maxEl.value = maxV;
+  heightMinCm = minV; heightMaxCm = maxV;
+  document.getElementById('height-range-display').textContent =
+    `${(minV/100).toFixed(2)} → ${(maxV/100).toFixed(2)} bloc(s)`;
+  render();
 }
 
 function resetHeightFilter() {
@@ -1619,6 +1658,10 @@ function resetHeightFilter() {
   document.getElementById('height-max-slider').value = HEIGHT_PAGE_MAX;
   heightMinCm = HEIGHT_PAGE_MIN;
   heightMaxCm = HEIGHT_PAGE_MAX;
+  const minIn = document.getElementById('height-min-input');
+  const maxIn = document.getElementById('height-max-input');
+  if (minIn) minIn.value = (HEIGHT_PAGE_MIN/100).toFixed(2);
+  if (maxIn) maxIn.value = (HEIGHT_PAGE_MAX/100).toFixed(2);
   updateHeightDisplay();
   render();
 }
@@ -1627,6 +1670,10 @@ function resetYFilter() {
   yMinFilter = -64; yMaxFilter = 320;
   document.getElementById('y-min-slider').value = -64;
   document.getElementById('y-max-slider').value = 320;
+  const minIn = document.getElementById('y-min-input');
+  const maxIn = document.getElementById('y-max-input');
+  if (minIn) minIn.value = -64;
+  if (maxIn) maxIn.value = 320;
   updateYDisplay();
   render();
 }
@@ -1636,6 +1683,29 @@ function updateYDisplay() {
   const mx = parseInt(document.getElementById('y-max-slider').value);
   yMinFilter = mn; yMaxFilter = mx;
   document.getElementById('y-range-display').textContent = `${mn} → ${mx}`;
+  // Sync number inputs
+  const minIn = document.getElementById('y-min-input');
+  const maxIn = document.getElementById('y-max-input');
+  if (minIn) minIn.value = mn;
+  if (maxIn) maxIn.value = mx;
+}
+
+function syncYFromInput() {
+  const minIn = document.getElementById('y-min-input');
+  const maxIn = document.getElementById('y-max-input');
+  const minEl = document.getElementById('y-min-slider');
+  const maxEl = document.getElementById('y-max-slider');
+  let minV = parseInt(minIn.value);
+  let maxV = parseInt(maxIn.value);
+  if (isNaN(minV)) minV = -64;
+  if (isNaN(maxV)) maxV = 320;
+  minV = Math.max(-64, Math.min(320, minV));
+  maxV = Math.max(-64, Math.min(320, maxV));
+  minEl.value = minV; maxEl.value = maxV;
+  yMinFilter = minV; yMaxFilter = maxV;
+  document.getElementById('y-range-display').textContent = `${minV} → ${maxV}`;
+  minIn.value = minV; maxIn.value = maxV;
+  render();
 }
 
 // ── Multi-select filter state ─────────────────────────────────────────────────
@@ -2032,68 +2102,6 @@ document.getElementById('height-max-slider').addEventListener('change', () => re
 render();
 initHeightSlider();
 
-// ── Pré-application des filtres Oracle (depuis URL) ───────────────────────────
-(function applyOracleFilters() {
-  const p = new URLSearchParams(window.location.search);
-  let dirty = false;
-
-  // Contexte
-  if (p.has('ctx')) {
-    toggleOpt('contexte', p.get('ctx'), 'incl');
-    dirty = true;
-  }
-
-  // EV stats (ex: "spe" ou "atk,spe")
-  const evStats = (p.get('ev') || '').split(',').filter(Boolean);
-  evStats.forEach(stat => { toggleOpt('ev', stat, 'incl'); dirty = true; });
-
-  // Moment (farm_time)
-  if (p.has('time')) {
-    toggleOpt('time', p.get('time'), 'incl');
-    dirty = true;
-  }
-
-  // Météo exclue
-  if (p.has('excl_weather')) {
-    toggleOpt('weather', p.get('excl_weather'), 'excl');
-    dirty = true;
-  }
-
-  // Special inclus (require_preset: treetop, water, lava)
-  const inclSpecials = (p.get('incl_special') || '').split(',').filter(Boolean);
-  inclSpecials.forEach(v => { toggleOpt('special', v, 'incl'); dirty = true; });
-
-  // Special exclus (sky, no_sky, dark, bright, treetop…)
-  const exclSpecials = (p.get('excl_special') || '').split(',').filter(Boolean);
-  exclSpecials.forEach(v => { toggleOpt('special', v, 'excl'); dirty = true; });
-
-  // Hauteur max (hmax en blocs → cm)
-  if (p.has('hmax')) {
-    const hmaxCm = Math.round(parseFloat(p.get('hmax')) * 100);
-    const el = document.getElementById('height-max-slider');
-    if (el) {
-      el.value = Math.min(hmaxCm, parseInt(el.max));
-      heightMaxCm = Math.min(hmaxCm, parseInt(el.max));
-      updateHeightDisplay();
-      dirty = true;
-    }
-  }
-
-  // Y min
-  if (p.has('y_min')) {
-    const el = document.getElementById('y-min-slider');
-    if (el) { el.value = p.get('y_min'); updateYDisplay(); dirty = true; }
-  }
-
-  // Y max
-  if (p.has('y_max')) {
-    const el = document.getElementById('y-max-slider');
-    if (el) { el.value = p.get('y_max'); updateYDisplay(); dirty = true; }
-  }
-
-  if (dirty) render();
-})();
-
 // Scroll to source pokemon after render
 setTimeout(() => {
   const sourceRow = document.querySelector('tr.is-source');
@@ -2129,6 +2137,97 @@ setTimeout(() => {
     div.querySelector('.ms-toggle.excl').addEventListener('click', () => toggleOpt('structure', name, 'excl'));
     container.appendChild(div);
   });
+})();
+
+// ── Pré-application des filtres Oracle (depuis URL) ──────────────────────────
+// Placé APRÈS buildStructureFilter pour que les divs structure existent dans le DOM.
+// On mute directement filterState sans passer par toggleOpt (qui appelle render() à chaque fois),
+// puis on fait un seul updateFilterUI + render() à la fin.
+(function applyOracleFilters() {
+  const p = new URLSearchParams(window.location.search);
+  if (!p.toString()) return;
+
+  // Helper : muter filterState sans déclencher render
+  function setFilter(filter, value, mode) {
+    const state = filterState[filter];
+    const opposite = mode === 'incl' ? 'exclude' : 'include';
+    const current  = mode === 'incl' ? 'include' : 'exclude';
+    state[opposite].delete(value);
+    state[current].add(value);
+  }
+
+  let dirty = false;
+
+  // Contexte inclus
+  if (p.has('ctx')) { setFilter('contexte', p.get('ctx'), 'incl'); dirty = true; }
+
+  // EV stats incluses
+  (p.get('ev') || '').split(',').filter(Boolean).forEach(s => { setFilter('ev', s, 'incl'); dirty = true; });
+
+  // Moment : exclure les créneaux opposés au créneau de farm
+  if (p.has('time')) {
+    const farm = p.get('time');
+    ['day','night','dusk'].filter(t => t !== farm).forEach(t => { setFilter('time', t, 'excl'); });
+    dirty = true;
+  }
+
+  // Météo exclue
+  if (p.has('excl_weather')) { setFilter('weather', p.get('excl_weather'), 'excl'); dirty = true; }
+
+  // Structures à exclure
+  // excl_structures = liste pipe-séparée de labels FR à exclure
+  if (p.has('excl_structures')) {
+    p.get('excl_structures').split('|').filter(Boolean).forEach(lbl => {
+      setFilter('structure', lbl, 'excl');
+    });
+    dirty = true;
+  }
+  // struct_keep = label FR à garder → exclure tout le reste présent dans ces données
+  if (p.has('struct_keep')) {
+    const keepLabel = p.get('struct_keep');
+    const allStructsHere = new Set();
+    data.forEach(row => {
+      if (row.structure_ids) row.structure_ids.forEach(s => allStructsHere.add(s));
+    });
+    allStructsHere.forEach(lbl => {
+      if (lbl !== keepLabel) setFilter('structure', lbl, 'excl');
+    });
+    dirty = true;
+  }
+
+  // Special inclus
+  (p.get('incl_special') || '').split(',').filter(Boolean).forEach(v => { setFilter('special', v, 'incl'); dirty = true; });
+
+  // Special exclus
+  (p.get('excl_special') || '').split(',').filter(Boolean).forEach(v => { setFilter('special', v, 'excl'); dirty = true; });
+
+  // Hauteur max
+  if (p.has('hmax')) {
+    const hmaxCm = Math.round(parseFloat(p.get('hmax')) * 100);
+    const el = document.getElementById('height-max-slider');
+    if (el) {
+      el.value = Math.min(hmaxCm, parseInt(el.max));
+      heightMaxCm = Math.min(hmaxCm, parseInt(el.max));
+      updateHeightDisplay();
+      dirty = true;
+    }
+  }
+
+  // Y sliders
+  if (p.has('y_min')) {
+    const el = document.getElementById('y-min-slider');
+    if (el) { el.value = p.get('y_min'); updateYDisplay(); dirty = true; }
+  }
+  if (p.has('y_max')) {
+    const el = document.getElementById('y-max-slider');
+    if (el) { el.value = p.get('y_max'); updateYDisplay(); dirty = true; }
+  }
+
+  if (dirty) {
+    // Mettre à jour l'UI de tous les filtres modifiés en une seule passe
+    FILTERS.forEach(f => updateFilterUI(f));
+    render();
+  }
 })();
 </script>
 </body>

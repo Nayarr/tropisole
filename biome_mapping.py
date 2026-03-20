@@ -46,6 +46,7 @@ BIOME_MAP = {
     "Grotte": [  # Cave
         {"biome": "Dripstone Caves", "mod": "Vanilla Minecraft"},
         {"biome": "Lush Caves", "mod": "Vanilla Minecraft"},
+        {"biome": "All Underground biomes", "mod": "Cobblemon"},
         {"biome": "Andesite Caves", "mod": "Terralith"},
         {"biome": "Crystal Caves", "mod": "Terralith"},
         {"biome": "Deep Caves", "mod": "Terralith"},
@@ -75,6 +76,25 @@ BIOME_MAP = {
         {"biome": "Mushroom Caves", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Volcanic Chamber", "mod": "Wythers' Overhauled Overworld"},
     ],
+
+    "Sous terre": [  # Underground
+        {"biome": "Andesite Caves", "mod": "Terralith"},
+        {"biome": "Crystal Caves", "mod": "Terralith"},
+        {"biome": "Deep Caves", "mod": "Terralith"},
+        {"biome": "Desert Caves", "mod": "Terralith"},
+        {"biome": "Diorite Caves", "mod": "Terralith"},
+        {"biome": "Frostfire Caves", "mod": "Terralith"},
+        {"biome": "Fungal Caves", "mod": "Terralith"},
+        {"biome": "Granite Caves", "mod": "Terralith"},
+        {"biome": "Ice Caves", "mod": "Terralith"},
+        {"biome": "Infested Caves", "mod": "Terralith"},
+        {"biome": "Mantle Caves", "mod": "Terralith"},
+        {"biome": "Thermal Caves", "mod": "Terralith"},
+        {"biome": "Tuff Caves", "mod": "Terralith"},
+        {"biome": "Underground Jungle", "mod": "Terralith"},
+    ],
+
+
     "Côte": [  # Coast
         {"biome": "Stony Shore", "mod": "Vanilla Minecraft"},
         {"biome": "All Beach biomes", "mod": "Cobblemon"},
@@ -264,7 +284,6 @@ BIOME_MAP = {
         {"biome": "Lush Valley", "mod": "Terralith"},
         {"biome": "Moonlight Grove", "mod": "Terralith"},
         {"biome": "Moonlight Valley", "mod": "Terralith"},
-        {"biome": "Skylands", "mod": "Terralith"},
         {"biome": "Skylands Autumn", "mod": "Terralith"},
         {"biome": "Skylands Spring", "mod": "Terralith"},
         {"biome": "Shield", "mod": "Terralith"},
@@ -459,7 +478,6 @@ BIOME_MAP = {
         {"biome": "Sparse Eucalyptus Jungle", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tepui", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tsingy Forest", "mod": "Wythers' Overhauled Overworld"},
-        {"biome": "Jungle Mountains", "mod": "Terralith"},
         {"biome": "Rocky Jungle", "mod": "Terralith"},
         {"biome": "Tropical Jungle", "mod": "Terralith"},
     ],
@@ -527,9 +545,11 @@ BIOME_MAP = {
         {"biome": "Haze Mountain", "mod": "Terralith"},
         {"biome": "Highlands", "mod": "Terralith"},
         {"biome": "Mountain Steppe", "mod": "Terralith"},
+        {"biome": "Jungle Mountains", "mod": "Terralith"},
         {"biome": "Painted Mountains", "mod": "Terralith"},
         {"biome": "Scarlet Mountains", "mod": "Terralith"},
         {"biome": "Temperate Highlands", "mod": "Terralith"},
+        {"biome": "Thermal Caves", "mod": "Terralith"},
         {"biome": "Tibesti Mountains", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tropical Volcano", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Tsingy Forest", "mod": "Wythers' Overhauled Overworld"},
@@ -706,7 +726,6 @@ BIOME_MAP = {
         {"biome": "Skylands Spring", "mod": "Terralith"},
         {"biome": "Skylands Summer", "mod": "Terralith"},
         {"biome": "Skylands Winter", "mod": "Terralith"},
-        {"biome": "Skylands", "mod": "Terralith"},
     ],
     "Forêt enneigée": [  # Snowy Forest
         {"biome": "Grove", "mod": "Vanilla Minecraft"},
@@ -730,6 +749,8 @@ BIOME_MAP = {
         {"biome": "Dark Forest", "mod": "Vanilla Minecraft"},
         {"biome": "All BYG Spooky biomes", "mod": "Oh The Biomes You'll Go"},
         {"biome": "Ebony Woods", "mod": "Oh The Biomes You'll Go"},
+        {"biome": "Frostfire Caves", "mod": "Terralith"},
+        {"biome": "Infested Caves", "mod": "Terralith"},
         {"biome": "All Wythers' Dark Forest biomes", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Ancient Taiga", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Bayou", "mod": "Wythers' Overhauled Overworld"},
@@ -1198,7 +1219,7 @@ BIOME_MAP = {
     "Boueux":                 [
         {"biome": "Mangrove Swamp", "mod": "Vanilla Minecraft"},
         {"biome": "Underground Jungle", "mod": "Terralith"},
-        {"biome": "Coastal Mangrove", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Coastal Mangroves", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Dripleaf Swamp", "mod": "Wythers' Overhauled Overworld"},
         ],
 
@@ -1319,7 +1340,21 @@ BIOME_MAP = {
 
     # ── Tags Wythers dédiés (pour liens cliquables distincts) ─────────────────
     "Désert (Wythers)":       [{"biome": "All Wythers' desert biomes",      "mod": "Wythers' Overhauled Overworld"}],
-    "Forêt sombre (Wythers)": [{"biome": "All Wythers' Dark Forest biomes", "mod": "Wythers' Overhauled Overworld"}],
+    "Forêt sombre (Wythers)": [
+        {"biome": "All Wythers' Dark Forest biomes", "mod": "Wythers' Overhauled Overworld"}
+        {"biome": "Dark Forest", "mod": "Minecraft"},
+        {"biome": "Forbidden Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Phantasmal Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Deep Dark Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Emerald Beech Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Golden Beech Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Copper Beech Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Moss Forest", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Oak Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Ancient Mossy Swamp", "mod": "Wythers' Overhauled Overworld"},
+        {"biome": "Phantasmal Swamp", "mod": "Wythers' Overhauled Overworld"},
+        
+        ],
     "Marais (Wythers)":       [{"biome": "All Wythers' Swamp biomes",       "mod": "Wythers' Overhauled Overworld"}],
 }
 
@@ -1495,6 +1530,7 @@ _ALL_BIOMES_OVERRIDES = {
     "All River biomes":           "Rivière",
     "All Beach biomes":           "Plage",
     "All Cave biomes":            "Grotte",
+    "All Underground biomes":     "Sous terre",
     "All Deep Dark biomes":       "Abysses sombres",
     "All Sky biomes":             "Ciel",
     "All Spooky biomes":          "Effrayant",
@@ -1562,12 +1598,6 @@ def expand_spawn_biomes_filtered(biomes_str, biomes_exclus_str=None):
 COBBLEMON_TAG_HIERARCHY = {
     # Source : wiki officiel Cobblemon (Biome Tags page) — version complète
 
-    # CAVE = grottes
-    "#cobblemon:is_cave": [
-        "#cobblemon:is_lush",
-        "#cobblemon:is_dripstone",
-        "#cobblemon:is_deep_dark",
-    ],
 
     # OVERWORLD : inclut tous les grands groupes Cobblemon
     "#cobblemon:is_overworld": [
@@ -1774,11 +1804,14 @@ COBBLEMON_TAG_HIERARCHY = {
     "#cobblemon:is_badlands": [],
     "#cobblemon:is_desert": [],
     "#cobblemon:is_bamboo": [],
+    # CAVE = grottes
     "#cobblemon:is_cave": [
-        "#cobblemon:is_lush",       # Lush Caves → grotte overworld
-        "#cobblemon:is_dripstone",  # Dripstone Caves → grotte overworld
-        "#cobblemon:is_deep_dark",  # Deep Dark → grotte overworld
+        "#cobblemon:is_lush",
+        "#cobblemon:is_dripstone",
+        "#cobblemon:is_deep_dark",
+        "#cobblemon:is_underground",
     ],
+    "#cobblemon:is_underground": [],
     "#cobblemon:is_deep_dark": [],
     "#cobblemon:is_floral": [
         "#cobblemon:is_cherry_blossom",  # Fleurs de cerisier → floral
@@ -1864,6 +1897,7 @@ FR_TAG_TO_COBBLEMON = {
     "Froid":                      "#cobblemon:is_cold",
     "Abysses sombres":            "#cobblemon:is_deep_dark",
     "Grotte":                     "#cobblemon:is_cave",
+    "Sous terre":                 "#cobblemon:is_underground",
     "Stalactites":                "#cobblemon:is_dripstone",
     "Floral":                     "#cobblemon:is_floral",
     "Luxuriant":                  "#cobblemon:is_lush",
