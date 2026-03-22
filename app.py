@@ -85,6 +85,20 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS favorites (
+            id           INTEGER PRIMARY KEY AUTOINCREMENT,
+            firebase_uid TEXT NOT NULL,
+            label        TEXT NOT NULL,
+            pokemon_num  INTEGER NOT NULL,
+            pokemon_name TEXT NOT NULL,
+            biome_name   TEXT NOT NULL,
+            mod          TEXT NOT NULL DEFAULT '',
+            url_params   TEXT NOT NULL DEFAULT '{}',
+            created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -1365,8 +1379,16 @@ def _oracle_load_spawns():
         s['is_mansion'] = any('woodland_mansion' in st for st in s['struct_list'])
         s['is_filler']      = s.get('bucket') == 'filler'
         s['is_ultra_rare']  = s.get('bucket') == 'ultra-rare'
-        s['tag_set']  = set(t.strip() for t in (s['biomes_tags']       or '').split(',') if t.strip())
-        s['excl_set'] = set(t.strip() for t in (s['biomes_exclus_tags'] or '').split(',') if t.strip())
+        # Normaliser #minecraft:is_nether → #cobblemon:is_nether
+        # (Cobblemon utilise son propre namespace mais certains spawns utilisent minecraft:)
+        _MC_TO_COB = {'#minecraft:is_nether': '#cobblemon:is_nether',
+                      '#minecraft:is_overworld': '#cobblemon:is_overworld',
+                      '#minecraft:is_end': '#cobblemon:is_end'}
+        def _norm_tags(raw):
+            tags = set(t.strip() for t in (raw or '').split(',') if t.strip())
+            return {_MC_TO_COB.get(t, t) for t in tags}
+        s['tag_set']  = _norm_tags(s['biomes_tags'])
+        s['excl_set'] = _norm_tags(s['biomes_exclus_tags'])
         spawns.append(s)
     return spawns
 
@@ -1385,15 +1407,23 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
 
     # ── Chaque filtre = BLOQUER une condition = ÉLIMINER les spawns qui la requièrent ──
     # Les spawns sans contrainte (None) restent dans le pool dans TOUS les cas.
-    fc = {}
+    # ORDRE de test : structures → lumière → ciel → blocs requis → Y → hitbox → preset → temps → météo
+    fc_struct  = {}   # 1. structures
+    fc_light   = {}   # 2. lumière / obscurité
+    fc_sky     = {}   # 3. ciel
+    fc_blocks  = {}   # 4. blocs requis
+    fc_y       = {}   # 5. Y
+    fc_hmax    = {}   # 6. hitbox (rempli plus bas)
+    fc_preset  = {}   # 7. presets
+    fc_time    = {}   # 8. temps
+    fc_weather = {}   # 9. météo
 
-    # MÉTÉO : bloquer clear → éliminer weather='clear', garder rain+None
-    #         bloquer rain  → éliminer weather='rain',  garder clear+None
+    # MÉTÉO
     all_weathers = sorted({s['weather'] for s in subset if s['weather']})
     for w in all_weathers:
         other = [x for x in all_weathers if x != w]
-        if other:  # seulement si ça élimine quelque chose
-            fc['block_weather:' + w] = _np.array(
+        if other:
+            fc_weather['block_weather:' + w] = _np.array(
                 [s['weather'] is None or s['weather'] == w for s in subset]
             )
 
@@ -1418,14 +1448,14 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
             continue
         # Exclure uniquement les spawns qui n'ont QUE ce preset (pas d'autre preset alternatif)
         # ex: block_preset:treetop exclut {treetop} mais garde {natural, treetop}
-        fc['block_preset:' + p] = _np.array(
+        fc_preset['block_preset:' + p] = _np.array(
             [(p not in s['preset_set']) or (len(s['preset_set']) > 1) for s in subset]
         )
         # REQUIRE PRESET : se limiter strictement a un emplacement exclusif.
         # Uniquement pour treetop/water/lava car ce sont des locations mutuellement
         # exclusives avec natural/wild — les autres presets se chevauchent.
         if p in REQUIREABLE_PRESETS and any(p in s['preset_set'] for s in subset if s['numero'] in chain):
-            fc['require_preset:' + p] = _np.array(
+            fc_preset['require_preset:' + p] = _np.array(
                 [p in s['preset_set'] for s in subset]
             )
 
@@ -1453,49 +1483,49 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     for canon, raw_ids in struct_groups.items():
         if canon in chain_struct_canons:
             # La chaîne utilise cette structure → propose require_struct pour s'y limiter
-            fc['require_struct:' + canon] = _np.array([
+            fc_struct['require_struct:' + canon] = _np.array([
                 not s['has_required_struct'] or bool(set(_struct_canonical(sid) for sid in s['struct_list']) & {canon})
                 for s in subset
             ])
         else:
             # Uniquement des concurrents → propose block_struct pour les exclure
-            fc['block_struct:' + canon] = _np.array([
+            fc_struct['block_struct:' + canon] = _np.array([
                 not s['has_required_struct'] or bool(set(_struct_canonical(sid) for sid in s['struct_list']) & chain_struct_canons)
                 for s in subset
             ])
 
     # CIEL : bloquer ciel visible → éliminer peut_voir_ciel='true', garder false+None
     #        bloquer ciel absent  → éliminer peut_voir_ciel='false', garder true+None
-    fc['block_sky:open']    = _np.array([s['peut_voir_ciel'] != 'true'  for s in subset])
-    fc['block_sky:covered'] = _np.array([s['peut_voir_ciel'] != 'false' for s in subset])
+    fc_sky['block_sky:open']    = _np.array([s['peut_voir_ciel'] != 'true'  for s in subset])
+    fc_sky['block_sky:covered'] = _np.array([s['peut_voir_ciel'] != 'false' for s in subset])
 
     # Y : "au-dessus de Y=v" → éliminer spawns dont maxY <= v
     for ym in sorted({s['maxY'] for s in subset if s['maxY'] is not None}):
-        fc['block_ybelow:' + str(ym)] = _np.array([s['maxY'] is None or s['maxY'] > ym for s in subset])
+        fc_y['block_ybelow:' + str(ym)] = _np.array([s['maxY'] is None or s['maxY'] > ym for s in subset])
     # Y : "en-dessous de Y=v" → éliminer spawns dont minY >= v
     for ym in sorted({s['minY'] for s in subset if s['minY'] is not None}):
-        fc['block_yabove:' + str(ym)] = _np.array([s['minY'] is None or s['minY'] < ym for s in subset])
+        fc_y['block_yabove:' + str(ym)] = _np.array([s['minY'] is None or s['minY'] < ym for s in subset])
 
     # LUMIÈRE : bloquer lumière forte → éliminer spawns avec maxLight > seuil
     for ml in sorted({s['maxLight'] for s in subset if s['maxLight'] is not None}):
-        fc['block_light:' + str(ml)] = _np.array(
+        fc_light['block_light:' + str(ml)] = _np.array(
             [s['maxLight'] is None or s['maxLight'] <= ml for s in subset]
         )
     # Bloquer les spawns qui nécessitent des blocs proches spécifiques (nénuphars, eau, etc.)
     if any(s['needed_blocks'] for s in subset):
-        fc['block_neededBlocks:1'] = _np.array([not s['needed_blocks'] for s in subset])
+        fc_blocks['block_neededBlocks:1'] = _np.array([not s['needed_blocks'] for s in subset])
     # Bloquer les spawns qui nécessitent un sol spécifique (herbe, pierre, etc.)
     if any(s['needed_base_blocks'] for s in subset):
-        fc['block_baseBlocks:1'] = _np.array([not s['needed_base_blocks'] for s in subset])
+        fc_blocks['block_baseBlocks:1'] = _np.array([not s['needed_base_blocks'] for s in subset])
     # Filtres luminosité basés sur la plage de lumière de la CIBLE
     # block_darkness : si la cible a besoin de lumière (lum_min>0), exclure les spawns d'obscurité
     if chain_lum_min is not None and chain_lum_min > 0:
-        fc['block_darkness:1'] = _np.array(
+        fc_light['block_darkness:1'] = _np.array(
             [s['lumiere_max'] is None or s['lumiere_max'] >= chain_lum_min for s in subset]
         )
     # block_brightness : si la cible a besoin d'obscurité (lum_max<15), exclure les spawns lumineux
     if chain_lum_max is not None and chain_lum_max < 15:
-        fc['block_brightness:1'] = _np.array(
+        fc_light['block_brightness:1'] = _np.array(
             [s['lumiere_min'] is None or s['lumiere_min'] <= chain_lum_max for s in subset]
         )
     # Filtres luminosité généraux : même si la cible n'a pas de contrainte lumière,
@@ -1503,9 +1533,11 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     # "block_darkness_gen" = farmer en lumière → exclure les spawns dark-only (lum_max <= 7)
     # "block_brightness_gen" = farmer dans le noir → exclure les spawns bright-only (lum_min >= 8)
     # Ces filtres ne s'appliquent que si la cible elle-même ne serait pas exclue.
-    if 'block_darkness:1' not in fc:
+    if 'block_darkness:1' not in fc_light:
         # Cible sans contrainte de luminosité OU avec lum_max > 7 → peut spawner en lumière
-        chain_allows_light = all(
+        # La chaîne a AU MOINS UN spawn qui tolère la lumière (lum_max > 7 ou sans contrainte)
+        # → mettre des torches peut avantager la cible sans l'éliminer
+        chain_allows_light = any(
             s['lumiere_max'] is None or s['lumiere_max'] > 7
             for s in subset if s['numero'] in chain
         )
@@ -1513,12 +1545,13 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
             s['lumiere_max'] is not None and s['lumiere_max'] <= 7
             for s in subset if s['numero'] not in chain
         ):
-            fc['block_darkness:1'] = _np.array(
+            fc_light['block_darkness:1'] = _np.array(
                 [s['lumiere_max'] is None or s['lumiere_max'] > 7 for s in subset]
             )
-    if 'block_brightness:1' not in fc:
+    if 'block_brightness:1' not in fc_light:
         # Cible sans contrainte OU avec lum_min < 8 → peut spawner dans l'obscurité
-        chain_allows_dark = all(
+        # La chaîne a AU MOINS UN spawn qui tolère l'obscurité (lum_min < 8 ou sans contrainte)
+        chain_allows_dark = any(
             s['lumiere_min'] is None or s['lumiere_min'] < 8
             for s in subset if s['numero'] in chain
         )
@@ -1526,7 +1559,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
             s['lumiere_min'] is not None and s['lumiere_min'] >= 8
             for s in subset if s['numero'] not in chain
         ):
-            fc['block_brightness:1'] = _np.array(
+            fc_light['block_brightness:1'] = _np.array(
                 [s['lumiere_min'] is None or s['lumiere_min'] < 8 for s in subset]
             )
 
@@ -1537,7 +1570,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
         for farm_t in ['day', 'night', 'dusk']:
             excluded_by_farm = [s for s in subset if s['time'] and s['time'] != farm_t]
             if excluded_by_farm:
-                fc['farm_time:' + farm_t] = _np.array(
+                fc_time['farm_time:' + farm_t] = _np.array(
                     [s['time'] is None or s['time'] == farm_t for s in subset]
                 )
     # Pour chaque hauteur unique des membres de la chaine, on cree un filtre hmax.
@@ -1556,7 +1589,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 h_ceil = max(h_ceil, 2.0)
             key = 'hmax:' + str(h_ceil)
             # Garde: hitbox inconnue (None) OU hitbox <= plafond
-            fc[key] = _np.array(
+            fc_hmax[key] = _np.array(
                 [s['hitbox_height'] is None or s['hitbox_height'] <= h_ceil for s in subset]
             )
             # is_t local: membres de la chaine qui RENTRENT dans ce plafond
@@ -1565,6 +1598,18 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 (s['hitbox_height'] is None or s['hitbox_height'] <= h_ceil)
                 for s in subset
             ])
+
+    # Fusionner dans l'ordre de priorité
+    fc = {}
+    fc.update(fc_struct)
+    fc.update(fc_light)
+    fc.update(fc_sky)
+    fc.update(fc_blocks)
+    fc.update(fc_y)
+    fc.update(fc_hmax)
+    fc.update(fc_preset)
+    fc.update(fc_time)
+    fc.update(fc_weather)
 
     if not fc:
         tgt = int(is_t.sum())
@@ -1583,7 +1628,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     beam = [(_np.ones(ns, dtype=bool), [])]
     is_ultra_arr = _np.array([s['is_ultra_rare'] for s in subset])
 
-    for _d in range(5):
+    for _d in range(9):
         nb = []
         for mask, active in beam:
             for name, arr in zip(fn, fa):
@@ -1637,7 +1682,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
             best_pct  = top[0]
             best_mask = top[2]
             best_keys = top[3]
-        beam = [(m, a) for _, _, m, a in nb[:5]]
+        beam = [(m, a) for _, _, m, a in nb[:10]]
         if best_pct == 100.0 and int(best_mask.sum()) <= len(chain):
             break
 
@@ -1907,28 +1952,36 @@ def _oracle_best_combo(in_biome, chain):
                 c = _struct_canonical_local(sid)
                 chain_struct_groups_local.setdefault(c, set()).add(sid)
 
-    # Construire un pool par structure de chaîne, si plusieurs structures existent
+    # Construire un pool par structure de chaîne
     extra_pools = []  # (pool_label, pool, struct_canon)
-    if len(chain_struct_canons_local) > 1:
-        for canon, raw_ids in chain_struct_groups_local.items():
-            if 'woodland_mansion' in canon:
-                continue  # manoir déjà géré par pool_mansion
-            # Pool : spawns sans structure + spawns de CETTE structure seulement
-            p_struct = [s for s in in_biome
-                        if not s['is_filler']
-                        and (not s['has_required_struct']
-                             or bool({_struct_canonical_local(sid) for sid in s['struct_list']} & {canon}))]
-            if any(s['numero'] in chain for s in p_struct):
-                # Préparer la liste des structures à exclure (toutes sauf celle-ci)
-                excl_fr = []
-                for other_canon, other_raw_ids in chain_struct_groups_local.items():
-                    if other_canon == canon:
-                        continue
-                    rep = next((r for r in other_raw_ids if not r.startswith('#')), next(iter(other_raw_ids)))
-                    _, lbl = _structure_label(rep)
-                    if lbl not in excl_fr:
-                        excl_fr.append(lbl)
-                extra_pools.append((f'struct:{canon}', p_struct, canon, excl_fr))
+    for canon, raw_ids in chain_struct_groups_local.items():
+        if 'woodland_mansion' in canon:
+            continue  # manoir déjà géré par pool_mansion
+        # Pool mixte : spawns sans structure + spawns de CETTE structure
+        p_struct = [s for s in in_biome
+                    if not s['is_filler']
+                    and (not s['has_required_struct']
+                         or bool({_struct_canonical_local(sid) for sid in s['struct_list']} & {canon}))]
+        # Pool strict : UNIQUEMENT les spawns de cette structure (pas les spawns naturels)
+        # → simule "je farm à l'intérieur de la structure" où seuls ces spawns sont actifs
+        p_strict = [s for s in in_biome
+                    if not s['is_filler']
+                    and s['has_required_struct']
+                    and bool({_struct_canonical_local(sid) for sid in s['struct_list']} & {canon})]
+        # Préparer la liste des structures à exclure (toutes sauf celle-ci)
+        excl_fr = []
+        if len(chain_struct_canons_local) > 1:
+            for other_canon, other_raw_ids in chain_struct_groups_local.items():
+                if other_canon == canon:
+                    continue
+                rep = next((r for r in other_raw_ids if not r.startswith('#')), next(iter(other_raw_ids)))
+                _, lbl = _structure_label(rep)
+                if lbl not in excl_fr:
+                    excl_fr.append(lbl)
+        if any(s['numero'] in chain for s in p_struct):
+            extra_pools.append((f'struct:{canon}', p_struct, canon, excl_fr))
+        if any(s['numero'] in chain for s in p_strict):
+            extra_pools.append((f'strict:{canon}', p_strict, canon, excl_fr))
 
     results = []
 
@@ -1973,13 +2026,16 @@ def _oracle_best_combo(in_biome, chain):
                 base = {'contexte': ctx, 'ev': ','.join(ev_combo), 'ev_label': label}
                 if pool_label == 'mansion':
                     base['pool'] = 'mansion'
-                elif pool_label.startswith('struct:'):
+                elif pool_label.startswith('struct:') or pool_label.startswith('strict:'):
                     # Pool limité à une structure spécifique → struct_keep = label FR de cette structure
-                    canon = pool_label[len('struct:'):]
+                    prefix = 'struct:' if pool_label.startswith('struct:') else 'strict:'
+                    canon = pool_label[len(prefix):]
                     raw_val = canon.replace('mc:', 'minecraft:')
                     _, label_fr = _structure_label(raw_val)
                     base['require_struct_canon'] = canon
                     base['struct_keep_fr'] = label_fr
+                    if pool_label.startswith('strict:'):
+                        base['pool'] = 'strict_struct'
                 elif pool_label == 'general' and chain_has_struct:
                     # pool_general exclut les spawns manoir → indiquer quelle(s) structure(s)
                     # la chaîne utilise pour que biome_spawns exclue tout le reste
@@ -2143,6 +2199,126 @@ def api_oracle_stream():
         mimetype='text/event-stream',
         headers={'Cache-Control': 'no-cache', 'X-Accel-Buffering': 'no'},
     )
+
+
+
+# ─────────────────────────────────────────────────────────
+# FAVORIS
+# ─────────────────────────────────────────────────────────
+
+@app.route('/favorites')
+def favorites_page():
+    user_id = session.get('user_id')
+    conn = get_db()
+    favs = [dict(r) for r in conn.execute(
+        "SELECT * FROM favorites WHERE firebase_uid = ? ORDER BY created_at DESC",
+        (user_id,)
+    ).fetchall()]
+    conn.close()
+    for fav in favs:
+        try:
+            params = json.loads(fav['url_params']) if fav['url_params'] else {}
+        except Exception:
+            params = {}
+        fav['params'] = params
+        from urllib.parse import urlencode
+        qs = {'biome': fav['biome_name'], 'mod': fav.get('mod', '')}
+        if params.get('ctx'):       qs['ctx']   = params['ctx']
+        if params.get('ev'):        qs['ev']    = params['ev']
+        if params.get('farm_time'): qs['time']  = params['farm_time']
+        if params.get('incl_time'):
+            it = params['incl_time'] if isinstance(params['incl_time'], list) else [params['incl_time']]
+            if it: qs['time'] = it[0]
+        if params.get('excl_weather'):
+            ew = params['excl_weather']
+            qs['excl_weather'] = ew[0] if isinstance(ew, list) else ew
+        elif params.get('block_weather_excl'): qs['excl_weather'] = params['block_weather_excl']
+        elif params.get('block_weather'):
+            inv = {'clear':'rain','rain':'clear'}
+            if inv.get(params['block_weather']): qs['excl_weather'] = inv[params['block_weather']]
+        if params.get('struct_keep'): qs['struct_keep'] = params['struct_keep']
+        excl_sp = []
+        if params.get('no_struct_filter'):     excl_sp.append('structure')
+        if params.get('block_sky') == 'open':  excl_sp.append('sky')
+        elif params.get('block_sky') == 'covered': excl_sp.append('no_sky')
+        if params.get('require_preset'): qs['incl_special'] = params['require_preset']
+        if params.get('struct_keep_fr') or params.get('require_struct_fr'):
+            qs['struct_keep'] = params.get('struct_keep_fr') or params.get('require_struct_fr')
+        if params.get('block_presets'):   excl_sp.extend(params['block_presets'])
+        if params.get('block_needed_blocks'): excl_sp += ['water','block']
+        if params.get('block_base_blocks'):   excl_sp.append('base_block')
+        if params.get('block_darkness'):      excl_sp.append('dark')
+        if params.get('block_brightness'):    excl_sp.append('bright')
+        if params.get('excl_special'):
+            for v in (params['excl_special'] if isinstance(params['excl_special'], list) else [params['excl_special']]):
+                excl_sp.append(v)
+        if params.get('incl_special'):
+            qs['incl_special'] = params['incl_special'] if isinstance(params['incl_special'], str) else ','.join(params['incl_special'])
+        if params.get('excl_structures'):
+            qs['excl_structures'] = '|'.join(params['excl_structures']) if isinstance(params['excl_structures'], list) else params['excl_structures']
+        if excl_sp: qs['excl_special'] = ','.join(dict.fromkeys(excl_sp))
+        if params.get('h_max') is not None:   qs.setdefault('hmax',  params['h_max'])
+        if params.get('y_above') is not None: qs.setdefault('y_min', int(params['y_above']) + 1)
+        if params.get('y_below') is not None: qs.setdefault('y_max', int(params['y_below']) - 1)
+        if params.get('hmax') is not None:    qs.setdefault('hmax',  params['hmax'])
+        if params.get('y_min') is not None:   qs.setdefault('y_min', params['y_min'])
+        if params.get('y_max') is not None:   qs.setdefault('y_max', params['y_max'])
+        fav['biome_url'] = '/spawns/biome-reel?' + urlencode(qs)
+    return render_template('favorites.html', favorites=favs)
+
+
+@app.route('/api/favorites', methods=['POST'])
+def api_favorites_add():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'non connecté'}), 401
+    data = request.get_json(force=True)
+    label        = (data.get('label') or '').strip()[:120]
+    pokemon_num  = int(data.get('pokemon_num', 0))
+    pokemon_name = (data.get('pokemon_name') or '').strip()[:80]
+    biome_name   = (data.get('biome_name') or '').strip()[:200]
+    mod          = (data.get('mod') or '').strip()[:100]
+    url_params   = json.dumps(data.get('url_params') or {})
+    if not label or not biome_name or not pokemon_num:
+        return jsonify({'error': 'données manquantes'}), 400
+    conn = get_db()
+    conn.execute(
+        "INSERT INTO favorites (firebase_uid, label, pokemon_num, pokemon_name, biome_name, mod, url_params) VALUES (?,?,?,?,?,?,?)",
+        (user_id, label, pokemon_num, pokemon_name, biome_name, mod, url_params)
+    )
+    conn.commit()
+    fav_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+    conn.close()
+    return jsonify({'ok': True, 'id': fav_id})
+
+
+@app.route('/api/favorites/<int:fav_id>/rename', methods=['PATCH'])
+def api_favorites_rename(fav_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'non connecté'}), 401
+    data = request.get_json(force=True)
+    label = (data.get('label') or '').strip()[:120]
+    if not label:
+        return jsonify({'error': 'label vide'}), 400
+    conn = get_db()
+    conn.execute("UPDATE favorites SET label = ? WHERE id = ? AND firebase_uid = ?",
+                 (label, fav_id, user_id))
+    conn.commit()
+    conn.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/favorites/<int:fav_id>', methods=['DELETE'])
+def api_favorites_delete(fav_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'non connecté'}), 401
+    conn = get_db()
+    conn.execute("DELETE FROM favorites WHERE id = ? AND firebase_uid = ?", (fav_id, user_id))
+    conn.commit()
+    conn.close()
+    return jsonify({'ok': True})
 
 
 if __name__ == "__main__":

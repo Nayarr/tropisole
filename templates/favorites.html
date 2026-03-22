@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TROPISOLE — Mes signets</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:#0a0a0f; --surface:#111118; --card:#16161f; --border:#2a2a3a;
+      --accent:#e8ff47; --accent2:#47ffe8; --text:#e8e8f0; --muted:#6a6a88;
+      --red:#ff4757; --green:#55efc4; --orange:#ffab40; --purple:#a29bfe;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); font-family:'Syne',sans-serif; min-height:100vh; }
+    body::before {
+      content:''; position:fixed; inset:0;
+      background-image: linear-gradient(var(--border) 1px,transparent 1px), linear-gradient(90deg,var(--border) 1px,transparent 1px);
+      background-size:40px 40px; opacity:.25; pointer-events:none; z-index:0;
+    }
+
+    header {
+      position:relative; z-index:10;
+      padding:1.5rem 2rem;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg,rgba(232,255,71,.04) 0%,transparent 100%);
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+    }
+    .logo-title { font-size:2rem; font-weight:800; color:var(--accent); letter-spacing:-.03em; text-shadow:0 0 40px rgba(232,255,71,.3); }
+    .logo-sub { font-family:'Space Mono',monospace; font-size:.65rem; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; margin-top:.2rem; }
+    .btn-back {
+      font-family:'Space Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.1em;
+      padding:.5rem .9rem; border-radius:6px; border:1px solid var(--border);
+      background:var(--card); color:var(--muted); cursor:pointer; text-decoration:none;
+      transition:border-color .2s,color .2s;
+    }
+    .btn-back:hover { border-color:var(--accent); color:var(--accent); }
+
+    main {
+      position:relative; z-index:5;
+      max-width:1100px; margin:0 auto;
+      padding:2.5rem 2rem;
+    }
+
+    .page-header {
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1rem; margin-bottom:2rem;
+    }
+    .page-title { font-size:1.6rem; font-weight:800; }
+    .page-count { font-family:'Space Mono',monospace; font-size:.7rem; color:var(--muted); }
+
+    /* Search bar */
+    .search-bar {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:8px; padding:.6rem 1rem;
+      font-family:'Space Mono',monospace; font-size:.82rem;
+      color:var(--text); outline:none; width:100%; max-width:320px;
+      transition:border-color .2s;
+    }
+    .search-bar:focus { border-color:var(--accent2); }
+    .search-bar::placeholder { color:var(--muted); }
+
+    /* Empty state */
+    .empty-state {
+      display:flex; flex-direction:column; align-items:center; gap:1.2rem;
+      padding:5rem 2rem; color:var(--muted);
+      font-family:'Space Mono',monospace; font-size:.82rem; text-align:center;
+    }
+    .empty-state .icon { font-size:3rem; }
+    .empty-state a { color:var(--accent); text-decoration:none; }
+
+    /* Grid */
+    .fav-grid {
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+      gap:1rem;
+    }
+
+    /* Card */
+    .fav-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:12px; padding:1.2rem 1.4rem;
+      display:flex; flex-direction:column; gap:.9rem;
+      transition:border-color .2s, box-shadow .2s;
+      position:relative; overflow:hidden;
+    }
+    .fav-card:hover { border-color:rgba(232,255,71,.25); box-shadow:0 0 20px rgba(232,255,71,.04); }
+
+    .fav-card-top {
+      display:flex; align-items:center; gap:.9rem;
+    }
+    .fav-sprite {
+      width:52px; height:52px; image-rendering:pixelated; object-fit:contain;
+      flex-shrink:0;
+    }
+    .fav-sprite-fallback {
+      width:52px; height:52px; flex-shrink:0;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(255,255,255,.05); border-radius:8px;
+      font-size:1.4rem;
+    }
+    .fav-info { flex:1; min-width:0; }
+    .fav-pokemon-name {
+      font-size:1rem; font-weight:700;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .fav-biome {
+      font-family:'Space Mono',monospace; font-size:.65rem;
+      color:var(--accent2); margin-top:.2rem;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .fav-mod {
+      font-family:'Space Mono',monospace; font-size:.58rem;
+      color:var(--muted); margin-top:.1rem;
+    }
+
+    /* Label editable */
+    .fav-label-wrap {
+      display:flex; align-items:center; gap:.5rem;
+    }
+    .fav-label {
+      font-family:'Space Mono',monospace; font-size:.72rem;
+      color:var(--accent); flex:1; min-width:0;
+      background:transparent; border:none; outline:none;
+      cursor:text; padding:.2rem 0;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+    .fav-label:focus {
+      border-bottom:1px solid var(--accent2);
+      color:var(--text);
+    }
+
+    /* Filters row */
+    .fav-filters {
+      display:flex; flex-wrap:wrap; gap:.35rem;
+    }
+    .fav-tag {
+      font-family:'Space Mono',monospace; font-size:.6rem;
+      padding:.2rem .55rem; border-radius:20px;
+      border:1px solid var(--border); color:var(--muted);
+      white-space:nowrap;
+    }
+    .fav-tag.ctx   { border-color:rgba(71,255,232,.3); color:var(--accent2); }
+    .fav-tag.ev    { border-color:rgba(232,255,71,.3); color:var(--accent); }
+    .fav-tag.block { border-color:rgba(255,71,87,.3);  color:#ff6b81; }
+
+    /* Actions */
+    .fav-actions {
+      display:flex; gap:.5rem; margin-top:.2rem;
+    }
+    .btn-go {
+      flex:1; text-align:center; text-decoration:none;
+      background:var(--accent); color:var(--bg);
+      border:none; border-radius:7px; cursor:pointer;
+      font-family:'Syne',sans-serif; font-weight:700; font-size:.82rem;
+      padding:.55rem .8rem;
+      transition:opacity .2s, transform .15s;
+    }
+    .btn-go:hover { opacity:.9; transform:translateY(-1px); }
+
+    .btn-delete {
+      background:transparent; color:var(--muted);
+      border:1px solid var(--border); border-radius:7px; cursor:pointer;
+      font-size:.85rem; padding:.55rem .65rem;
+      transition:color .2s, border-color .2s;
+    }
+    .btn-delete:hover { color:var(--red); border-color:rgba(255,71,87,.4); }
+
+    .fav-date {
+      position:absolute; top:.8rem; right:1rem;
+      font-family:'Space Mono',monospace; font-size:.58rem; color:var(--muted);
+    }
+
+    /* Toast */
+    #toast {
+      position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%) translateY(3rem);
+      background:var(--card); border:1px solid var(--border); border-radius:8px;
+      padding:.7rem 1.4rem; font-family:'Space Mono',monospace; font-size:.78rem;
+      color:var(--text); z-index:9999; transition:transform .3s, opacity .3s; opacity:0;
+      pointer-events:none;
+    }
+    #toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+    @media (max-width:600px) {
+      .fav-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo-title">TROPISOLE</div>
+    <div class="logo-sub">Mes Signets</div>
+  </div>
+  <div style="display:flex;gap:.75rem;align-items:center;">
+    <a href="/" class="btn-back">← Accueil</a>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <div>
+      <div class="page-title">⭐ Mes signets</div>
+      <div class="page-count" id="count-label">{{ favorites|length }} signet{{ 's' if favorites|length != 1 else '' }}</div>
+    </div>
+    <input class="search-bar" id="search-input" placeholder="Rechercher pokémon, biome…" oninput="filterCards()" />
+  </div>
+
+  {% if favorites %}
+  <div class="fav-grid" id="fav-grid">
+    {% for fav in favorites %}
+    {% set params = fav.url_params | tojson %}
+    <div class="fav-card" data-id="{{ fav.id }}" data-search="{{ fav.label|lower }} {{ fav.pokemon_name|lower }} {{ fav.biome_name|lower }}">
+
+      <div class="fav-date">{{ fav.created_at[:10] }}</div>
+
+      <div class="fav-card-top">
+        <img class="fav-sprite"
+             src="/static/pokemon_icons/icon{{ '%04d'|format(fav.pokemon_num) }}_f00_s0.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+             alt="{{ fav.pokemon_name }}"/>
+        <div class="fav-sprite-fallback" style="display:none">🎮</div>
+        <div class="fav-info">
+          <div class="fav-pokemon-name">{{ fav.pokemon_name }}</div>
+          <div class="fav-biome">{{ fav.biome_name }}</div>
+          <div class="fav-mod">{{ fav.mod }}</div>
+        </div>
+      </div>
+
+      <div class="fav-label-wrap">
+        <input class="fav-label" value="{{ fav.label }}"
+               data-id="{{ fav.id }}"
+               onblur="renameLabel(this)"
+               onkeydown="if(event.key==='Enter')this.blur()"
+               title="Cliquer pour renommer"/>
+        <span style="font-size:.7rem;color:var(--muted);cursor:pointer" title="Renommer" onclick="this.previousElementSibling.focus()">✏️</span>
+      </div>
+
+      <div class="fav-filters" id="tags-{{ fav.id }}">
+        {% if fav.params.ctx %}<span class="fav-tag ctx">📍 {{ fav.params.ctx }}</span>{% endif %}
+        {% if fav.params.ev %}<span class="fav-tag ev">⚡ EV {{ fav.params.ev }}</span>{% endif %}
+        {% for tag in (fav.params.removed or []) %}<span class="fav-tag block">🚫 {{ tag }}</span>{% endfor %}
+      </div>
+
+      <div class="fav-actions">
+        <a class="btn-go" href="{{ fav.biome_url }}"
+           target="_blank" id="go-{{ fav.id }}">Voir le biome ↗</a>
+        <button class="btn-delete" onclick="deleteFav({{ fav.id }}, this)" title="Supprimer">🗑️</button>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <span class="icon">⭐</span>
+    <div>Aucun signet enregistré.</div>
+    <div>Retrouvez vos spawns sauvegardés ici.</div>
+  </div>
+  {% endif %}
+</main>
+
+<div id="toast"></div>
+
+<script>
+// Données des favoris
+const FAV_DATA = {{ favorites | tojson }};
+
+function toast(msg, ok=true) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderColor = ok ? 'rgba(85,239,196,.3)' : 'rgba(255,71,87,.3)';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function filterCards() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  let visible = 0;
+  document.querySelectorAll('.fav-card').forEach(card => {
+    const match = !q || card.dataset.search.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('count-label').textContent =
+    visible + ' signet' + (visible !== 1 ? 's' : '');
+}
+
+async function deleteFav(id, btn) {
+  if (!confirm('Supprimer ce signet ?')) return;
+  const resp = await fetch(`/api/favorites/${id}`, { method: 'DELETE' });
+  if (resp.ok) {
+    const card = btn.closest('.fav-card');
+    card.style.transition = 'opacity .3s, transform .3s';
+    card.style.opacity = '0'; card.style.transform = 'scale(.95)';
+    setTimeout(() => { card.remove(); filterCards(); }, 300);
+    toast('Signet supprimé');
+  } else {
+    toast('Erreur lors de la suppression', false);
+  }
+}
+
+async function renameLabel(input) {
+  const id = input.dataset.id;
+  const newLabel = input.value.trim();
+  if (!newLabel) { input.value = input.defaultValue; return; }
+  if (newLabel === input.defaultValue) return;
+  const resp = await fetch(`/api/favorites/${id}/rename`, {
+    method: 'PATCH',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ label: newLabel })
+  });
+  if (resp.ok) {
+    input.defaultValue = newLabel;
+    const card = input.closest('.fav-card');
+    card.dataset.search = card.dataset.search.replace(/^[^|]*/, newLabel.toLowerCase());
+    toast('Renommé ✓');
+  } else {
+    input.value = input.defaultValue;
+    toast('Erreur', false);
+  }
+}
+</script>
+</body>
+</html>

@@ -519,6 +519,8 @@ BIOME_MAP = {
         {"biome": "Mirage Isles", "mod": "Terralith"},
         {"biome": "Moonlight Grove", "mod": "Terralith"},
         {"biome": "Moonlight Valley", "mod": "Terralith"},
+        {"biome": "Lavender Forest", "mod": "Terralith"},
+        {"biome": "Lavender Valley", "mod": "Terralith"},
         {"biome": "Skylands Winter", "mod": "Terralith"},
         {"biome": "Skylands Spring", "mod": "Terralith"},
         {"biome": "Skylands Summer", "mod": "Terralith"},
@@ -1341,7 +1343,7 @@ BIOME_MAP = {
     # ── Tags Wythers dédiés (pour liens cliquables distincts) ─────────────────
     "Désert (Wythers)":       [{"biome": "All Wythers' desert biomes",      "mod": "Wythers' Overhauled Overworld"}],
     "Forêt sombre (Wythers)": [
-        {"biome": "All Wythers' Dark Forest biomes", "mod": "Wythers' Overhauled Overworld"}
+        {"biome": "All Wythers' Dark Forest biomes", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Dark Forest", "mod": "Minecraft"},
         {"biome": "Forbidden Forest", "mod": "Wythers' Overhauled Overworld"},
         {"biome": "Phantasmal Forest", "mod": "Wythers' Overhauled Overworld"},

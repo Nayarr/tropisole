@@ -697,6 +697,42 @@
       flex-shrink: 0;
       opacity: 0.92;
       filter: drop-shadow(0 0 4px rgba(232,255,71,0.15));
+      cursor: pointer;
+      border-radius: 4px;
+      transition: transform .15s, filter .15s, outline .15s;
+    }
+    .row-sprite:hover {
+      transform: scale(1.25);
+      filter: drop-shadow(0 0 6px rgba(232,255,71,0.5));
+    }
+    .row-sprite.fav-selected {
+      outline: 2px solid #f9ca24;
+      border-radius: 4px;
+      filter: drop-shadow(0 0 8px rgba(249,202,36,0.7));
+      transform: scale(1.15);
+    }
+    /* Badge flottant "pour le signet" */
+    #fav-selection-bar {
+      display: none;
+      position: fixed; bottom: 1.5rem; left: 50%;
+      transform: translateX(-50%);
+      background: #16161f; border: 1px solid rgba(249,202,36,.4);
+      border-radius: 10px; padding: .65rem 1.2rem;
+      font-family: 'Space Mono', monospace; font-size: .72rem; color: #f9ca24;
+      z-index: 999; gap: .7rem; align-items: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,.5);
+    }
+    #fav-selection-bar.visible { display: flex; }
+    #fav-selection-bar img {
+      width: 28px; height: 28px; image-rendering: pixelated;
+    }
+    #fav-selection-bar button {
+      background: #f9ca24; color: #0a0a0f; border: none; border-radius: 6px;
+      font-family: 'Space Mono', monospace; font-size: .68rem; font-weight: 700;
+      padding: .3rem .75rem; cursor: pointer;
+    }
+    #fav-selection-bar .cancel-sel {
+      background: transparent; color: var(--muted); border: 1px solid var(--border);
     }
 
     .badge {
@@ -935,6 +971,17 @@
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    /* Preset tooltip */
+    .badge-preset.has-tooltip { cursor: help; }
+    .preset-tooltip-box {
+      position: fixed; z-index: 9999;
+      background: #1e1e2e; border: 1px solid #3a3a5a;
+      border-radius: 8px; padding: .65rem .9rem;
+      font-family: 'Space Mono', monospace; font-size: .65rem;
+      color: #b8b8cc; line-height: 1.7; max-width: 300px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.6);
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -947,6 +994,7 @@
   {% endif %}
   <span class="nav-title">Pokémon du même spawn</span>
   <a href="/bugreport" class="nav-back" style="margin-left:auto;font-size:.62rem;">🐛 Bug</a>
+  <a href="/favorites" class="nav-back" style="font-size:.72rem;">⭐ Signets</a>
 </nav>
 
 <div class="hero">
@@ -976,6 +1024,14 @@
       {% for t in biomes %}
       <span class="tags-via-chip">{{ t }}</span>
       {% endfor %}
+      <button id="btn-save-fav" onclick="openSaveFavModal()" title="Sauvegarder en signet"
+        style="margin-left:.5rem;font-family:'Space Mono',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:.25rem .65rem;transition:all .2s"
+        onmouseover="this.style.borderColor='#e8ff47';this.style.color='#e8ff47'"
+        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">⭐ Signet</button>
+      <button id="btn-share" onclick="shareFilters()" title="Copier le lien avec les filtres actuels"
+        style="margin-left:.35rem;font-family:'Space Mono',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:.25rem .65rem;transition:all .2s"
+        onmouseover="this.style.borderColor='#47ffe8';this.style.color='#47ffe8'"
+        onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🔗 Partager</button>
     </div>
   </div>
 
@@ -1527,7 +1583,8 @@
 </div>
 
 <script>
-const SOURCE_NUM = {{ source_pokemon.numero if source_pokemon else 'null' }};
+const SOURCE_NUM  = {{ source_pokemon.numero  if source_pokemon else 'null' }};
+const SOURCE_NAME = {{ source_pokemon.pokemon | tojson if source_pokemon else 'null' }};
 const BUCKET_FR = {
   'common': 'Commun',
   'uncommon': 'Peu commun',
@@ -1549,6 +1606,9 @@ const EV_COLORS = {
 const EV_LABELS = {
   hp: 'PV', atk: 'Atk', def: 'Déf', spa: 'A.S', spd: 'D.S', spe: 'Vit',
 };
+
+const PAGE_BIOME_NAME = {{ (real_biome_name if (real_biome_name is defined and real_biome_name) else '') | tojson }};
+const PAGE_BIOME_MOD  = {{ (real_biome_mod  if (real_biome_mod  is defined and real_biome_mod)  else '') | tojson }};
 
 const RAW_DATA = [
   {% for p in pokemon_list %}
@@ -1722,6 +1782,11 @@ function toggleDropdown(name) {
 
 // Close dropdowns when clicking outside
 document.addEventListener('click', e => {
+  const sprite = e.target.closest('.fav-sprite-pick');
+  if (sprite) {
+    selectFavPokemon(parseInt(sprite.dataset.num), sprite.dataset.name, sprite.dataset.sprite);
+    return;
+  }
   if (!e.target.closest('.ms-wrap')) {
     FILTERS.forEach(f => document.getElementById(`ms-dropdown-${f}`).classList.remove('open'));
   }
@@ -1969,10 +2034,23 @@ function render() {
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
 
     // Presets
+    const PRESET_TOOLTIPS = {
+      natural: "Blocs naturels : Herbe, Terre, Podzol, Mycélium, Terre racinaire, Mousse, Boue, Pierre, Deepslate, Andésite, Diorite, Granite, Tuf, Calcite, Bloc de spéléothème, Grès",
+      urban: "Blocs urbains : Planches (toutes variantes), Briques (argile/pierre/Nether), Béton, Poudre de béton, Laine (toutes couleurs), Terre cuite",
+      water: "Eau",
+      treetop: "Feuilles : Chêne, Sapin, Jungle, Bouleau, Acacia, Chêne noir, Mangrove, Cerisier, Azalée, Azalée fleurie",
+      foliage: "Feuilles d'arbres (côtés et dessous des Leaf blocks)",
+      lava: "Lave",
+      derelict: "Structures abandonnées : Cobblestone mousu, Planches vieillies, Pierre taillée fissurée",
+      webs: "Toiles d'araignées (Cobweb)",
+    };
     const presetsHtml = p.presets && p.presets.length > 0
-      ? `<div class="preset-list">${p.presets.map(pr =>
-          `<span class="badge-preset ${pr}" title="${pr}">🏷 ${pr}</span>`
-        ).join('')}</div>`
+      ? `<div class="preset-list">${p.presets.map(pr => {
+          const tip = PRESET_TOOLTIPS[pr];
+          return tip
+            ? `<span class="badge-preset ${pr} has-tooltip" data-tooltip="${tip}">🏷 ${pr}</span>`
+            : `<span class="badge-preset ${pr}" title="${pr}">🏷 ${pr}</span>`;
+        }).join('')}</div>`
       : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
 
     // CanSeeSky
@@ -2021,7 +2099,7 @@ function render() {
         <td class="td-num">#${String(p.numero).padStart(4,'0')}</td>
         <td class="td-name">
           <div style="display:flex;align-items:center;gap:5px">
-            ${p.sprite ? `<img src="/static/pokemon_icons/${p.sprite}" alt="${p.pokemon}" class="row-sprite" />` : ''}
+            ${p.sprite ? `<img src="/static/pokemon_icons/${p.sprite}" alt="${p.pokemon}" class="row-sprite fav-sprite-pick" data-num="${p.numero}" data-name="${p.pokemon.replace(/"/g,'&quot;')}" data-sprite="/static/pokemon_icons/${p.sprite}" title="Cliquer pour sélectionner comme pokémon du signet" />` : ''}
             <div>
               <a href="/pokemon/${p.numero}">${p.pokemon}</a>
               ${p.forme_regionale ? `<span class="badge-forme-reg" style="color:${p.forme_regionale.color};border-color:${p.forme_regionale.color}44;background:${p.forme_regionale.color}18">🌏 ${p.forme_regionale.short}</span>` : ''}
@@ -2229,6 +2307,349 @@ setTimeout(() => {
     render();
   }
 })();
+
+// ── Favoris depuis biome_spawns ──
+function serializeCurrentFilters() {
+  // Reconstruit les params URL depuis l'état actuel des filtres
+  const p = new URLSearchParams();
+  p.set('biome', PAGE_BIOME_NAME);
+  p.set('mod', PAGE_BIOME_MOD);
+
+  const ctx = [...filterState['contexte'].include];
+  if (ctx.length) p.set('ctx', ctx[0]);
+
+  const evs = [...filterState['ev'].include];
+  if (evs.length) p.set('ev', evs.join(','));
+
+  // Time : si on a exclu certains temps, on inclut le temps gardé
+  const timeExcl = [...filterState['time'].exclude];
+  if (timeExcl.length) {
+    const kept = ['day','night','dusk'].filter(t => !timeExcl.includes(t));
+    if (kept.length === 1) p.set('time', kept[0]);
+  }
+
+  const wExcl = [...filterState['weather'].exclude];
+  if (wExcl.length) p.set('excl_weather', wExcl[0]);
+
+  const spExcl = [...filterState['special'].exclude];
+  if (spExcl.length) p.set('excl_special', spExcl.join(','));
+
+  const spIncl = [...filterState['special'].include];
+  if (spIncl.length) p.set('incl_special', spIncl.join(','));
+
+  const structExcl = [...filterState['structure'].exclude];
+  if (structExcl.length) p.set('excl_structures', structExcl.join('|'));
+
+  if (heightMaxCm < HEIGHT_PAGE_MAX) p.set('hmax', (heightMaxCm / 100).toFixed(2));
+  if (yMinFilter > -64) p.set('y_min', yMinFilter);
+  if (yMaxFilter < 320) p.set('y_max', yMaxFilter);
+
+  return p;
+}
+
+// ── Tooltips preset ──
+const _ptip = document.createElement('div');
+_ptip.className = 'preset-tooltip-box';
+_ptip.style.display = 'none';
+document.body.appendChild(_ptip);
+
+document.addEventListener('mouseover', e => {
+  const el = e.target.closest('.badge-preset.has-tooltip');
+  if (!el) return;
+  _ptip.textContent = el.dataset.tooltip;
+  _ptip.style.display = 'block';
+});
+document.addEventListener('mousemove', e => {
+  if (_ptip.style.display === 'none') return;
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + 310 > window.innerWidth)  x = e.clientX - 320;
+  if (y + 120 > window.innerHeight) y = e.clientY - 90;
+  _ptip.style.left = x + 'px';
+  _ptip.style.top  = y + 'px';
+});
+document.addEventListener('mouseout', e => {
+  if (e.target.closest('.badge-preset.has-tooltip')) _ptip.style.display = 'none';
+});
+
+// ── Partage via URL ──
+function shareFilters() {
+  const p = serializeCurrentFilters();
+  const url = window.location.origin + window.location.pathname + '?' + p.toString();
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.getElementById('btn-share');
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copié !';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showBiomeToast('🔗 Lien copié !');
+  });
+}
+
+// ── Sélection du pokémon pour le signet ──
+let selectedFavNum  = null;
+let selectedFavName = null;
+
+function selectFavPokemon(num, name, spriteUrl) {
+  // Désélectionner l'ancien
+  document.querySelectorAll('.row-sprite.fav-selected').forEach(el => el.classList.remove('fav-selected'));
+
+  if (selectedFavNum === num) {
+    // Deuxième clic = désélectionner
+    selectedFavNum  = null;
+    selectedFavName = null;
+    document.getElementById('fav-selection-bar').classList.remove('visible');
+    return;
+  }
+
+  selectedFavNum  = num;
+  selectedFavName = name;
+
+  // Sélectionner le sprite cliqué
+  document.querySelectorAll('.fav-sprite-pick').forEach(img => {
+    if (parseInt(img.dataset.num) === num) {
+      img.classList.add('fav-selected');
+    }
+  });
+
+  // Afficher la barre flottante
+  const bar = document.getElementById('fav-selection-bar');
+  document.getElementById('fav-sel-sprite').src  = spriteUrl;
+  document.getElementById('fav-sel-name').textContent = name;
+  bar.classList.add('visible');
+
+  // Animation coeur
+  const heart = document.createElement('span');
+  heart.textContent = '♥';
+  heart.style.cssText = 'position:fixed;font-size:1.2rem;color:#f9ca24;pointer-events:none;z-index:9999;transition:transform .6s,opacity .6s;animation:heartFloat .6s ease-out forwards';
+  const imgs = document.querySelectorAll('.row-sprite');
+  let targetImg = null;
+  document.querySelectorAll('.fav-sprite-pick').forEach(img => { if (parseInt(img.dataset.num) === num) targetImg = img; });
+  if (targetImg) {
+    const r = targetImg.getBoundingClientRect();
+    heart.style.left = (r.left + r.width/2 - 8) + 'px';
+    heart.style.top  = (r.top  - 10) + 'px';
+    document.body.appendChild(heart);
+    heart.style.transform = 'translateY(-30px) scale(1.5)';
+    heart.style.opacity   = '0';
+    setTimeout(() => heart.remove(), 700);
+  }
+}
+
+function clearFavSelection() {
+  selectedFavNum  = null;
+  selectedFavName = null;
+  document.querySelectorAll('.row-sprite.fav-selected').forEach(el => el.classList.remove('fav-selected'));
+  document.getElementById('fav-selection-bar').classList.remove('visible');
+}
+
+function openSaveFavModal() {
+  const defaultLabel = PAGE_BIOME_NAME;
+  const label = prompt('Nom du signet (biome + tes filtres actifs seront sauvegardés) :', defaultLabel);
+  if (label === null) return;
+
+  // Priorité : sprite sélectionné > source_pokemon > premier visible
+  let pokeNum, pokeName;
+  if (selectedFavNum && selectedFavName) {
+    pokeNum  = selectedFavNum;
+    pokeName = selectedFavName;
+  } else if (SOURCE_NUM && SOURCE_NAME) {
+    pokeNum  = SOURCE_NUM;
+    pokeName = SOURCE_NAME;
+  } else {
+    const visible = getFilteredData();
+    const firstPoke = visible[0];
+    pokeNum  = firstPoke ? firstPoke.numero : 0;
+    pokeName = firstPoke ? firstPoke.pokemon : '';
+  }
+
+  // Sérialiser TOUS les filtres actifs
+  const structIncl = [...filterState['structure'].include];
+  const structExcl = [...filterState['structure'].exclude];
+  const urlParams = {
+    ctx:              [...filterState['contexte'].include][0]  || null,
+    ctx_excl:         [...filterState['contexte'].exclude],
+    ev:               [...filterState['ev'].include].join(',') || null,
+    ev_excl:          [...filterState['ev'].exclude],
+    excl_special:     [...filterState['special'].exclude],
+    incl_special:     [...filterState['special'].include],
+    excl_weather:     [...filterState['weather'].exclude],
+    incl_weather:     [...filterState['weather'].include],
+    excl_time:        [...filterState['time'].exclude],
+    incl_time:        [...filterState['time'].include],
+    excl_bucket:      [...filterState['bucket'].exclude],
+    incl_bucket:      [...filterState['bucket'].include],
+    excl_type:        [...filterState['type'].exclude],
+    incl_type:        [...filterState['type'].include],
+    excl_structures:  structExcl,
+    struct_keep:      structIncl.length ? structIncl[0] : null,
+    hmax:             heightMaxCm < HEIGHT_PAGE_MAX ? heightMaxCm / 100 : null,
+    hmin:             heightMinCm > HEIGHT_PAGE_MIN ? heightMinCm / 100 : null,
+    y_min:            yMinFilter > -64  ? yMinFilter : null,
+    y_max:            yMaxFilter < 320  ? yMaxFilter : null,
+    removed: buildRemovedList(),
+  };
+
+  fetch('/api/favorites', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({
+      label:        (label || defaultLabel).trim(),
+      pokemon_num:  pokeNum,
+      pokemon_name: pokeName,
+      biome_name:   PAGE_BIOME_NAME,
+      mod:          PAGE_BIOME_MOD,
+      url_params:   urlParams,
+    }),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.ok) {
+      const btn = document.getElementById('btn-save-fav');
+      if (btn) { btn.textContent = '✅ Sauvegardé'; btn.style.color = 'var(--accent)'; btn.style.borderColor = 'var(--accent)'; }
+      clearFavSelection();
+      showBiomeToast('⭐ Signet enregistré !');
+    } else {
+      showBiomeToast('Erreur : ' + (data.error || '?'), false);
+    }
+  })
+  .catch(() => showBiomeToast('Erreur réseau', false));
+}
+
+function buildRemovedList() {
+  const items = [];
+
+  const CTX_FR  = { grounded:'Sol', fishing:'Pêche', submerged:'Submerged', surface:'Surface', seafloor:'Fond marin' };
+  const EV_FR   = { hp:'PV', atk:'Attaque', def:'Défense', spa:'Att. Spé', spd:'Déf. Spé', spe:'Vitesse' };
+  const TIME_FR = { day:'Jour', dusk:'Crépuscule', night:'Nuit', always:'Sans contrainte horaire' };
+  const WTHR_FR = { clear:'Beau temps', rain:'Pluie', any:'Sans contrainte météo' };
+  const BKFR    = { common:'Commun', uncommon:'Peu commun', rare:'Rare', 'ultra-rare':'Ultra-rare', filler:'Filler' };
+  const SP_INCL_FR = {
+    sky:'Ciel visible requis', no_sky:'Sans ciel requis', dark:'Obscurité requise',
+    bright:'Luminosité requise', water:'Blocs eau requis', block:'Blocs requis',
+    base_block:'Blocs sol requis', depth:'Contrainte Y requise', height:'Contrainte hauteur requise',
+    slime:'Chunk Slime requis', fishing:'Condition pêche requise', bait:'Appât requis',
+    moon:'Phase de lune requise', structure:'Structure requise', no_structure:'Hors structure requis',
+    treetop:"Cimes d'arbres requises", none:'Sans condition spéciale',
+  };
+  const SP_EXCL_FR = {
+    sky:'Ciel visible exclu', no_sky:'Sans ciel exclu', dark:'Obscurité exclue',
+    bright:'Luminosité exclue', water:'Blocs eau exclus', block:'Blocs requis exclus',
+    base_block:'Blocs sol exclus', depth:'Contrainte Y exclue', height:'Contrainte hauteur exclue',
+    slime:'Chunk Slime exclu', fishing:'Condition pêche exclue', bait:'Appât exclu',
+    moon:'Phase de lune exclue', structure:'Structure exclue', no_structure:'Hors structure exclu',
+    treetop:"Cimes d'arbres exclues", none:'Sans condition spéciale exclu',
+  };
+
+  // Contexte et EV déjà affichés comme tags obligatoires dans le signet → pas de doublon
+
+  // Temps
+  const timeIncl = [...filterState['time'].include];
+  const timeExcl = [...filterState['time'].exclude];
+  timeIncl.forEach(v => items.push('Moment : ' + (TIME_FR[v]||v) + ' seulement'));
+  timeExcl.forEach(v => items.push('Moment exclu : ' + (TIME_FR[v]||v)));
+
+  // Météo
+  const wthrIncl = [...filterState['weather'].include];
+  const wthrExcl = [...filterState['weather'].exclude];
+  wthrIncl.forEach(v => items.push('Météo : ' + (WTHR_FR[v]||v) + ' seulement'));
+  wthrExcl.forEach(v => items.push('Météo exclue : ' + (WTHR_FR[v]||v)));
+
+  // Bucket
+  const bkIncl = [...filterState['bucket'].include];
+  const bkExcl = [...filterState['bucket'].exclude];
+  bkIncl.forEach(v => items.push('Rareté : ' + (BKFR[v]||v) + ' seulement'));
+  bkExcl.forEach(v => items.push('Rareté exclue : ' + (BKFR[v]||v)));
+
+  // Type
+  const tyIncl = [...filterState['type'].include];
+  const tyExcl = [...filterState['type'].exclude];
+  tyIncl.forEach(v => items.push('Type : ' + v + ' seulement'));
+  tyExcl.forEach(v => items.push('Type exclu : ' + v));
+
+  // Special inclus/exclus
+  const spIncl = [...filterState['special'].include];
+  const spExcl = [...filterState['special'].exclude];
+  spIncl.forEach(v => { if (SP_INCL_FR[v]) items.push(SP_INCL_FR[v]); });
+  spExcl.forEach(v => { if (SP_EXCL_FR[v]) items.push(SP_EXCL_FR[v]); });
+
+  // Structure incluse (garder seulement)
+  const structIncl = [...filterState['structure'].include];
+  structIncl.forEach(s => items.push('Structure gardée : ' + s + ' seulement'));
+
+  // Structure exclue (par nom)
+  const structExcl = [...filterState['structure'].exclude];
+  structExcl.forEach(s => items.push('Structure exclue : ' + s));
+
+  // Hauteur
+  if (heightMinCm > HEIGHT_PAGE_MIN) items.push('Hauteur ≥ ' + (heightMinCm/100).toFixed(1) + 'm');
+  if (heightMaxCm < HEIGHT_PAGE_MAX) items.push('Hauteur ≤ ' + (heightMaxCm/100).toFixed(1) + 'm');
+
+  // Y
+  if (yMinFilter > -64) items.push('Y > ' + yMinFilter);
+  if (yMaxFilter < 320) items.push('Y < ' + yMaxFilter);
+
+  return items;
+}
+
+function getFilteredData() {
+  return RAW_DATA.filter(p => {
+    const ctx = [...filterState['contexte'].include];
+    if (ctx.length && !ctx.some(c => p.contextes.includes(c))) return false;
+    return true;
+  });
+}
+
+function showBiomeToast(msg, ok = true) {
+  let toast = document.getElementById('biome-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'biome-toast';
+    toast.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(3rem);background:#16161f;border:1px solid #2a2a3a;border-radius:8px;padding:.7rem 1.4rem;font-family:Space Mono,monospace;font-size:.78rem;color:#e8e8f0;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.borderColor = ok ? 'rgba(85,239,196,.3)' : 'rgba(255,71,87,.3)';
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  toast.style.opacity   = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => {
+    toast.style.transform = 'translateX(-50%) translateY(3rem)';
+    toast.style.opacity   = '0';
+  }, 2500);
+}
 </script>
+
+<!-- Bouton scroll top -->
+<button id="scroll-top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Remonter en haut"
+  style="display:none;position:fixed;bottom:1.5rem;right:1.5rem;z-index:900;
+         width:2.4rem;height:2.4rem;border-radius:50%;border:1px solid var(--border);
+         background:var(--card);color:var(--muted);font-size:1rem;cursor:pointer;
+         transition:opacity .2s,border-color .2s,color .2s;box-shadow:0 2px 12px rgba(0,0,0,.4)">↑</button>
+
+<script>
+  const _scrollBtn = document.getElementById('scroll-top-btn');
+  window.addEventListener('scroll', () => {
+    _scrollBtn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+    _scrollBtn.style.alignItems = 'center';
+    _scrollBtn.style.justifyContent = 'center';
+  }, { passive: true });
+  _scrollBtn.addEventListener('mouseover', () => { _scrollBtn.style.borderColor='var(--accent)'; _scrollBtn.style.color='var(--accent)'; });
+  _scrollBtn.addEventListener('mouseout',  () => { _scrollBtn.style.borderColor='var(--border)'; _scrollBtn.style.color='var(--muted)'; });
+</script>
+
+<!-- Barre de sélection pokémon pour signet -->
+<div id="fav-selection-bar">
+  <img id="fav-sel-sprite" src="" alt=""/>
+  <span id="fav-sel-name">—</span>
+  <span style="color:var(--muted)">sélectionné pour le signet</span>
+  <button onclick="openSaveFavModal()">⭐ Sauvegarder</button>
+  <button class="cancel-sel" onclick="clearFavSelection()">✕</button>
+</div>
 </body>
 </html>

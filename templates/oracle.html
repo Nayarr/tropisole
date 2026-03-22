@@ -518,6 +518,7 @@ function buildBiomeUrl(r) {
 
   // Construire la liste excl_special (NE PAS inclure 'structure' ici — géré via excl_structures)
   const exclSp = (p.get('excl_special') || '').split(',').filter(Boolean);
+  if (combo.no_struct_filter)    exclSp.push('structure');
   if (combo.block_needed_blocks) exclSp.push('water', 'block');
   if (combo.block_base_blocks)   exclSp.push('base_block');
   if (combo.block_darkness)      exclSp.push('dark');
