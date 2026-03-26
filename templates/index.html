@@ -639,6 +639,25 @@
       margin-left: .5rem;
       align-self: center;
     }
+    .expiry-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: .65rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: .4rem .7rem;
+      cursor: default;
+      white-space: nowrap;
+      transition: border-color .2s, color .2s;
+    }
+    .expiry-badge.expiring-soon {
+      color: #ffab40;
+      border-color: rgba(255,171,64,.4);
+    }
+    .expiry-badge.expired {
+      color: var(--red);
+      border-color: rgba(255,71,87,.4);
+    }
     .btn-logout:hover {
       border-color: var(--red);
       color: var(--red);
@@ -674,6 +693,11 @@
 <a class="btn-patchnotes" href="/favorites" title="Mes signets">⭐ Signets</a>
 <a class="btn-patchnotes" href="/patchnotes" title="Patch Notes">📋 Patch Notes</a>
 <a class="btn-patchnotes" href="/bugreport" title="Signaler un bug" style="color:var(--muted)">🐛 Bug</a>
+{% if user_expires_at %}
+<div class="expiry-badge" title="Expiration de votre accès">
+  ⏳ <span id="expiry-text">{{ user_expires_at }}</span>
+</div>
+{% endif %}
 <a class="btn-logout" href="/logout" title="Se déconnecter">⏻</a>
 </div>
 </header>
@@ -2860,6 +2884,31 @@
       if (currentSub2) positionSub2(currentSub2.item, currentSub2.sub);
     });
   })();
+
+// ── Expiration abonnement ──
+(function() {
+  const el = document.getElementById('expiry-text');
+  if (!el) return;
+  const raw = el.textContent.trim(); // YYYY-MM-DD
+  if (!raw) return;
+  const exp = new Date(raw + 'T23:59:59');
+  const now = new Date();
+  const diffMs = exp - now;
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+  const badge = el.closest('.expiry-badge');
+  if (diffDays <= 0) {
+    el.textContent = 'Expiré';
+    badge.classList.add('expired');
+    badge.title = 'Votre accès a expiré';
+  } else if (diffDays <= 7) {
+    el.textContent = `Expire dans ${diffDays}j`;
+    badge.classList.add('expiring-soon');
+    badge.title = `Expire le ${raw}`;
+  } else {
+    el.textContent = `Expire le ${raw}`;
+    badge.title = `${diffDays} jours restants`;
+  }
+})();
 </script>
 </body>
 </html>

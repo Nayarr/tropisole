@@ -936,6 +936,12 @@
       vertical-align: middle;
     }
 
+    .badge-preset.none {
+      background: rgba(106,106,136,0.1);
+      border-color: rgba(106,106,136,0.25);
+      color: var(--muted);
+      font-style: italic;
+    }
     .badge-preset {
       font-family: 'Space Mono', monospace;
       font-size: 0.55rem;
@@ -1363,6 +1369,161 @@
     </div>
   </div>
 
+
+  <!-- Preset -->
+  <div class="ms-wrap" id="ms-preset_filter">
+    <button class="ms-btn" onclick="toggleDropdown('preset_filter')">
+      🏷 Preset <span class="ms-badge incl" id="ms-badge-incl-preset_filter" style="display:none"></span>
+                <span class="ms-badge excl" id="ms-badge-excl-preset_filter" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-preset_filter" style="min-width:240px">
+      <div class="ms-dropdown-header">
+        <span>Preset de spawn</span>
+        <button class="ms-clear-btn" onclick="clearFilter('preset_filter')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Preset</span><span>+ Inclure</span><span>− Exclure</span></div>
+        <div class="ms-option" id="opt-preset_filter-none">
+          <span class="ms-option-label" style="color:var(--muted)">∅ Vide (aucun preset)</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','none','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','none','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-natural">
+          <span class="ms-option-label">🌿 Natural</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','natural','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','natural','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-wild">
+          <span class="ms-option-label">🌾 Wild</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','wild','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','wild','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-treetop">
+          <span class="ms-option-label">🌳 Treetop</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','treetop','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','treetop','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-foliage">
+          <span class="ms-option-label">🍃 Foliage</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','foliage','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','foliage','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-water">
+          <span class="ms-option-label">💧 Water</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','water','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','water','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-lava">
+          <span class="ms-option-label">🔥 Lava</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','lava','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','lava','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-urban">
+          <span class="ms-option-label">🏙️ Urban</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','urban','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','urban','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-derelict">
+          <span class="ms-option-label">🏚️ Derelict</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','derelict','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','derelict','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-webs">
+          <span class="ms-option-label">🕸️ Webs</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','webs','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','webs','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-salt">
+          <span class="ms-option-label">🧂 Salt</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','salt','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','salt','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-redstone">
+          <span class="ms-option-label">🔴 Redstone</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','redstone','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','redstone','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-nether_structures">
+          <span class="ms-option-label">🔥 Nether Structures</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','nether_structures','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','nether_structures','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-nether_fossil">
+          <span class="ms-option-label">🦴 Nether Fossil</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','nether_fossil','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','nether_fossil','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-stronghold">
+          <span class="ms-option-label">🏰 Stronghold</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','stronghold','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','stronghold','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-ancient_city">
+          <span class="ms-option-label">🏛️ Ancient City</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','ancient_city','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','ancient_city','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-mansion">
+          <span class="ms-option-label">🏯 Mansion</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','mansion','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','mansion','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-mansion_bedrooms">
+          <span class="ms-option-label">🛏️ Mansion Bedrooms</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','mansion_bedrooms','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','mansion_bedrooms','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-mansion_dining">
+          <span class="ms-option-label">🍽️ Mansion Dining</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','mansion_dining','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','mansion_dining','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-illager_structures">
+          <span class="ms-option-label">⚔️ Illager Structures</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','illager_structures','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','illager_structures','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-pillager_outpost">
+          <span class="ms-option-label">🗼 Pillager Outpost</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','pillager_outpost','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','pillager_outpost','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-jungle_pyramid">
+          <span class="ms-option-label">🏯 Jungle Pyramid</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','jungle_pyramid','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','jungle_pyramid','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-desert_pyramid">
+          <span class="ms-option-label">🏜️ Desert Pyramid</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','desert_pyramid','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','desert_pyramid','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-ocean_ruins">
+          <span class="ms-option-label">🌊 Ocean Ruins</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','ocean_ruins','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','ocean_ruins','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-ocean_monument">
+          <span class="ms-option-label">🏛️ Ocean Monument</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','ocean_monument','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','ocean_monument','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-end_city">
+          <span class="ms-option-label">🌌 End City</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','end_city','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','end_city','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-ruined_portal">
+          <span class="ms-option-label">🌀 Ruined Portal</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','ruined_portal','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','ruined_portal','excl')">−</button>
+        </div>
+        <div class="ms-option" id="opt-preset_filter-trail_ruins">
+          <span class="ms-option-label">🪨 Trail Ruins</span>
+          <button class="ms-toggle incl" onclick="toggleOpt('preset_filter','trail_ruins','incl')">+</button>
+          <button class="ms-toggle excl" onclick="toggleOpt('preset_filter','trail_ruins','excl')">−</button>
+        </div>
+    </div>
+  </div>
   <!-- EV -->
   <div class="ms-wrap" id="ms-ev">
     <button class="ms-btn" onclick="toggleDropdown('ev')">
@@ -1516,6 +1677,24 @@
     </div>
   </div>
 
+  <!-- Groupe d'œufs -->
+  <div class="ms-wrap" id="ms-egg_group">
+    <button class="ms-btn" onclick="toggleDropdown('egg_group')">
+      Groupe d'œuf <span class="ms-badge" id="ms-badge-incl-egg_group" style="display:none"></span>
+                   <span class="ms-badge excl" id="ms-badge-excl-egg_group" style="display:none"></span>
+    </button>
+    <div class="ms-dropdown" id="ms-dropdown-egg_group" style="min-width:240px">
+      <div class="ms-dropdown-header">
+        <span>Groupe d'œuf</span>
+        <button class="ms-clear-btn" onclick="clearFilter('egg_group')">Tout effacer</button>
+      </div>
+      <div class="ms-legend"><span>Groupe</span><span>+ Inclure</span><span>− Exclure</span></div>
+      <div class="ms-options" id="egg-group-options-list">
+        <!-- Peuplé dynamiquement par JS -->
+      </div>
+    </div>
+  </div>
+
   <div class="y-filter-wrap" id="y-filter-section">
     <label class="y-filter-label">Couche Y accessible <span id="y-range-display">−60 → 320</span></label>
     <div class="y-slider-row">
@@ -1641,6 +1820,7 @@ const RAW_DATA = [
     sprite: {{ (p.sprite or '') | tojson }},
     hitbox_height: {{ p.hitbox_height | tojson }},
     structure_ids: {{ (p.condition_tags | selectattr('type','eq','structure') | map(attribute='label') | map('replace','Structure : ','') | list) | tojson }},
+    egg_groups: {{ (p.egg_groups or []) | tojson }},
   }{% if not loop.last %},{% endif %}
   {% endfor %}
 ];
@@ -1769,7 +1949,7 @@ function syncYFromInput() {
 }
 
 // ── Multi-select filter state ─────────────────────────────────────────────────
-const FILTERS = ['bucket', 'contexte', 'time', 'weather', 'special', 'structure', 'ev', 'type'];
+const FILTERS = ['bucket', 'contexte', 'time', 'weather', 'special', 'structure', 'preset_filter', 'ev', 'type', 'egg_group'];
 const filterState = {};
 FILTERS.forEach(f => filterState[f] = { include: new Set(), exclude: new Set() });
 
@@ -1924,6 +2104,18 @@ function filteredData() {
       }
     }
 
+    // Preset filter — logique OR pour include, OR pour exclude
+    {
+      const presets = (p.presets && p.presets.length > 0) ? p.presets : ['none'];
+      for (const v of filterState['preset_filter'].exclude) {
+        if (presets.includes(v)) return false;
+      }
+      if (filterState['preset_filter'].include.size > 0) {
+        const matched = [...filterState['preset_filter'].include].some(v => presets.includes(v));
+        if (!matched) return false;
+      }
+    }
+
     // Structure spécifique
     if (!matchFilter('structure', p => p.structure_ids && p.structure_ids.length > 0 ? p.structure_ids : ['none'], p)) return false;
 
@@ -1934,6 +2126,9 @@ function filteredData() {
 
     // Type filter
     if (!matchFilter('type', p => (p.types || []), p)) return false;
+
+    // Groupe d'œufs
+    if (!matchFilter('egg_group', p => p.egg_groups && p.egg_groups.length > 0 ? p.egg_groups : ['unknown'], p)) return false;
 
     // Height filter — actif seulement si les sliders sont bougés depuis la plage de la page
     if (heightMinCm > HEIGHT_PAGE_MIN || heightMaxCm < HEIGHT_PAGE_MAX) {
@@ -2031,7 +2226,7 @@ function render() {
 
     const contextesHtml = p.contextes.length
       ? p.contextes.map(c => `<span class="badge-contexte badge-ctx-${c}" title="${CONTEXTE_LABELS[c] || c}">${CONTEXTE_ICONS[c] || '?'} ${CONTEXTE_LABELS[c] || c}</span>`).join('')
-      : '<span style="color:var(--muted);font-size:0.7rem">—</span>';
+      : '<span class="badge-preset none">∅ Vide</span>';
 
     // Presets
     const PRESET_TOOLTIPS = {
@@ -2217,6 +2412,68 @@ setTimeout(() => {
   });
 })();
 
+// ── Populate egg_group filter dynamically ──
+(function buildEggGroupFilter() {
+  const EGG_LABELS = {
+    monster:      '🦕 Monster',
+    water_1:      '💧 Water 1',
+    water_2:      '🐟 Water 2',
+    water_3:      '🦀 Water 3',
+    bug:          '🐛 Insecte',
+    flying:       '🦅 Vol',
+    field:        '🌿 Sol',
+    fairy:        '✨ Fée',
+    grass:        '🌱 Plante',
+    human_like:   '🧑 Humanoïde',
+    mineral:      '🪨 Minéral',
+    amorphous:    '🫧 Amorphe',
+    dragon:       '🐉 Dragon',
+    ditto:        '🟣 Ditto',
+    undiscovered: '❓ Non découvert',
+    unknown:      '— Inconnu',
+  };
+
+  const presentGroups = new Set();
+  data.forEach(p => {
+    if (p.egg_groups && p.egg_groups.length > 0) {
+      p.egg_groups.forEach(g => presentGroups.add(g));
+    } else {
+      presentGroups.add('unknown');
+    }
+  });
+
+  const container = document.getElementById('egg-group-options-list');
+  if (presentGroups.size === 0) {
+    container.innerHTML = '<div style="padding:0.6rem 0.75rem;font-family:\'Space Mono\',monospace;font-size:0.72rem;color:var(--muted)">Aucun groupe d\'œuf dans ces données</div>';
+    return;
+  }
+
+  // Trier dans l'ordre canonique, puis alphabétique pour ce qui reste
+  const ORDER = ['monster','field','flying','water_1','water_2','water_3','bug','fairy','grass',
+                 'human_like','mineral','amorphous','dragon','ditto','undiscovered','unknown'];
+  const sorted = [...presentGroups].sort((a, b) => {
+    const ia = ORDER.indexOf(a); const ib = ORDER.indexOf(b);
+    if (ia !== -1 && ib !== -1) return ia - ib;
+    if (ia !== -1) return -1;
+    if (ib !== -1) return 1;
+    return a.localeCompare(b);
+  });
+
+  sorted.forEach(group => {
+    const label = EGG_LABELS[group] || ('🥚 ' + group);
+    const div = document.createElement('div');
+    div.className = 'ms-option';
+    div.id = `opt-egg_group-${group}`;
+    div.innerHTML = `
+      <span class="ms-option-label">${label}</span>
+      <button class="ms-toggle incl">+</button>
+      <button class="ms-toggle excl">−</button>`;
+    div.querySelector('.ms-toggle.incl').addEventListener('click', () => toggleOpt('egg_group', group, 'incl'));
+    div.querySelector('.ms-toggle.excl').addEventListener('click', () => toggleOpt('egg_group', group, 'excl'));
+    container.appendChild(div);
+  });
+})();
+
 // ── Pré-application des filtres Oracle (depuis URL) ──────────────────────────
 // Placé APRÈS buildStructureFilter pour que les divs structure existent dans le DOM.
 // On mute directement filterState sans passer par toggleOpt (qui appelle render() à chaque fois),
@@ -2257,6 +2514,15 @@ setTimeout(() => {
   if (p.has('excl_structures')) {
     p.get('excl_structures').split('|').filter(Boolean).forEach(lbl => {
       setFilter('structure', lbl, 'excl');
+    });
+    dirty = true;
+  }
+  // incl_structures = liste pipe-séparée de labels FR à INCLURE (logique OR)
+  // Un spawn passe s'il a AU MOINS UN des labels → parfait pour spawns multi-structures
+  // (ex: Monorpale [Forteresse Nether, Vestige bastion] passe avec incl_structures=Forteresse+Nether)
+  if (p.has('incl_structures')) {
+    p.get('incl_structures').split('|').filter(Boolean).forEach(lbl => {
+      setFilter('structure', lbl, 'incl');
     });
     dirty = true;
   }
@@ -2593,6 +2859,18 @@ function buildRemovedList() {
   // Y
   if (yMinFilter > -64) items.push('Y > ' + yMinFilter);
   if (yMaxFilter < 320) items.push('Y < ' + yMaxFilter);
+
+  // Groupes d'œufs
+  const EGG_FR = {
+    monster:'Monster', water_1:'Water 1', water_2:'Water 2', water_3:'Water 3',
+    bug:'Insecte', flying:'Vol', field:'Sol', fairy:'Fée', grass:'Plante',
+    human_like:'Humanoïde', mineral:'Minéral', amorphous:'Amorphe',
+    dragon:'Dragon', ditto:'Ditto', undiscovered:'Non découvert', unknown:'Inconnu',
+  };
+  const egIncl = [...filterState['egg_group'].include];
+  const egExcl = [...filterState['egg_group'].exclude];
+  egIncl.forEach(v => items.push('Œuf : ' + (EGG_FR[v]||v) + ' seulement'));
+  egExcl.forEach(v => items.push('Œuf exclu : ' + (EGG_FR[v]||v)));
 
   return items;
 }

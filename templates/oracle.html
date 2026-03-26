@@ -480,6 +480,36 @@ const PRESET_LABELS = {
 function buildBiomeUrl(r) {
   const combo = r.combo || {};
   const p = new URLSearchParams();
+
+  // Biome virtuel (structure ubiquitaire) → URL vers /spawns/biome avec tag de dimension
+  if (r.virtual_info) {
+    const vi = r.virtual_info;
+    // Base : /spawns/biome?biomes=<dim_fr>
+    const base = new URLSearchParams();
+    base.set('biomes', vi.dim_fr);
+    if (vi.struct_labels && vi.struct_labels.length > 0) {
+      // incl_structures = inclusion OR : spawn passe s'il a AU MOINS UN de ces labels
+      // Parfait pour Monorpale [Forteresse+Bastion] : passe avec incl_structures=Forteresse+Nether
+      base.set('incl_structures', vi.struct_labels.join('|'));
+      // incl_special=structure : exclure les spawns sans structure
+      const existingIncl = base.get('incl_special');
+      base.set('incl_special', existingIncl ? existingIncl + ',structure' : 'structure');
+    }
+    if (combo.contexte) base.set('ctx', combo.contexte);
+    if (combo.ev)       base.set('ev',  combo.ev);
+    if (combo.farm_time) base.set('time', combo.farm_time);
+    if (combo.block_weather_excl) base.set('excl_weather', combo.block_weather_excl);
+    const exclSpV = [];
+    if (combo.no_struct_filter)    exclSpV.push('structure');
+    if (combo.block_needed_blocks) exclSpV.push('water', 'block');
+    if (combo.block_base_blocks)   exclSpV.push('base_block');
+    if (combo.block_darkness)      exclSpV.push('dark');
+    if (combo.block_brightness)    exclSpV.push('bright');
+    if (exclSpV.length) base.set('excl_special', [...new Set(exclSpV)].join(','));
+    if (combo.h_max !== undefined) base.set('hmax', combo.h_max);
+    return `/spawns/biome?${base.toString()}`;
+  }
+
   p.set('biome', r.biome_name);
   p.set('mod',   r.mod || '');
 
@@ -518,7 +548,6 @@ function buildBiomeUrl(r) {
 
   // Construire la liste excl_special (NE PAS inclure 'structure' ici — géré via excl_structures)
   const exclSp = (p.get('excl_special') || '').split(',').filter(Boolean);
-  if (combo.no_struct_filter)    exclSp.push('structure');
   if (combo.block_needed_blocks) exclSp.push('water', 'block');
   if (combo.block_base_blocks)   exclSp.push('base_block');
   if (combo.block_darkness)      exclSp.push('dark');

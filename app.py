@@ -12,6 +12,7 @@ from pokemon_types import get_types, ALL_TYPES, TYPE_COLORS
 from pokemon_sprites import get_sprite
 from pokemon_hitboxes import get_height
 from pokemon_evochains import get_evo_chain
+from pokemon_egg_groups import get_egg_groups  
 from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spawn_biomes_filtered,
                            MINECRAFT_TAG_ALIASES,
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
@@ -602,6 +603,7 @@ def _build_spawn_list(filtered_rows):
         p["ev"], p["ev_str"] = ev_cache[num]
         p["ev_total"] = p["ev"]["total"]
         p["types"] = get_types(num)
+        p["egg_groups"] = get_egg_groups(num)
         p["sprite"] = get_sprite(num, p.get("forme"))
         h = get_height(num, p.get("forme"))
         p["hitbox_height"] = round(h, 3) if h else None
@@ -1393,7 +1395,7 @@ def _oracle_load_spawns():
     return spawns
 
 
-def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, chain_lum_min=None, chain_lum_max=None):
+def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, chain_lum_min=None, chain_lum_max=None, skip_struct=False):
     """
     Affine une sous-liste avec beam search sur les filtres optionnels.
     Contexte et EV déjà appliqués — ici : weather, preset, sky, Y, light, time, hmax.
@@ -1459,40 +1461,41 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 [p in s['preset_set'] for s in subset]
             )
 
-    # STRUCTURE — deux types de filtres :
-    # 1. block_struct:X  → exclure les structures QUE UNIQUEMENT les concurrents utilisent
-    # 2. require_struct:X → se limiter à UNE structure que la chaîne utilise (élimine les autres,
-    #    y compris d'autres structures de la chaîne — ex: village plutôt que manoir pour Évoli)
-    all_struct_ids = set()
-    for s in subset:
-        all_struct_ids |= set(s['struct_list'])
-    def _struct_canonical(sid):
-        return sid.lstrip('#').replace('cobblemon:', 'mc:').replace('minecraft:', 'mc:')
-    struct_groups = {}  # canonical → set of raw IDs
-    for sid in all_struct_ids:
-        c = _struct_canonical(sid)
-        struct_groups.setdefault(c, set()).add(sid)
+    if not skip_struct:
+        # STRUCTURE — deux types de filtres :
+        # 1. block_struct:X  → exclure les structures QUE UNIQUEMENT les concurrents utilisent
+        # 2. require_struct:X → se limiter à UNE structure que la chaîne utilise (élimine les autres,
+        #    y compris d'autres structures de la chaîne — ex: village plutôt que manoir pour Évoli)
+        all_struct_ids = set()
+        for s in subset:
+            all_struct_ids |= set(s['struct_list'])
+        def _struct_canonical(sid):
+            return sid.lstrip('#').replace('cobblemon:', 'mc:').replace('minecraft:', 'mc:')
+        struct_groups = {}  # canonical → set of raw IDs
+        for sid in all_struct_ids:
+            c = _struct_canonical(sid)
+            struct_groups.setdefault(c, set()).add(sid)
 
-    # Structures utilisées par la chaîne
-    chain_struct_canons = set()
-    for s in subset:
-        if s['numero'] in chain:
-            for sid in s['struct_list']:
-                chain_struct_canons.add(_struct_canonical(sid))
+        # Structures utilisées par la chaîne
+        chain_struct_canons = set()
+        for s in subset:
+            if s['numero'] in chain:
+                for sid in s['struct_list']:
+                    chain_struct_canons.add(_struct_canonical(sid))
 
-    for canon, raw_ids in struct_groups.items():
-        if canon in chain_struct_canons:
-            # La chaîne utilise cette structure → propose require_struct pour s'y limiter
-            fc_struct['require_struct:' + canon] = _np.array([
-                not s['has_required_struct'] or bool(set(_struct_canonical(sid) for sid in s['struct_list']) & {canon})
-                for s in subset
-            ])
-        else:
-            # Uniquement des concurrents → propose block_struct pour les exclure
-            fc_struct['block_struct:' + canon] = _np.array([
-                not s['has_required_struct'] or bool(set(_struct_canonical(sid) for sid in s['struct_list']) & chain_struct_canons)
-                for s in subset
-            ])
+        for canon, raw_ids in struct_groups.items():
+            if canon in chain_struct_canons:
+                # La chaîne utilise cette structure → propose require_struct pour s'y limiter
+                fc_struct['require_struct:' + canon] = _np.array([
+                    not s['has_required_struct'] or bool(set(_struct_canonical(sid) for sid in s['struct_list']) & {canon})
+                    for s in subset
+                ])
+            else:
+                # Uniquement des concurrents → propose block_struct pour les exclure
+                fc_struct['block_struct:' + canon] = _np.array([
+                    not s['has_required_struct'] or bool(set(_struct_canonical(sid) for sid in s['struct_list']) & chain_struct_canons)
+                    for s in subset
+                ])
 
     # CIEL : bloquer ciel visible → éliminer peut_voir_ciel='true', garder false+None
     #        bloquer ciel absent  → éliminer peut_voir_ciel='false', garder true+None
@@ -1651,13 +1654,11 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 cnt = int(nm.sum())
                 if cnt == 0: continue
                 # Un filtre n'est utile que s'il élimine au moins un concurrent (non-cible).
-                # Sans ça, block_weather:clear peut être sélectionné même quand il n'élimine
-                # aucun concurrent (et laisse passer des rain-only comme Tartard/Têtarte).
-                # Exception : hmax réduit aussi des spawns de cibles trop grandes → toujours utile.
-                if not name.startswith('hmax:'):
-                    curr_non_target = int((mask & ~is_t).sum())
-                    new_non_target  = int((nm    & ~is_t).sum())
-                    if new_non_target >= curr_non_target: continue
+                # Pour hmax : utile seulement s'il élimine au moins un concurrent,
+                # pas juste des membres de la chaîne (évite hmax:2 quand seule la chaîne est présente).
+                curr_non_target = int((mask & ~is_t).sum())
+                new_non_target  = int((nm    & ~is_t).sum())
+                if new_non_target >= curr_non_target: continue
                 # Pour les filtres hmax, la chaine effective = membres qui rentrent dans le plafond.
                 # Les membres exclus par la hauteur ne sont pas des cibles perdues.
                 new_active_combo = active + [name]
@@ -1716,11 +1717,10 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 cnt = int(nm.sum())
                 if cnt == 0:
                     continue
-                if not name.startswith('hmax:'):
-                    curr_non_target_fp = int((fp_mask & ~is_t).sum())
-                    new_non_target_fp  = int((nm      & ~is_t).sum())
-                    if new_non_target_fp >= curr_non_target_fp:
-                        continue
+                curr_non_target_fp = int((fp_mask & ~is_t).sum())
+                new_non_target_fp  = int((nm      & ~is_t).sum())
+                if new_non_target_fp >= curr_non_target_fp:
+                    continue
                 new_keys = list(fp_keys) + [name]
                 hmax_in_combo = [k for k in new_keys if k.startswith('hmax:')]
                 if hmax_in_combo:
@@ -1904,7 +1904,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     return round(best_pct, 1), int(best_mask.sum()), combo, filtered_final
 
 
-def _oracle_best_combo(in_biome, chain):
+def _oracle_best_combo(in_biome, chain, is_virtual_biome=False):
     """
     Calcule la meilleure isolation pour un biome.
     Pool = spawns sans structure requise + spawns de structure non-manoir
@@ -1952,36 +1952,9 @@ def _oracle_best_combo(in_biome, chain):
                 c = _struct_canonical_local(sid)
                 chain_struct_groups_local.setdefault(c, set()).add(sid)
 
-    # Construire un pool par structure de chaîne
-    extra_pools = []  # (pool_label, pool, struct_canon)
-    for canon, raw_ids in chain_struct_groups_local.items():
-        if 'woodland_mansion' in canon:
-            continue  # manoir déjà géré par pool_mansion
-        # Pool mixte : spawns sans structure + spawns de CETTE structure
-        p_struct = [s for s in in_biome
-                    if not s['is_filler']
-                    and (not s['has_required_struct']
-                         or bool({_struct_canonical_local(sid) for sid in s['struct_list']} & {canon}))]
-        # Pool strict : UNIQUEMENT les spawns de cette structure (pas les spawns naturels)
-        # → simule "je farm à l'intérieur de la structure" où seuls ces spawns sont actifs
-        p_strict = [s for s in in_biome
-                    if not s['is_filler']
-                    and s['has_required_struct']
-                    and bool({_struct_canonical_local(sid) for sid in s['struct_list']} & {canon})]
-        # Préparer la liste des structures à exclure (toutes sauf celle-ci)
-        excl_fr = []
-        if len(chain_struct_canons_local) > 1:
-            for other_canon, other_raw_ids in chain_struct_groups_local.items():
-                if other_canon == canon:
-                    continue
-                rep = next((r for r in other_raw_ids if not r.startswith('#')), next(iter(other_raw_ids)))
-                _, lbl = _structure_label(rep)
-                if lbl not in excl_fr:
-                    excl_fr.append(lbl)
-        if any(s['numero'] in chain for s in p_struct):
-            extra_pools.append((f'struct:{canon}', p_struct, canon, excl_fr))
-        if any(s['numero'] in chain for s in p_strict):
-            extra_pools.append((f'strict:{canon}', p_strict, canon, excl_fr))
+    # Les structures sont gérées par les biomes virtuels dans generate()
+    # → pas d'extra_pools ici, pool_general = sans structure uniquement
+    extra_pools = []
 
     results = []
 
@@ -2027,13 +2000,20 @@ def _oracle_best_combo(in_biome, chain):
                 if pool_label == 'mansion':
                     base['pool'] = 'mansion'
                 elif pool_label.startswith('struct:') or pool_label.startswith('strict:'):
-                    # Pool limité à une structure spécifique → struct_keep = label FR de cette structure
                     prefix = 'struct:' if pool_label.startswith('struct:') else 'strict:'
-                    canon = pool_label[len(prefix):]
-                    raw_val = canon.replace('mc:', 'minecraft:')
-                    _, label_fr = _structure_label(raw_val)
-                    base['require_struct_canon'] = canon
-                    base['struct_keep_fr'] = label_fr
+                    canon_key = pool_label[len(prefix):]
+                    # Pour biome_spawns, trouver tous les labels du groupe
+                    struct_labels = []
+                    for c in canon_key.split('|'):
+                        raw_val = c.replace('mc:', 'minecraft:')
+                        _, lbl = _structure_label(raw_val)
+                        if lbl not in struct_labels:
+                            struct_labels.append(lbl)
+                    base['require_struct_canon'] = canon_key
+                    # struct_keep_fr = premier label du groupe
+                    base['struct_keep_fr'] = struct_labels[0] if struct_labels else ''
+                    # struct_keep_all = tous les labels pour biome_spawns
+                    base['struct_keep_all_fr'] = struct_labels
                     if pool_label.startswith('strict:'):
                         base['pool'] = 'strict_struct'
                 elif pool_label == 'general' and chain_has_struct:
@@ -2060,6 +2040,7 @@ def _oracle_best_combo(in_biome, chain):
                 c_lum_max = max(lum_maxs) if lum_maxs else None
                 pct, tf, combo, filt = _oracle_beam_refine(ev_sub, base, chain,
                                                             skip_hmax=(ctx == 'fishing'),
+                                                            skip_struct=(not is_virtual_biome),
                                                             ctx=ctx,
                                                             chain_lum_min=c_lum_min,
                                                             chain_lum_max=c_lum_max)
@@ -2106,6 +2087,24 @@ def api_oracle_stream():
 
         ALLOWED_MODS = {'Vanilla Minecraft', 'Terralith', "Wythers' Overhauled Overworld"}
 
+        # Structures ubiquitaires → traités comme biomes virtuels
+        # (stronghold sous tout l'overworld, bastion/fortress dans tout le nether, etc.)
+        # Format : (nom_affiché, frozenset_de_tags, mod)
+        VIRTUAL_STRUCT_BIOMES = [
+            ('Forteresse',            frozenset({'#cobblemon:is_overworld'}),  'Vanilla Minecraft',   frozenset({'mc:stronghold'})),
+            ('Ruines',                frozenset({'#cobblemon:is_overworld'}),  'Cobblemon',           frozenset({'mc:ruin'})),
+            ('Ruines (Arche)',        frozenset({'#cobblemon:is_overworld'}),  'Cobblemon',           frozenset({'mc:ruins/arch'})),
+            ('Ruines (Luna Henge)',   frozenset({'#cobblemon:is_overworld'}),  'Cobblemon',           frozenset({'mc:ruins/luna_henge_ruins'})),
+            ('Ruines (Sol Henge)',    frozenset({'#cobblemon:is_overworld'}),  'Cobblemon',           frozenset({'mc:ruins/sol_henge_ruins'})),
+            ('Ruines (Stonjourner)',  frozenset({'#cobblemon:is_overworld'}),  'Cobblemon',           frozenset({'mc:ruins/stonjourner_henge_ruins'})),
+            ('Forteresse Nether',     frozenset({'#cobblemon:is_nether'}),     'Vanilla Minecraft',   frozenset({'mc:nether_fortress'})),
+            ('Vestige de bastion',    frozenset({'#cobblemon:is_nether'}),     'Vanilla Minecraft',   frozenset({'mc:bastion_remnant'})),
+            ('Mineshaft',             frozenset({'#cobblemon:is_overworld'}),  'Vanilla Minecraft',   frozenset({'mc:mineshaft'})),
+        ]
+
+        def _struct_canonical_check(sid):
+            return sid.lstrip('#').replace('cobblemon:', 'mc:').replace('minecraft:', 'mc:')
+
         # Biomes réels où la chaîne peut spawner
         # — exclure les regroupements "All ..." et les mods non autorisés
         target_biomes = []
@@ -2119,17 +2118,42 @@ def api_oracle_stream():
                     target_biomes.append((bname, all_tags))
                     break
 
+        # Ajouter les biomes virtuels de structure si la chaîne y spawn
+        for vname, vtags, vmod, vstruct_canons in VIRTUAL_STRUCT_BIOMES:
+            # La chaîne doit avoir au moins un spawn avec ces structs dans cette dimension
+            chain_has = any(
+                s['numero'] in chain
+                and vtags & s['tag_set']
+                and bool({_struct_canonical_check(sid) for sid in s['struct_list']} & vstruct_canons)
+                for s in all_spawns
+            )
+            if chain_has:
+                target_biomes.append((vname, vtags, vmod, vstruct_canons))
+
         _msg = json.dumps({'type': 'init', 'chain': chain_names, 'total_biomes': len(target_biomes)})
         yield "data: " + _msg + "\n\n"
 
         results = []
 
-        for i, (bname, all_tags) in enumerate(target_biomes):
-            in_biome = [s for s in all_spawns
-                        if all_tags & s['tag_set'] and not (all_tags & s['excl_set'])]
+        for i, biome_entry in enumerate(target_biomes):
+            bname    = biome_entry[0]
+            all_tags = biome_entry[1]
+            bmod     = biome_entry[2] if len(biome_entry) > 2 else biome_mods.get(bname, '?')
+            vstruct_filter = biome_entry[3] if len(biome_entry) > 3 else None
+
+            if vstruct_filter:
+                # Biome virtuel : pool = spawns dans cette dimension ET avec au moins une de ces structures
+                in_biome = [s for s in all_spawns
+                            if all_tags & s['tag_set']
+                            and not (all_tags & s['excl_set'])
+                            and s['has_required_struct']
+                            and bool({_struct_canonical_check(sid) for sid in s['struct_list']} & vstruct_filter)]
+            else:
+                in_biome = [s for s in all_spawns
+                            if all_tags & s['tag_set'] and not (all_tags & s['excl_set'])]
             if not in_biome: continue
 
-            pct, total_base, total_filt, combo, filtered = _oracle_best_combo(in_biome, chain)
+            pct, total_base, total_filt, combo, filtered = _oracle_best_combo(in_biome, chain, is_virtual_biome=vstruct_filter is not None)
             if pct == 0: continue
 
             competitor_nums = frozenset(s['numero'] for s in filtered if s['numero'] not in chain)
@@ -2160,10 +2184,37 @@ def api_oracle_stream():
             )
             filler_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(filler_nums)]
 
+            # Pour les biomes virtuels, préparer les infos pour l'URL
+            virtual_info = None
+            if vstruct_filter is not None:
+                dim_fr = 'Nether' if '#cobblemon:is_nether' in all_tags else 'Monde de surface'
+                # Trouver le premier label FR de la structure
+                struct_labels_virt = []
+                for c in vstruct_filter:
+                    # Essayer cobblemon: avec # en premier, puis minecraft: sans #
+                    raw_cob_hash = '#cobblemon:' + c.replace('mc:', '')
+                    raw_cob      = 'cobblemon:'  + c.replace('mc:', '')
+                    raw_mc       = 'minecraft:'  + c.replace('mc:', '')
+                    if raw_cob_hash in STRUCTURE_NAMES_FR:
+                        _, lbl = STRUCTURE_NAMES_FR[raw_cob_hash]
+                    elif raw_cob in STRUCTURE_NAMES_FR:
+                        _, lbl = STRUCTURE_NAMES_FR[raw_cob]
+                    elif raw_mc in STRUCTURE_NAMES_FR:
+                        _, lbl = STRUCTURE_NAMES_FR[raw_mc]
+                    else:
+                        _, lbl = _structure_label(raw_mc)
+                    if lbl not in struct_labels_virt:
+                        struct_labels_virt.append(lbl)
+                virtual_info = {
+                    'dim_fr': dim_fr,
+                    'struct_labels': struct_labels_virt,
+                }
+
             result = {
                 'biome_name':      bname,
                 'biome_fr':        bname,
-                'mod':             biome_mods.get(bname, '?'),
+                'mod':             bmod,
+                'virtual_info':    virtual_info,
                 'pct':             pct,
                 'raw_pct':         combo.pop('raw_pct', pct),
                 'only_ultra':      combo.pop('only_ultra', False),
@@ -2184,6 +2235,7 @@ def api_oracle_stream():
                 reduct = (x['total_base'] - x['total_filtered']) / x['total_base'] if x['total_base'] > 0 else 0
                 return (-raw, -reduct)
             results_sorted = sorted(results, key=_sort_key)
+
             _msg = json.dumps({
                 'type': 'update',
                 'results': results_sorted[:50],
