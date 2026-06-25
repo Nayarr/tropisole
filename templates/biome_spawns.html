@@ -2545,6 +2545,12 @@ setTimeout(() => {
   // Special exclus
   (p.get('excl_special') || '').split(',').filter(Boolean).forEach(v => { setFilter('special', v, 'excl'); dirty = true; });
 
+  // Preset inclus (ex: incl_preset=none → seulement les spawns sans preset)
+  (p.get('incl_preset') || '').split(',').filter(Boolean).forEach(v => { setFilter('preset_filter', v, 'incl'); dirty = true; });
+
+  // Preset exclus (ex: excl_preset=treetop,foliage)
+  (p.get('excl_preset') || '').split(',').filter(Boolean).forEach(v => { setFilter('preset_filter', v, 'excl'); dirty = true; });
+
   // Hauteur max
   if (p.has('hmax')) {
     const hmaxCm = Math.round(parseFloat(p.get('hmax')) * 100);

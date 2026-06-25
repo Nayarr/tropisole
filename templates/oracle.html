@@ -311,7 +311,7 @@
 <script>
 const POKEMON_LIST = [
   {% for p in pokemon_list %}
-  { numero: {{ p[0] }}, name: {{ p[1] | tojson }} },
+  { numero: {{ p.numero }}, name: {{ p.name | tojson }}, forme: {{ p.forme | tojson }} },
   {% endfor %}
 ];
 
@@ -357,10 +357,16 @@ searchInput.addEventListener('input', () => {
   acList.innerHTML = matches.map((p, i) => {
     const num = String(p.numero).padStart(4,'0');
     const sprite = `${SPRITE_BASE}icon${num}_f00_s0.png`;
+    const FORME_COLORS = { Alola:'#00b4d8', Galar:'#9b5de5', Hisui:'#e9c46a', Paldea:'#f4a261', Valencia:'#2dc653' };
+    const formeMatch = p.name.match(/\(([^)]+)\)$/);
+    const formeBadge = formeMatch
+      ? `<span style="font-size:.58rem;padding:.1rem .4rem;border-radius:10px;background:${(FORME_COLORS[formeMatch[1]]||'#6a6a88')}22;border:1px solid ${(FORME_COLORS[formeMatch[1]]||'#6a6a88')}55;color:${(FORME_COLORS[formeMatch[1]]||'#6a6a88')}">${formeMatch[1]}</span>`
+      : '';
+    const baseName = formeMatch ? p.name.replace(/\s*\([^)]+\)$/, '') : p.name;
     return `<div class="ac-item" data-num="${p.numero}" data-name="${p.name}">
       <span class="ac-num">#${num}</span>
       <img class="ac-sprite" src="${sprite}" onerror="this.style.display='none'" />
-      <span>${p.name}</span>
+      <span>${baseName}</span>${formeBadge}
     </div>`;
   }).join('');
   acList.querySelectorAll('.ac-item').forEach(el => {
@@ -507,6 +513,9 @@ function buildBiomeUrl(r) {
     if (combo.block_brightness)    exclSpV.push('bright');
     if (exclSpV.length) base.set('excl_special', [...new Set(exclSpV)].join(','));
     if (combo.h_max !== undefined) base.set('hmax', combo.h_max);
+    if (combo.excl_structures_fr?.length) base.set('excl_structures', combo.excl_structures_fr.join('|'));
+    if (combo.incl_preset) base.set('incl_preset', combo.incl_preset);
+    if (combo.excl_preset_list?.length) base.set('excl_preset', combo.excl_preset_list.join(','));
     return `/spawns/biome?${base.toString()}`;
   }
 
@@ -531,12 +540,19 @@ function buildBiomeUrl(r) {
     p.set('excl_special', combo.block_sky === 'open' ? 'sky' : 'no_sky');
   }
   if (combo.require_preset) p.set('incl_special', combo.require_preset);
+  // Preset filter : incl_preset=none ou excl_preset=treetop,foliage,...
+  if (combo.incl_preset) p.set('incl_preset', combo.incl_preset);
+  if (combo.excl_preset_list?.length) p.set('excl_preset', combo.excl_preset_list.join(','));
   // require_struct : on EXCLUT toutes les autres structures sauf celle choisie
   // → biome_spawns recevra la liste des structures à exclure
   // Structure : struct_keep = label FR de la structure à garder
   // biome_spawns exclut dynamiquement tout le reste
   const structKeep = combo.struct_keep_fr || combo.require_struct_fr;
   if (structKeep) p.set('struct_keep', structKeep);
+  // Structures à exclure (excl_structures_fr = liste de labels FR)
+  if (combo.excl_structures_fr?.length) {
+    p.set('excl_structures', combo.excl_structures_fr.join('|'));
+  }
   if (combo.block_presets?.length) {
     const existing = p.get('excl_special');
     const list = [...(existing ? [existing] : []), ...combo.block_presets].join(',');
@@ -576,8 +592,11 @@ function renderCard(r, i) {
   if (combo.ev_label) mandatoryTags.push(`<span class="filter-tag lume">⚡ EV ${combo.ev_label}</span>`);
   if (combo.structure) mandatoryTags.push(`<span class="filter-tag lume">🏗️ ${combo.structure.replace(/.*[:/]/, '')}</span>`);
   if (combo.require_preset) {
-    const PRESET_LABELS = { 'treetop': '🌲 Cimes d\'arbres', 'water': '💧 Eau', 'lava': '🌋 Lave' };
-    mandatoryTags.push(`<span class="filter-tag ctx">${PRESET_LABELS[combo.require_preset] || combo.require_preset}</span>`);
+    const PRESET_LABELS_CARD = { 'treetop': '🌲 Cimes d\'arbres', 'water': '💧 Eau', 'lava': '🌋 Lave' };
+    mandatoryTags.push(`<span class="filter-tag ctx">${PRESET_LABELS_CARD[combo.require_preset] || combo.require_preset}</span>`);
+  }
+  if (combo.incl_preset === 'none') {
+    mandatoryTags.push(`<span class="filter-tag lume">∅ Preset vide uniquement</span>`);
   }
   if (combo.require_struct_label) {
     mandatoryTags.push(`<span class="filter-tag ctx">${combo.require_struct_label}</span>`);
@@ -587,6 +606,12 @@ function renderCard(r, i) {
   const removedTags = (combo.removed || []).map(msg =>
     `<span class="filter-tag removed">🚫 ${msg}</span>`
   );
+  // Structures exclues → afficher dans "À bloquer"
+  if (combo.excl_structures_fr?.length) {
+    combo.excl_structures_fr.forEach(lbl =>
+      removedTags.push(`<span class="filter-tag removed">🏗️ ${lbl} exclu</span>`)
+    );
+  }
 
   const filtersHtml = `
     <div class="filters-row">

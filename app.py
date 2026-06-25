@@ -18,7 +18,7 @@ from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spa
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
                            get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
                            FR_TAG_TO_COBBLEMON, FR_TAG_TO_RAW_IDS, get_parent_cobblemon_tags,
-                           COBBLEMON_TAG_TO_FR)
+                           COBBLEMON_TAG_TO_FR, build_biome_menu)
 
 app = Flask(__name__)
 app.secret_key = "bfcdc97aed922f455ccac7c0af8833b776446cc8b13466187c0b4c6f6ca8ef33"
@@ -674,6 +674,7 @@ def index():
     return render_template("index.html",
                            buckets=buckets,
                            biomes_by_category=biomes_by_category,
+                           biome_menu=build_biome_menu(),
                            bucket_fr=BUCKET_FR,
                            all_types=ALL_TYPES,
                            type_colors=TYPE_COLORS,
@@ -697,6 +698,11 @@ def api_pokemon():
     if bucket:
         where_clauses.append("bucket = ?")
         params.append(bucket)
+
+    # Filtre par type directement en SQL via la table de référence pokemon_types
+    if type_filter:
+        where_clauses.append("numero IN (SELECT numero FROM pokemon_types WHERE type = ?)")
+        params.append(type_filter)
 
     where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
 
@@ -729,10 +735,6 @@ def api_pokemon():
             return unicodedata.normalize('NFD', s).encode('ascii', 'ignore').decode().lower()
         needle = normalize(search)
         all_rows = [r for r in all_rows if needle in normalize(r["pokemon"])]
-
-    # Filtre par type en Python (les types ne sont pas en BDD)
-    if type_filter:
-        all_rows = [r for r in all_rows if type_filter in get_types(r["numero"])]
 
     total = len(all_rows)
     offset = (page - 1) * per_page
@@ -1444,7 +1446,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     # ou lava (pres de lave) sans ambiguite avec natural/wild.
     # Tous les autres presets (foliage, urban, derelict...) coexistent avec
     # natural/wild et ne peuvent pas etre "requis" sans faux positifs.
-    REQUIREABLE_PRESETS = {'treetop', 'water', 'lava'}
+    REQUIREABLE_PRESETS = {'treetop', 'water', 'lava', 'none'}
     for p in sorted(all_presets):
         if p in UNBLOCABLE_PRESETS:
             continue
@@ -1460,6 +1462,20 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
             fc_preset['require_preset:' + p] = _np.array(
                 [p in s['preset_set'] for s in subset]
             )
+
+    # Spawns SANS aucun preset : traités comme 'none'
+    # block_preset:none  → exclut les spawns sans preset (= ne garde que ceux qui ont au moins un preset)
+    # require_preset:none → se limite aux spawns sans preset (isole les "aucun preset")
+    has_none = any(len(s['preset_set']) == 0 for s in subset)
+    has_non_none = any(len(s['preset_set']) > 0 for s in subset)
+    if has_none and has_non_none:
+        fc_preset['block_preset:none'] = _np.array(
+            [len(s['preset_set']) > 0 for s in subset]
+        )
+    if has_none and any(len(s['preset_set']) == 0 for s in subset if s['numero'] in chain):
+        fc_preset['require_preset:none'] = _np.array(
+            [len(s['preset_set']) == 0 for s in subset]
+        )
 
     if not skip_struct:
         # STRUCTURE — deux types de filtres :
@@ -1781,6 +1797,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
         'desert_pyramid':'pyramide désert','pillager_outpost':'avant-poste pillard',
         'ruined_portal':'portail ruiné','ocean_ruins':'ruines océaniques',
         'ocean_monument':'monument océanique',
+        'none':'(aucun preset)',
     }
     combo = dict(base_combo)
     removed = []  # conditions supprimées pour affichage
@@ -1822,10 +1839,19 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
             else:
                 removed.append(f"Farmer par {farm_label}")
         elif cat == 'block_preset':
-            combo.setdefault('block_presets', []).append(val)
-            removed.append('Preset ' + PRESET_LBL.get(val,val) + ' bloqué')
+            if val == 'none':
+                combo.setdefault('excl_preset_list', []).append('none')
+                removed.append('Preset vide bloqué (∅ exclus)')
+            else:
+                combo.setdefault('block_presets', []).append(val)
+                combo.setdefault('excl_preset_list', []).append(val)
+                removed.append('Preset ' + PRESET_LBL.get(val, val) + ' bloqué')
         elif cat == 'require_preset':
-            combo['require_preset'] = val
+            if val == 'none':
+                combo['incl_preset'] = 'none'
+                removed.append('Preset vide uniquement (∅)')
+            else:
+                combo['require_preset'] = val
         elif cat == 'require_struct':
             raw_val = val.replace('mc:', 'minecraft:')
             icon, label_fr = _structure_label(raw_val)
@@ -2056,10 +2082,20 @@ def _oracle_best_combo(in_biome, chain, is_virtual_biome=False):
 @app.route('/oracle')
 def oracle():
     conn = get_db()
-    pokemon_list = conn.execute(
-        "SELECT DISTINCT numero, pokemon FROM pokemon_spawns ORDER BY numero"
+    rows = conn.execute(
+        "SELECT DISTINCT numero, pokemon, forme FROM pokemon_spawns ORDER BY numero"
     ).fetchall()
     conn.close()
+    # Construire la liste avec le label de forme régionale si nécessaire
+    pokemon_list = []
+    seen = set()
+    for numero, pokemon, forme in rows:
+        fr = get_forme_regionale(forme)
+        label = f"{pokemon} ({fr['short']})" if fr else pokemon
+        key = (numero, label)
+        if key not in seen:
+            seen.add(key)
+            pokemon_list.append({'numero': numero, 'name': label, 'forme': forme or ''})
     return render_template('oracle.html', pokemon_list=pokemon_list)
 
 
@@ -2078,10 +2114,15 @@ def api_oracle_stream():
         real_biome_map, biome_mods = _oracle_build_real_biome_map()
 
         conn = get_db()
-        num_to_name = {r[0]: r[1] for r in conn.execute(
-            "SELECT DISTINCT numero, pokemon FROM pokemon_spawns"
-        ).fetchall()}
+        _name_rows = conn.execute(
+            "SELECT DISTINCT numero, pokemon, forme FROM pokemon_spawns"
+        ).fetchall()
         conn.close()
+        num_to_name = {}
+        for _num, _poke, _forme in _name_rows:
+            if _num not in num_to_name:
+                _fr = get_forme_regionale(_forme)
+                num_to_name[_num] = f"{_poke} ({_fr['short']})" if _fr else _poke
 
         chain_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(chain)]
 
@@ -2308,6 +2349,13 @@ def favorites_page():
             qs['incl_special'] = params['incl_special'] if isinstance(params['incl_special'], str) else ','.join(params['incl_special'])
         if params.get('excl_structures'):
             qs['excl_structures'] = '|'.join(params['excl_structures']) if isinstance(params['excl_structures'], list) else params['excl_structures']
+        if params.get('excl_structures_fr'):
+            qs['excl_structures'] = '|'.join(params['excl_structures_fr']) if isinstance(params['excl_structures_fr'], list) else params['excl_structures_fr']
+        if params.get('incl_preset'):
+            qs['incl_preset'] = params['incl_preset']
+        if params.get('excl_preset_list'):
+            ep = params['excl_preset_list']
+            qs['excl_preset'] = ','.join(ep) if isinstance(ep, list) else ep
         if excl_sp: qs['excl_special'] = ','.join(dict.fromkeys(excl_sp))
         if params.get('h_max') is not None:   qs.setdefault('hmax',  params['h_max'])
         if params.get('y_above') is not None: qs.setdefault('y_min', int(params['y_above']) + 1)

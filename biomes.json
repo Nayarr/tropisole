@@ -1,0 +1,6963 @@
+{
+  "biome_map": {
+    "Aride": [
+      {
+        "biome": "All Sandy biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Savanna biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Red Rock Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Red Rock Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Terres arides": [
+      {
+        "biome": "Badlands",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Eroded Badlands",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Wooded Badlands",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Ashen Savanna",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ancient Sands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Bryce Canyon",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Red Oasis",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Warped Mesa",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "White Mesa",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Danakil Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ayers Rock",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Kwongan Heath",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Outback",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Outback Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Badlands Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Badlands Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Red Rock Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Savanna Badlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Red Rock Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Red Rock Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sierra Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Plage": [
+      {
+        "biome": "Beach",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Beach",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Stony Shore",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Guelta",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sand Dunes",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Coastal Mangroves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Gravelly Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Black Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Desert Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Gravel Beach",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frozen Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Basalt Barrera",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Dacite Shore",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rainbow Beach",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Grotte": [
+      {
+        "biome": "Dripstone Caves",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Lush Caves",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Underground biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Andesite Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Crystal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Diorite Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frostfire Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Fungal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Granite Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ice Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Infested Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mantle Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Thermal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Tuff Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Underground Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Underground",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mossy Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mossy Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Underground",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Calcite Caverns",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Dark Incursion",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Fungous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lichenous Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lichenous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Fungous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Shroom Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mushroom Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Volcanic Chamber",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Sous terre": [
+      {
+        "biome": "Andesite Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Crystal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Diorite Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frostfire Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Fungal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Granite Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ice Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Infested Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mantle Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Thermal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Tuff Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Underground Jungle",
+        "mod": "Terralith"
+      }
+    ],
+    "Côte": [
+      {
+        "biome": "Stony Shore",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Beach biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Basalt Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Granite Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "White Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Calcite Coast",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Coastal Mangroves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Stony Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deepslate Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frigid Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frozen Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Gravelly Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Temperate Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Warm Stony Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Froid": [
+      {
+        "biome": "All Cold Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Freezing biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Peak biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Taiga biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Tundra biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Berry Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Fen",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Peaks",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Stony Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Snowy Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frigid Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frozen Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Glacial Cliffs",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ice Cap",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Ocean",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Alpha Islands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Alpine Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Alpine Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Birch Taiga",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Caldera",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Cloud Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "cold_shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Emerald Peaks",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Forested Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frozen Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Glacial Chasm",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Gravel Desert",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Haze Mountain",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ice Marsh",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Rocky Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Rocky Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Scarlet Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Shield Clearing",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Taiga",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Badlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Cherry Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Maple Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Valley Clearing",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yellowstone",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frostfire Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ice Caves",
+        "mod": "Terralith"
+      }
+    ],
+    "Abysses sombres": [
+      {
+        "biome": "Deep Dark",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Crystal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frostfire Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mantle Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Tuff Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Dark Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Dark Incursion",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Grand océan": [
+      {
+        "biome": "Deep Cold Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Frozen Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Lukewarm Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Icy Ocean",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Désert": [
+      {
+        "biome": "Desert",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Ancient Sands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Canyon",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Oasis",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Spires",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lush Desert",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Red Oasis",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sandstone Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "All Wythers' desert biomes",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Badlands Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Desert Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Kwongan Heath",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Outback Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Red Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sandy Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cactus Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Desert Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Desert Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Desert Pinnacles",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Guelta",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Wooded Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Atacama Outback",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Mojave Desert",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Windswept Desert",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Stalactites": [
+      {
+        "biome": "Dripstone Caves",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Fractured Savanna",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Stony Spires",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Fungous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lichenous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Fungous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mossy Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dead Sea",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Floral": [
+      {
+        "biome": "Cherry Grove",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Flower Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Meadow",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Sunflower Plains",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Blooming Plateau",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Blooming Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Cloud Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lavender Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lavender Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sakura Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Orchid Swamp",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Autumnal Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flowering Pantanal",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jacaranda Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lapacho Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sakura Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Spring Flower Fields",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Spring Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Allium Shrubland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Amaranth Grassland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coconino Meadow",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Enchanted Tangle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Lush Stacks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Orchard",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Forêt": [
+      {
+        "biome": "Birch Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Dark Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Flower Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Old Growth Birch Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Cherry Grove",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Alpha Islands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Alpha Islands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Blooming Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Forested Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lavender Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lavender Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mirage Isles",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sakura Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Temperate Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Cloud Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Alpine Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Birch Taiga",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lush Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Moonlight Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Moonlight Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Autumn",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Spring",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Taiga",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Cherry Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Maple Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "White Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yosemite Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Dry Tropical Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Birch Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Boreal Forest Red",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Boreal Forest Yellow",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tangled Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Dark Incursion",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Copper Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Emerald Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Golden Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Moss Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Birch Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Dark Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Deanei Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flowering Pantanal",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forbidden Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sakura Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Spring Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Warm Birch Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Wistman Woods",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Aspen Boreal",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Black Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Canadian Shield",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cika Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Dacite Ridges",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ebony Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Enchanted Tangle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Eroded Borealis",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Forgotten Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Frosted Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Orchard",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Overgrowth Woodlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Redwood Thicket",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Skyris Vale",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Weeping Witch Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Zelkova Forest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Glacial": [
+      {
+        "biome": "Frozen River",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Jagged Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Beach",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Plains",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Slopes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Frozen Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Glacial biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Snowy Forest biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Emerald Peaks",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Scarlet Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Badlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frozen Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Peaks",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Eau douce": [
+      {
+        "biome": "All River biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Swamp biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Desert Lakes",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Guelta",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Forest River",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Océan gelé": [
+      {
+        "biome": "Deep Frozen Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Frozen Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Frozen Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Icy Ocean",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Ocean",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Glaciaire": [
+      {
+        "biome": "Frozen Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Ice Spikes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Icy biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Frostfire Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frozen Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Glacial Chasm",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Glacial Cliffs",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ice Cap",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frozen Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Shattered Glacier",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Prairie": [
+      {
+        "biome": "All Plains biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Savanna biomes",
+        "mod": "Cobblemon"
+      }
+    ],
+    "Hautes terres": [
+      {
+        "biome": "Meadow",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Alpine Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Arid Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Blooming Plateau",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Painted Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Bamboo Jungle Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Deanei Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forested Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Huangshan Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highland Tropical Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jade Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Wistman Woods",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highland Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Collines": [
+      {
+        "biome": "Stony Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Windswept Gravelly Hills",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Windswept Hills",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Windswept Wooded Hills",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Highlands biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Blooming Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Forested Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lavender Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lush Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Moonlight Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sakura Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Savanna Slopes",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Temperate Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yosemite Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Autumnal Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ayers Rock",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Old Growth Taiga Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Taiga Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Temperate Rainforest Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Thermal Taiga Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Windswept Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Stony Canyons",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Stony Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tepui",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Andesite Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Aspen Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Canadian Shield",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Shattered Glacier",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Île": [
+      {
+        "biome": "Mushroom Fields",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Tropical Island biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Alpha Islands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Alpha Islands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mirage Isles",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Warped Mesa",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Cold Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Desert Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frigid Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frozen Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jungle Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island Thermal Springs",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mushroom Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Temperate Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Island",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Jungle": [
+      {
+        "biome": "Bamboo Jungle",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Jungle",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Sparse Jungle",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Jungle biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Underground Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Amethyst Canyon",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Amethyst Rainforest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Jungle Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Rocky Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Summer",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Tropical Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sparse Bamboo Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dripleaf Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Deanei Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highland Tropical Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Humid Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jungle Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Forest Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Jungle Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sandy Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sparse Eucalyptus Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tepui",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tsingy Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Rocky Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Tropical Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Crag Gardens",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Fragment Jungle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Jacaranda Jungle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Tropical Rainforest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Océan tiède": [
+      {
+        "biome": "Deep Lukewarm Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Lukewarm Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Tropical Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Warm Stony Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Luxuriant": [
+      {
+        "biome": "Lush Caves",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Lush biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Underground Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Fungal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lush Desert",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Dreapleaf Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lichenous Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lichenous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Fungous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Shroom Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dripleaf Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Stacks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Magique": [
+      {
+        "biome": "Dark Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Magical biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Wythers' Dark Forest biomes",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lantern River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mushroom Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Amethyst Canyon",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Amethyst Rainforest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mirage Isles",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Moonlight Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Moonlight Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lavender Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Lavender Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Spring",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Summer",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Autumn",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Enchanted Tangle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Forgotten Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Skyris Vale",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Weeping Witch Forest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Ile Mirage": [
+      {
+        "biome": "Mirage Isles",
+        "mod": "Terralith"
+      }
+    ],
+    "Montagne": [
+      {
+        "biome": "Frozen Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Jagged Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Meadow",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Stony Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Hill biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Stony Spires",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Volcanic Peaks",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Windswept Spires",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yosemite Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Canyon",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Spires",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Forested Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Haze Mountain",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mountain Steppe",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Jungle Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Painted Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Scarlet Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Temperate Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Thermal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Tibesti Mountains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tsingy Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Stony Peaks",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highland Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Huangshan Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Maple Mountains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Crag Gardens",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Champignon": [
+      {
+        "biome": "Dark Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Mushroom Fields",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Mushroom biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Fungal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mirage Isles",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ancient Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Dark Incursion",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forbidden Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mushroom Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mushroom Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Shroom Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Fungous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lush Fungous Dripstone Caves",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Océan": [
+      {
+        "biome": "Cold Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Cold Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Frozen Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Lukewarm Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Frozen Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Lukewarm Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Warm Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Coast biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Cold Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Deep Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Frozen Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Lukewarm Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Warm Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Icy Ocean",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dead Sea",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Lush Stacks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Sommet": [
+      {
+        "biome": "Frozen Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Jagged Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Slopes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Stony Peaks",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Emerald Peaks",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Fractured Savanna",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Frozen Cliffs",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Mirage Isles",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Volcanic Crater",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Volcanic Peaks",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Warped Mesa",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Rocky Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Scarlet Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Windswept Spires",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Andesite Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Aspen Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Red Rock Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Plaines": [
+      {
+        "biome": "Plains",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Sunflower Plains",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Highlands biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Plains biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Brushland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Steppe",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Valley Clearing",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Berry Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dry Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Spring Flower Fields",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Humid Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Harvest Fields",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highland Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lapacho Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Allium Shrubland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Amaranth Grassland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coconino Meadow",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Firecracker Chaparral",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Prairie",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Pumpkin Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rose Fields",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Temperate Grove",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Plateau": [
+      {
+        "biome": "Savanna Plateau",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Plateau biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Ayers Rock",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ironwood Gour",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Rivière": [
+      {
+        "biome": "River",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All River biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Warm River",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Guelta",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Forest River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Savanna River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jungle River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Badlands River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Billabong",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Black River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Desert River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Desert River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Gravelly River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lantern River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Warm River",
+        "mod": "Terralith"
+      }
+    ],
+    "Sel": [
+      {
+        "biome": "Calcite Caverns",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Calcite Coast",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island Thermal Spring",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Salt Lakes Pink",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Salt Lakes Turquoise",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Salt Lakes White",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Sableux": [
+      {
+        "biome": "All Badlands biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Desert biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Atacama Outback",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Mojave Desert",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rainbow Beach",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Windswept Desert",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Savane": [
+      {
+        "biome": "Savanna",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Savanna Plateau",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Windswept Savanna",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Arid Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ashen Savanna",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Brushland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Desert Oasis",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Fractured Savanna",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Hot Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Red Oasis",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Savanna Badlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Savanna Slopes",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Granite Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Forest Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Chaparral",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dry Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Savanna Basaltic Incursions",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Wooded Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dry Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Savanna Badlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dry Tropical Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Salubris Woodland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Woodland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Giant Sequoia Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Humid Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jacaranda Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Scrubland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Scrub Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tsingy Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sparse Eucalyptus Woodland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Araucaria Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Baobab Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ironwood Gour",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Ciel": [
+      {
+        "biome": "Skylands Autumn",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Spring",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Summer",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Winter",
+        "mod": "Terralith"
+      }
+    ],
+    "Forêt enneigée": [
+      {
+        "biome": "Grove",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Taiga",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Alpha Islands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Alpine Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ice Marsh",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Cherry Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Maple Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Huangshan Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Jade Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Snowy Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Fen",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Effrayant": [
+      {
+        "biome": "Dark Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Frostfire Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Infested Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "All Wythers' Dark Forest biomes",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bayou",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tangled Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Twilight Meadow",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forbidden Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Marais": [
+      {
+        "biome": "Mangrove Swamp",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Swamp",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Wythers' Swamp biomes",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Billabong",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bayou",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ice Marsh",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Orchid Swamp",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Berry Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Fen",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Temperate Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Old Growth Taiga Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Oak Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Birch Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dripleaf Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bamboo Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bamboo Jungle Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tangled Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mud Pools",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Mossy Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Marsh",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Pantanal",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Waterlily Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bayou",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cypress Swamplands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cypress Wetlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Pale Bog",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "White Mangrove Marshes",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Taïga": [
+      {
+        "biome": "Old Growth Pine Taiga",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Old Growth Spruce Taiga",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Taiga",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Grove",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Alpine Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yosemite Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yellowstone",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Haze Mountain",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ice Marsh",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Moonlight Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Moonlight Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Shield Clearing",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Taiga",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Maple Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Ancient Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Birch Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Boreal Forest Red",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Boreal Forest Yellow",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Snowy Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Fen",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Temperate Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forested Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Huangshan Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jade Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Larch Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Old Growth Taiga Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Old Growth Taiga Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Pine Barrens",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Temperate Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Temperate Rainforest Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Taiga Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Thermal Taiga Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Birch Taiga",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Aspen Boreal",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Black Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Canadian Shield",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cika Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Dacite Ridges",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Frosted Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Frosted Taiga",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Maple Taiga",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Tempéré": [
+      {
+        "biome": "All Forest biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Plains biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Ancient Copper Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Emerald Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Golden Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Moss Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Berry Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Fen",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Temperate Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Old Growth Taiga Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Oak Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Birch Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Marsh",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bayou",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Waterlily Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Mossy Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flowering Pantanal",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Pantanal",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dripleaf Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tangled Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Salt Lakes Pink",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Salt Lakes White",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Salt Lakes Turquoise",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mud Pools",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Andesite Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Aspen Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Birch Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Birch Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "boreal_forest_red",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "boreal_forest_yellow",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "cool_forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "cool_forest_edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "deepslate_shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Pantanal",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flowering Pantanal",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forbidden Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Harvest Fields",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highland Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Lantern River",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island Thermal Springs",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sakura Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Spring Flower Fields",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Spring Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Temperate Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Temperate Rainforest Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Warm Birch Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Wistman Woods",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Thermal": [
+      {
+        "biome": "Caldera",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Thermal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yellowstone",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Calcite Caverns",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island Thermal Springs",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Thermal Taiga Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tibesti Mountains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Danakil Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mud Pools",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Île tropicale": [
+      {
+        "biome": "Tropical Beach",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Toundra": [
+      {
+        "biome": "Frozen River",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Ice Spikes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Plains",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Cold Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Gravel Desert",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Rocky Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Badlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Yellowstone",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frigid Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ice Cap",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Volcanique": [
+      {
+        "biome": "Mantle Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Volcanic Crater",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Volcanic Peaks",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Icy Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Volcanic Chamber",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Volcanic Crater",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Océan chaud": [
+      {
+        "biome": "Warm Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Lush Stacks",
+        "mod": "Terralith"
+      }
+    ],
+    "Monde de surface": [
+      {
+        "biome": "All vanilla Overworld biomes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Arid biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Cave biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Coast biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Cold biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Deep Dark biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Floral biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Forest biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Freshwater biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Grassland biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Highlands biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Island biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Jungle biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Magical biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Mountain biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Mushroom biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Sky biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Spooky biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Temperate biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Thermal biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Volcanic biomes",
+        "mod": "Cobblemon"
+      }
+    ],
+    "Fin": [
+      {
+        "biome": "End Barrens",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "End Highlands",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "End Midlands",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Small End Islands",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "The End",
+        "mod": "Vanilla Minecraft"
+      }
+    ],
+    "Nether": [
+      {
+        "biome": "Basalt Deltas",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Crimson Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Nether Wastes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Soul Sand Valley",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Warped Forest",
+        "mod": "Vanilla Minecraft"
+      }
+    ],
+    "Nether basaltique": [
+      {
+        "biome": "Basalt Deltas",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Blackstone Shales",
+        "mod": "Cinderscapes"
+      },
+      {
+        "biome": "Ash Barrens",
+        "mod": "Incendium"
+      },
+      {
+        "biome": "Volcanic Deltas",
+        "mod": "Incendium"
+      },
+      {
+        "biome": "Withered Forest",
+        "mod": "Incendium"
+      }
+    ],
+    "Nether cramoisi": [
+      {
+        "biome": "Crimson Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Crimson Glowing Woods",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Crimson Pinewood",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Nether Swampland",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Nether Swampland Terraces",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Whistling Woods",
+        "mod": "Gardens of the Dead"
+      }
+    ],
+    "Désert du Nether": [
+      {
+        "biome": "Soul Sand Valley",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Gravel Desert",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Infernal Dunes",
+        "mod": "Incendium"
+      },
+      {
+        "biome": "Weeping Valley",
+        "mod": "Incendium"
+      }
+    ],
+    "Forêt du Nether": [
+      {
+        "biome": "Nether Jungle",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Nether Swampland",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Nether Swampland Terraces",
+        "mod": "BetterNether"
+      }
+    ],
+    "Nether gelé": [],
+    "Nether fongique": [
+      {
+        "biome": "Crimson Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Warped Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Crimson Glowing Woods",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Crimson Pinewood",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Mushroom Forest",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Mushroom Forest Edge",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Old Fungiwoods",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Old Warped Woods",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Luminous Grove",
+        "mod": "Cinderscapes"
+      },
+      {
+        "biome": "Whistling Woods",
+        "mod": "Gardens of the Dead"
+      },
+      {
+        "biome": "Soulblight Forest",
+        "mod": "Gardens of the Dead"
+      },
+      {
+        "biome": "Inverted Forest",
+        "mod": "Incendium"
+      }
+    ],
+    "Montagne du Nether": [
+      {
+        "biome": "Basalt Deltas",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Volcanic Deltas",
+        "mod": "Incendium"
+      }
+    ],
+    "Végétation du Nether": [
+      {
+        "biome": "Bone Reef",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Nether Grasslands",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Soul Plain",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Sulfuric Bone Reef",
+        "mod": "BetterNether"
+      }
+    ],
+    "Quartz du Nether": [
+      {
+        "biome": "Quartz Cavern",
+        "mod": "Cinderscapes"
+      },
+      {
+        "biome": "Quartz Flats",
+        "mod": "Incendium"
+      }
+    ],
+    "Nether feu de l'Âme": [
+      {
+        "biome": "Soul Sand Valley",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Quartz Flats",
+        "mod": "Incendium"
+      },
+      {
+        "biome": "Weeping Valley",
+        "mod": "Incendium"
+      }
+    ],
+    "Nether sable de l'Âme": [
+      {
+        "biome": "Soul Sand Valley",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Soul Plain",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Wart Forest",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Wart Forest Edge",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Ashy Shoals",
+        "mod": "Cinderscapes"
+      },
+      {
+        "biome": "Blackstone Shales",
+        "mod": "Cinderscapes"
+      },
+      {
+        "biome": "Soulblight Forest",
+        "mod": "Gardens of the Dead"
+      },
+      {
+        "biome": "Weeping Valley",
+        "mod": "Incendium"
+      }
+    ],
+    "Nether toxique": [
+      {
+        "biome": "Toxic Heap",
+        "mod": "Incendium"
+      }
+    ],
+    "Nether distordu": [
+      {
+        "biome": "Warped Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Nether Jungle",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Old Warped Woods",
+        "mod": "BetterNether"
+      }
+    ],
+    "Terres dévastées du Nether": [
+      {
+        "biome": "Nether Wastes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Magma Land",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Poor Nether Grasslands",
+        "mod": "BetterNether"
+      },
+      {
+        "biome": "Ashy Shoals",
+        "mod": "Cinderscapes"
+      },
+      {
+        "biome": "Quartz Cavern",
+        "mod": "Cinderscapes"
+      },
+      {
+        "biome": "Ash Barrens",
+        "mod": "Incendium"
+      },
+      {
+        "biome": "Toxic Heap",
+        "mod": "Incendium"
+      }
+    ],
+    "Bumblezone": [
+      {
+        "biome": "Hive Pillar",
+        "mod": "The Bumblezone"
+      },
+      {
+        "biome": "Hive Wall",
+        "mod": "The Bumblezone"
+      },
+      {
+        "biome": "Pollinated Fields",
+        "mod": "The Bumblezone"
+      },
+      {
+        "biome": "Pollinated Pillar",
+        "mod": "The Bumblezone"
+      },
+      {
+        "biome": "Sugar Water Floor",
+        "mod": "The Bumblezone"
+      },
+      {
+        "biome": "Crystal Canyon",
+        "mod": "The Bumblezone"
+      },
+      {
+        "biome": "Floral Meadow",
+        "mod": "The Bumblezone"
+      },
+      {
+        "biome": "Howling Constructs",
+        "mod": "The Bumblezone"
+      }
+    ],
+    "Automne": [
+      {
+        "biome": "All Arid biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Cold Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Mountain biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Mushroom biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Taiga biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Skylands Autumn",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Autumnal Birch Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forbidden Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Harvest Fields",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Printemps": [
+      {
+        "biome": "All Floral biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Lukewarm Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Magical biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Plains biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Skylands Spring",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Spring Flower Fields",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Spring Flower Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Été": [
+      {
+        "biome": "All Forest biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Jungle biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Lush biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Warm Ocean biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Swamp biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Skylands Summer",
+        "mod": "Terralith"
+      }
+    ],
+    "Hiver": [
+      {
+        "biome": "All Freezing biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Skylands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Snowy Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Dense": [
+      {
+        "biome": "Dark Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Mangrove Swamp",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Jungle biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Deep Snowy Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Copper Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Emerald Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Golden Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Moss Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Oak Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Dark Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Deanei Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forbidden Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Temperate Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Jungle Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Flooded Rainforest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Windswept Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Wistman Woods",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Crag Gardens",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ebony Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Orchard",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Overgrowth Woodlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Prairie",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Pumpkin Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Redwood Thicket",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rose Fields",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Skyris Vale",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Weeping Witch Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Zelkova Forest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Clairsemé": [
+      {
+        "biome": "All Arid biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Grassland biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Tundra biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Dry Savanna",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Savanna Badlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Chaparral",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dry Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Autumnal Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cold Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Cool Plains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Humid Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Kwongan Heath",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Scrubland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Scrub Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Subtropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Wooded Desert",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Amaranth Grassland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Araucaria Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Atacama Outback",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Baobab Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Firecracker Chaparral",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ironwood Gour",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Temperate Grove",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Canyon de cristal": [
+      {
+        "biome": "Crystal Canyon",
+        "mod": "The Bumblezone"
+      }
+    ],
+    "Prairie fleurie": [
+      {
+        "biome": "Floral Meadow",
+        "mod": "The Bumblezone"
+      }
+    ],
+    "Champs pollinisés": [
+      {
+        "biome": "Pollinated Fields",
+        "mod": "The Bumblezone"
+      }
+    ],
+    "Constructions hurlantes": [
+      {
+        "biome": "Howling Constructs",
+        "mod": "The Bumblezone"
+      }
+    ],
+    "Éther": [
+      {
+        "biome": "All Aether biomes",
+        "mod": "Aether mod"
+      }
+    ],
+    "Bambou": [
+      {
+        "biome": "Bamboo Jungle",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Bamboo Jungle Hills",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Bamboo Jungle Highlands",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Bamboo Jungle Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bamboo Jungle Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sparse Bamboo Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Bamboo Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Jade Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Maple Mountains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mushroom Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sakura Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Sandy Jungle",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Waterlily Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Glacé": [
+      {
+        "biome": "Glacial cliffs",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ice Cap",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Boueux": [
+      {
+        "biome": "Mangrove Swamp",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Underground Jungle",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Coastal Mangroves",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dripleaf Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Champs de champignons": [
+      {
+        "biome": "Mushroom Fields",
+        "mod": "Vanilla Minecraft"
+      }
+    ],
+    "Fleurs de cerisier": [
+      {
+        "biome": "Cherry Grove",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sakura Valley",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Cherry Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Sakura Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Enneigé": [
+      {
+        "biome": "Snowy Beach",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Jagged Beach",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Plains",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Snowy Slopes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Ice Spikes",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "All Glacial biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Snowy Forest biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Snowy Taiga biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "All Snowy biomes",
+        "mod": "Cobblemon"
+      },
+      {
+        "biome": "Emerald Peaks",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Scarlet Mountains",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Skylands Winter",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Badlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Frozen Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Fen",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Peaks",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Thermal Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Snowy Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Snowy Taiga",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Highlands",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Crags",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Shore",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Icy Volcano",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Plage enneigée": [
+      {
+        "biome": "Snowy Beach",
+        "mod": "Vanilla Minecraft"
+      }
+    ],
+    "Taïga enneigée": [
+      {
+        "biome": "Snowy Taiga",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Grove",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Alpine Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Cold Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Siberian Grove",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Maple Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Shield",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Forest",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Wintry Lowlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Cold Island",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Deep Snowy Taiga",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Snowy Thermal Taiga",
+        "mod": "Terralith"
+      }
+    ],
+    "Rivière gelée": [
+      {
+        "biome": "Frozen River",
+        "mod": "Vanilla Minecraft"
+      }
+    ],
+    "Plaines de tournesols": [
+      {
+        "biome": "Sunflower Plains",
+        "mod": "Vanilla Minecraft"
+      }
+    ],
+    "Océan froid": [
+      {
+        "biome": "Cold Ocean",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Deep Cold Ocean",
+        "mod": "Vanilla Minecraft"
+      }
+    ],
+    "Maquis": [
+      {
+        "biome": "Hot Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Alpine Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Cold Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Rocky Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Shrubland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Arid Highlands",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Brushland",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Berry Bog",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Chaparral",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Scrubland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dry Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eucalyptus Salubris Woodland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Forest Edge",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Kwongan Heath",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Mediterranean Island",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Outback",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Scrub Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tropical Grassland",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Tundra",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Eroded Borealis",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Été aérien": [
+      {
+        "biome": "Skylands Summer",
+        "mod": "Terralith"
+      }
+    ],
+    "Automne aérien": [
+      {
+        "biome": "Skylands Autumn",
+        "mod": "Terralith"
+      }
+    ],
+    "Printemps aérien": [
+      {
+        "biome": "Skylands Spring",
+        "mod": "Terralith"
+      }
+    ],
+    "Hiver aérien": [
+      {
+        "biome": "Skylands Winter",
+        "mod": "Terralith"
+      }
+    ],
+    "Gouffre cristallin": [
+      {
+        "biome": "Crystal Caves",
+        "mod": "Terralith"
+      },
+      {
+        "biome": "Glacial Chasm",
+        "mod": "Terralith"
+      }
+    ],
+    "Désert (Wythers)": [
+      {
+        "biome": "All Wythers' desert biomes",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Forêt sombre (Wythers)": [
+      {
+        "biome": "All Wythers' Dark Forest biomes",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Dark Forest",
+        "mod": "Vanilla Minecraft"
+      },
+      {
+        "biome": "Forbidden Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Deep Dark Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Emerald Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Golden Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Copper Beech Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Moss Forest",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Oak Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Ancient Mossy Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
+        "biome": "Phantasmal Swamp",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Marais (Wythers)": [
+      {
+        "biome": "All Wythers' Swamp biomes",
+        "mod": "Wythers' Overhauled Overworld"
+      }
+    ],
+    "Plaines (BWG)": [
+      {
+        "biome": "Allium Shrubland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Amaranth Grassland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coconino Meadow",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Crimson Tundra",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Firecracker Chaparral",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Prairie",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Pumpkin Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rose Fields",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Temperate Grove",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Floral (BWG)": [
+      {
+        "biome": "Allium Shrubland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Amaranth Grassland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coconino Meadow",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Enchanted Tangle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Lush Stacks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Orchard",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Clairsemé (BWG)": [
+      {
+        "biome": "Amaranth Grassland",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Araucaria Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Atacama Outback",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Baobab Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Firecracker Chaparral",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ironwood Gour",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Temperate Grove",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Savane (BWG)": [
+      {
+        "biome": "Araucaria Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Baobab Savanna",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ironwood Gour",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Forêt (BWG)": [
+      {
+        "biome": "Aspen Boreal",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Black Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Canadian Shield",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cika Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Dacite Ridges",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ebony Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Enchanted Tangle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Eroded Borealis",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Forgotten Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Frosted Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Orchard",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Overgrowth Woodlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Redwood Thicket",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Skyris Vale",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Weeping Witch Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Zelkova Forest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Taïga (BWG)": [
+      {
+        "biome": "Aspen Boreal",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Black Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Canadian Shield",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cika Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Dacite Ridges",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Frosted Coniferous Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Frosted Taiga",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Maple Taiga",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Désert (BWG)": [
+      {
+        "biome": "Atacama Outback",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Mojave Desert",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Windswept Desert",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Sableux (BWG)": [
+      {
+        "biome": "Atacama Outback",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Mojave Desert",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rainbow Beach",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Windswept Desert",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Plage (BWG)": [
+      {
+        "biome": "Basalt Barrera",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Dacite Shore",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rainbow Beach",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Marais (BWG)": [
+      {
+        "biome": "Bayou",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cypress Swamplands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Cypress Wetlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Pale Bog",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "White Mangrove Marshes",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Collines (BWG)": [
+      {
+        "biome": "Canadian Shield",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Shattered Glacier",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Jungle (BWG)": [
+      {
+        "biome": "Crag Gardens",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Fragment Jungle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Jacaranda Jungle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Tropical Rainforest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Montagne (BWG)": [
+      {
+        "biome": "Crag Gardens",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Dense (BWG)": [
+      {
+        "biome": "Crag Gardens",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Ebony Woods",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Orchard",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Overgrowth Woodlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Prairie",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Pumpkin Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Redwood Thicket",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rose Fields",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sakura Grove",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Skyris Vale",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Weeping Witch Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Zelkova Forest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Océan (BWG)": [
+      {
+        "biome": "Dead Sea",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Lush Stacks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Stalactites (BWG)": [
+      {
+        "biome": "Dead Sea",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Magique (BWG)": [
+      {
+        "biome": "Enchanted Tangle",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Forgotten Forest",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Skyris Vale",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Weeping Witch Forest",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Enneigé (BWG)": [
+      {
+        "biome": "Eroded Borealis",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Glaciaire (BWG)": [
+      {
+        "biome": "Shattered Glacier",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Sommet (BWG)": [
+      {
+        "biome": "Howling Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Red Rock Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Plateau (BWG)": [
+      {
+        "biome": "Ironwood Gour",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Luxuriant (BWG)": [
+      {
+        "biome": "Lush Stacks",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Terres arides (BWG)": [
+      {
+        "biome": "Red Rock Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Red Rock Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Sierra Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ],
+    "Aride (BWG)": [
+      {
+        "biome": "Red Rock Valley",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Red Rock Peaks",
+        "mod": "Oh The Biomes We've Gone"
+      },
+      {
+        "biome": "Rugged Badlands",
+        "mod": "Oh The Biomes We've Gone"
+      }
+    ]
+  },
+  "mod_colors": {
+    "Oh The Biomes We've Gone": "#6ab04c",
+    "Vanilla Minecraft": "#74b9ff",
+    "Cobblemon": "#e8ff47",
+    "Terralith": "#55efc4",
+    "Wythers' Overhauled Overworld": "#fd79a8",
+    "BetterNether": "#ff7675",
+    "Incendium": "#e17055",
+    "Cinderscapes": "#d63031",
+    "Gardens of the Dead": "#00b894",
+    "The Bumblezone": "#fdcb6e",
+    "Aether mod": "#81ecec"
+  },
+  "cobblemon_tag_hierarchy": {
+    "#cobblemon:is_overworld": [
+      "#cobblemon:is_arid",
+      "#cobblemon:is_bamboo",
+      "#cobblemon:is_cave",
+      "#cobblemon:is_coast",
+      "#cobblemon:is_cold",
+      "#cobblemon:is_deep_dark",
+      "#cobblemon:is_floral",
+      "#cobblemon:is_forest",
+      "#cobblemon:is_freshwater",
+      "#cobblemon:is_grassland",
+      "#cobblemon:is_highlands",
+      "#cobblemon:is_island",
+      "#cobblemon:is_jungle",
+      "#cobblemon:is_magical",
+      "#cobblemon:is_mirage_island",
+      "#cobblemon:is_mountain",
+      "#cobblemon:is_mushroom",
+      "#cobblemon:is_ocean",
+      "#cobblemon:is_sky",
+      "#cobblemon:is_spooky",
+      "#cobblemon:is_temperate",
+      "#cobblemon:is_thermal",
+      "#cobblemon:is_volcanic"
+    ],
+    "#cobblemon:is_nether": [
+      "#cobblemon:nether/is_basalt",
+      "#cobblemon:nether/is_crimson",
+      "#cobblemon:nether/is_desert",
+      "#cobblemon:nether/is_forest",
+      "#cobblemon:nether/is_frozen",
+      "#cobblemon:nether/is_fungus",
+      "#cobblemon:nether/is_mountain",
+      "#cobblemon:nether/is_overgrowth",
+      "#cobblemon:nether/is_quartz",
+      "#cobblemon:nether/is_soul_fire",
+      "#cobblemon:nether/is_soul_sand",
+      "#cobblemon:nether/is_toxic",
+      "#cobblemon:nether/is_warped",
+      "#cobblemon:nether/is_wasteland",
+      "#minecraft:is_nether"
+    ],
+    "#cobblemon:is_arid": [
+      "#cobblemon:is_sandy",
+      "#cobblemon:is_savanna"
+    ],
+    "#cobblemon:is_ocean": [
+      "#cobblemon:is_coast",
+      "#cobblemon:is_cold_ocean",
+      "#cobblemon:is_deep_ocean",
+      "#cobblemon:is_frozen_ocean",
+      "#cobblemon:is_lukewarm_ocean",
+      "#cobblemon:is_temperate_ocean",
+      "#cobblemon:is_warm_ocean"
+    ],
+    "#cobblemon:is_coast": [
+      "#cobblemon:is_beach",
+      "#cobblemon:is_tropical_island"
+    ],
+    "#cobblemon:is_cold": [
+      "#cobblemon:is_cold_ocean",
+      "#cobblemon:is_freezing",
+      "#cobblemon:is_peak",
+      "#cobblemon:is_snowy",
+      "#cobblemon:is_snowy_taiga",
+      "#cobblemon:is_taiga",
+      "#cobblemon:is_tundra"
+    ],
+    "#cobblemon:is_freezing": [
+      "#cobblemon:is_frozen_ocean",
+      "#cobblemon:is_glacial",
+      "#cobblemon:is_snowy"
+    ],
+    "#cobblemon:is_freshwater": [
+      "#cobblemon:is_river",
+      "#cobblemon:is_swamp"
+    ],
+    "#cobblemon:is_grassland": [
+      "#cobblemon:is_plains",
+      "#cobblemon:is_savanna"
+    ],
+    "#cobblemon:is_temperate": [
+      "#cobblemon:is_forest",
+      "#cobblemon:is_plains"
+    ],
+    "#cobblemon:is_sandy": [
+      "#cobblemon:is_badlands",
+      "#cobblemon:is_desert"
+    ],
+    "#cobblemon:is_mountain": [
+      "#cobblemon:is_hills",
+      "#cobblemon:is_peak",
+      "#cobblemon:is_plateau"
+    ],
+    "#cobblemon:is_hills": [
+      "#cobblemon:is_highlands"
+    ],
+    "#cobblemon:is_plains": [
+      "#cobblemon:is_highlands"
+    ],
+    "#cobblemon:is_island": [
+      "#cobblemon:is_tropical_island"
+    ],
+    "#cobblemon:is_taiga": [
+      "#cobblemon:is_snowy_taiga"
+    ],
+    "#cobblemon:is_autumn": [
+      "#cobblemon:is_arid",
+      "#cobblemon:is_cold_ocean",
+      "#cobblemon:is_mountain",
+      "#cobblemon:is_mushroom",
+      "#cobblemon:is_taiga"
+    ],
+    "#cobblemon:is_spring": [
+      "#cobblemon:is_floral",
+      "#cobblemon:is_lukewarm_ocean",
+      "#cobblemon:is_magical",
+      "#cobblemon:is_plains"
+    ],
+    "#cobblemon:is_summer": [
+      "#cobblemon:is_forest",
+      "#cobblemon:is_jungle",
+      "#cobblemon:is_lush",
+      "#cobblemon:is_warm_ocean",
+      "#cobblemon:is_swamp"
+    ],
+    "#cobblemon:is_winter": [
+      "#cobblemon:is_freezing"
+    ],
+    "#cobblemon:is_sparse": [
+      "#cobblemon:is_arid",
+      "#cobblemon:is_grassland",
+      "#cobblemon:is_tundra"
+    ],
+    "#cobblemon:is_dense": [
+      "#cobblemon:is_jungle"
+    ],
+    "#cobblemon:is_cold_ocean": [],
+    "#cobblemon:is_deep_ocean": [],
+    "#cobblemon:is_frozen_ocean": [],
+    "#cobblemon:is_lukewarm_ocean": [],
+    "#cobblemon:is_temperate_ocean": [],
+    "#cobblemon:is_warm_ocean": [],
+    "#cobblemon:is_tropical_island": [],
+    "#cobblemon:is_beach": [],
+    "#cobblemon:is_river": [],
+    "#cobblemon:is_swamp": [
+      "#cobblemon:has_block/mud"
+    ],
+    "#cobblemon:has_block/mud": [],
+    "#cobblemon:is_savanna": [],
+    "#cobblemon:is_forest": [
+      "#cobblemon:is_cherry_blossom"
+    ],
+    "#cobblemon:is_snowy_taiga": [],
+    "#cobblemon:is_snowy_forest": [],
+    "#cobblemon:is_snowy": [
+      "#cobblemon:is_snowy_forest",
+      "#cobblemon:is_glacial",
+      "#cobblemon:is_snowy_taiga"
+    ],
+    "#cobblemon:is_peak": [],
+    "#cobblemon:is_highlands": [],
+    "#cobblemon:is_glacial": [
+      "#cobblemon:is_icy"
+    ],
+    "#cobblemon:is_icy": [],
+    "#cobblemon:is_badlands": [],
+    "#cobblemon:is_desert": [],
+    "#cobblemon:is_bamboo": [],
+    "#cobblemon:is_cave": [
+      "#cobblemon:is_lush",
+      "#cobblemon:is_dripstone",
+      "#cobblemon:is_deep_dark",
+      "#cobblemon:is_underground"
+    ],
+    "#cobblemon:is_underground": [],
+    "#cobblemon:is_deep_dark": [],
+    "#cobblemon:is_floral": [
+      "#cobblemon:is_cherry_blossom"
+    ],
+    "#cobblemon:is_jungle": [],
+    "#cobblemon:is_lush": [],
+    "#cobblemon:is_magical": [],
+    "#cobblemon:is_mirage_island": [],
+    "#cobblemon:is_mushroom": [],
+    "#cobblemon:is_sky": [],
+    "#cobblemon:is_spooky": [],
+    "#cobblemon:is_thermal": [],
+    "#cobblemon:is_volcanic": [],
+    "#cobblemon:is_tundra": [],
+    "#cobblemon:is_cherry_blossom": [],
+    "#cobblemon:is_shrubland": [],
+    "#cobblemon:is_plateau": [],
+    "#cobblemon:is_dripstone": [],
+    "#cobblemon:nether/is_basalt": [],
+    "#cobblemon:nether/is_crimson": [],
+    "#cobblemon:nether/is_desert": [],
+    "#cobblemon:nether/is_forest": [],
+    "#cobblemon:nether/is_frozen": [],
+    "#cobblemon:nether/is_fungus": [],
+    "#cobblemon:nether/is_mountain": [],
+    "#cobblemon:nether/is_overgrowth": [],
+    "#cobblemon:nether/is_quartz": [],
+    "#cobblemon:nether/is_soul_fire": [],
+    "#cobblemon:nether/is_soul_sand": [],
+    "#cobblemon:nether/is_toxic": [],
+    "#cobblemon:nether/is_warped": [],
+    "#cobblemon:nether/is_wasteland": [],
+    "#minecraft:is_nether": []
+  },
+  "minecraft_tag_aliases": {
+    "#minecraft:is_nether": "#cobblemon:is_nether",
+    "#minecraft:is_overworld": "#cobblemon:is_overworld",
+    "#minecraft:is_end": "#cobblemon:is_end"
+  },
+  "fr_tag_to_cobblemon": {
+    "Monde de surface": "#cobblemon:is_overworld",
+    "Océan": "#cobblemon:is_ocean",
+    "Côte": "#cobblemon:is_coast",
+    "Plage": "#cobblemon:is_beach",
+    "Île tropicale": "#cobblemon:is_tropical_island",
+    "Océan chaud": "#cobblemon:is_warm_ocean",
+    "Océan tiède": "#cobblemon:is_lukewarm_ocean",
+    "Océan froid": "#cobblemon:is_cold_ocean",
+    "Océan gelé": "#cobblemon:is_frozen_ocean",
+    "Grand océan": "#cobblemon:is_deep_ocean",
+    "Eau douce": "#cobblemon:is_freshwater",
+    "Rivière": "#cobblemon:is_river",
+    "Marais": "#cobblemon:is_swamp",
+    "Boueux": "#cobblemon:has_block/mud",
+    "Prairie": "#cobblemon:is_grassland",
+    "Plaines": "#cobblemon:is_plains",
+    "Savane": "#cobblemon:is_savanna",
+    "Forêt": "#cobblemon:is_forest",
+    "Jungle": "#cobblemon:is_jungle",
+    "Taïga": "#cobblemon:is_taiga",
+    "Taïga enneigée": "#cobblemon:is_snowy_taiga",
+    "Forêt enneigée": "#cobblemon:is_snowy_forest",
+    "Enneigé": "#cobblemon:is_snowy",
+    "Toundra": "#cobblemon:is_tundra",
+    "Montagne": "#cobblemon:is_mountain",
+    "Collines": "#cobblemon:is_hills",
+    "Hautes terres": "#cobblemon:is_highlands",
+    "Sommet": "#cobblemon:is_peak",
+    "Glaciaire": "#cobblemon:is_glacial",
+    "Glacial": "#cobblemon:is_freezing",
+    "Aride": "#cobblemon:is_arid",
+    "Désert": "#cobblemon:is_desert",
+    "Terres arides": "#cobblemon:is_badlands",
+    "Bambou": "#cobblemon:is_bamboo",
+    "Fleurs de cerisier": "#cobblemon:is_cherry_blossom",
+    "Froid": "#cobblemon:is_cold",
+    "Abysses sombres": "#cobblemon:is_deep_dark",
+    "Grotte": "#cobblemon:is_cave",
+    "Sous terre": "#cobblemon:is_underground",
+    "Stalactites": "#cobblemon:is_dripstone",
+    "Floral": "#cobblemon:is_floral",
+    "Luxuriant": "#cobblemon:is_lush",
+    "Magique": "#cobblemon:is_magical",
+    "Ile Mirage": "#cobblemon:is_mirage_island",
+    "Champignon": "#cobblemon:is_mushroom",
+    "Ciel": "#cobblemon:is_sky",
+    "Maquis": "#cobblemon:is_shrubland",
+    "Sableux": "#cobblemon:is_sandy",
+    "Clairsemé": "#cobblemon:is_sparse",
+    "Île": "#cobblemon:is_island",
+    "Plateau": "#cobblemon:is_plateau",
+    "Tempéré": "#cobblemon:is_temperate",
+    "Thermal": "#cobblemon:is_thermal",
+    "Volcanique": "#cobblemon:is_volcanic",
+    "Effrayant": "#cobblemon:is_spooky",
+    "Nether": "#cobblemon:is_nether",
+    "Nether basaltique": "#cobblemon:nether/is_basalt",
+    "Nether cramoisi": "#cobblemon:nether/is_crimson",
+    "Désert du Nether": "#cobblemon:nether/is_desert",
+    "Forêt du Nether": "#cobblemon:nether/is_forest",
+    "Nether gelé": "#cobblemon:nether/is_frozen",
+    "Nether fongique": "#cobblemon:nether/is_fungus",
+    "Montagne du Nether": "#cobblemon:nether/is_mountain",
+    "Végétation du Nether": "#cobblemon:nether/is_overgrowth",
+    "Quartz du Nether": "#cobblemon:nether/is_quartz",
+    "Nether feu de l'Âme": "#cobblemon:nether/is_soul_fire",
+    "Nether sable de l'Âme": "#cobblemon:nether/is_soul_sand",
+    "Nether toxique": "#cobblemon:nether/is_toxic",
+    "Nether distordu": "#cobblemon:nether/is_warped",
+    "Terres dévastées du Nether": "#cobblemon:nether/is_wasteland",
+    "Fin": "#cobblemon:is_end",
+    "Éther": "#aether:is_aether",
+    "Bumblezone": "#the_bumblezone:the_bumblezone",
+    "Plaines (BWG)": "#cobblemon:is_plains",
+    "Floral (BWG)": "#cobblemon:is_floral",
+    "Clairsemé (BWG)": "#cobblemon:is_sparse",
+    "Savane (BWG)": "#cobblemon:is_savanna",
+    "Forêt (BWG)": "#cobblemon:is_forest",
+    "Taïga (BWG)": "#cobblemon:is_taiga",
+    "Désert (BWG)": "#cobblemon:is_desert",
+    "Sableux (BWG)": "#cobblemon:is_sandy",
+    "Plage (BWG)": "#cobblemon:is_beach",
+    "Marais (BWG)": "#cobblemon:is_swamp",
+    "Collines (BWG)": "#cobblemon:is_hills",
+    "Jungle (BWG)": "#cobblemon:is_jungle",
+    "Montagne (BWG)": "#cobblemon:is_mountain",
+    "Dense (BWG)": "#cobblemon:is_dense",
+    "Océan (BWG)": "#cobblemon:is_ocean",
+    "Stalactites (BWG)": "#cobblemon:is_dripstone",
+    "Magique (BWG)": "#cobblemon:is_magical",
+    "Enneigé (BWG)": "#cobblemon:is_snowy",
+    "Glaciaire (BWG)": "#cobblemon:is_glacial",
+    "Sommet (BWG)": "#cobblemon:is_peak",
+    "Plateau (BWG)": "#cobblemon:is_plateau",
+    "Luxuriant (BWG)": "#cobblemon:is_lush",
+    "Terres arides (BWG)": "#cobblemon:is_badlands",
+    "Aride (BWG)": "#cobblemon:is_arid",
+    "Désert (Wythers)": "#cobblemon:is_desert",
+    "Forêt sombre (Wythers)": "#cobblemon:is_spooky",
+    "Marais (Wythers)": "#cobblemon:is_swamp"
+  },
+  "raw_id_to_fr_tag": {
+    "biomeswevegone:allium_shrubland": [
+      "Plaines",
+      "Floral"
+    ],
+    "biomeswevegone:amaranth_grassland": [
+      "Plaines",
+      "Floral",
+      "Clairsemé"
+    ],
+    "biomeswevegone:araucaria_savanna": [
+      "Savane",
+      "Clairsemé"
+    ],
+    "biomeswevegone:aspen_boreal": [
+      "Forêt",
+      "Taïga"
+    ],
+    "biomeswevegone:atacama_outback": [
+      "Désert",
+      "Sableux",
+      "Clairsemé"
+    ],
+    "biomeswevegone:baobab_savanna": [
+      "Savane",
+      "Clairsemé"
+    ],
+    "biomeswevegone:basalt_barrera": [
+      "Plage"
+    ],
+    "biomeswevegone:bayou": [
+      "Marais"
+    ],
+    "biomeswevegone:black_forest": [
+      "Forêt",
+      "Taïga"
+    ],
+    "biomeswevegone:canadian_shield": [
+      "Forêt",
+      "Taïga",
+      "Collines"
+    ],
+    "biomeswevegone:cika_woods": [
+      "Forêt",
+      "Taïga"
+    ],
+    "biomeswevegone:coconino_meadow": [
+      "Plaines",
+      "Floral"
+    ],
+    "biomeswevegone:coniferous_forest": [
+      "Forêt",
+      "Taïga"
+    ],
+    "biomeswevegone:crag_gardens": [
+      "Jungle",
+      "Montagne",
+      "Dense"
+    ],
+    "biomeswevegone:crimson_tundra": [
+      "Plaines"
+    ],
+    "biomeswevegone:cypress_swamplands": [
+      "Marais"
+    ],
+    "biomeswevegone:cypress_wetlands": [
+      "Marais"
+    ],
+    "biomeswevegone:dacite_ridges": [
+      "Forêt",
+      "Taïga"
+    ],
+    "biomeswevegone:dacite_shore": [
+      "Plage"
+    ],
+    "biomeswevegone:dead_sea": [
+      "Océan",
+      "Stalactites"
+    ],
+    "biomeswevegone:ebony_woods": [
+      "Forêt",
+      "Dense"
+    ],
+    "biomeswevegone:enchanted_tangle": [
+      "Forêt",
+      "Magique",
+      "Floral"
+    ],
+    "biomeswevegone:eroded_borealis": [
+      "Enneigé",
+      "Forêt"
+    ],
+    "biomeswevegone:firecracker_chaparral": [
+      "Plaines",
+      "Clairsemé"
+    ],
+    "biomeswevegone:forgotten_forest": [
+      "Forêt",
+      "Magique"
+    ],
+    "biomeswevegone:fragment_jungle": [
+      "Jungle"
+    ],
+    "biomeswevegone:frosted_coniferous_forest": [
+      "Forêt",
+      "Taïga"
+    ],
+    "biomeswevegone:frosted_taiga": [
+      "Taïga"
+    ],
+    "biomeswevegone:howling_peaks": [
+      "Forêt",
+      "Montagne",
+      "Enneigé",
+      "Taïga",
+      "Sommet"
+    ],
+    "biomeswevegone:ironwood_gour": [
+      "Plateau",
+      "Savane",
+      "Clairsemé"
+    ],
+    "biomeswevegone:jacaranda_jungle": [
+      "Jungle"
+    ],
+    "biomeswevegone:lush_stacks": [
+      "Luxuriant",
+      "Océan",
+      "Floral"
+    ],
+    "biomeswevegone:maple_taiga": [
+      "Taïga"
+    ],
+    "biomeswevegone:mojave_desert": [
+      "Désert",
+      "Sableux"
+    ],
+    "biomeswevegone:orchard": [
+      "Forêt",
+      "Floral",
+      "Dense"
+    ],
+    "biomeswevegone:overgrowth_woodlands": [
+      "Forêt",
+      "Dense"
+    ],
+    "biomeswevegone:pale_bog": [
+      "Marais"
+    ],
+    "biomeswevegone:prairie": [
+      "Plaines",
+      "Dense"
+    ],
+    "biomeswevegone:pumpkin_valley": [
+      "Plaines",
+      "Dense"
+    ],
+    "biomeswevegone:rainbow_beach": [
+      "Plage",
+      "Sableux"
+    ],
+    "biomeswevegone:red_rock_peaks": [
+      "Terres arides",
+      "Sommet",
+      "Aride"
+    ],
+    "biomeswevegone:red_rock_valley": [
+      "Terres arides",
+      "Aride"
+    ],
+    "biomeswevegone:redwood_thicket": [
+      "Forêt",
+      "Dense"
+    ],
+    "biomeswevegone:rose_fields": [
+      "Plaines",
+      "Dense"
+    ],
+    "biomeswevegone:rugged_badlands": [
+      "Terres arides",
+      "Sableux",
+      "Clairsemé",
+      "Aride"
+    ],
+    "biomeswevegone:sakura_grove": [
+      "Forêt",
+      "Floral",
+      "Dense"
+    ],
+    "biomeswevegone:shattered_glacier": [
+      "Collines",
+      "Glaciaire"
+    ],
+    "biomeswevegone:sierra_badlands": [
+      "Terres arides"
+    ],
+    "biomeswevegone:skyris_vale": [
+      "Forêt",
+      "Magique",
+      "Dense"
+    ],
+    "biomeswevegone:temperate_grove": [
+      "Plaines",
+      "Clairsemé"
+    ],
+    "biomeswevegone:tropical_rainforest": [
+      "Jungle"
+    ],
+    "biomeswevegone:weeping_witch_forest": [
+      "Forêt",
+      "Magique",
+      "Dense"
+    ],
+    "biomeswevegone:white_mangrove_marshes": [
+      "Marais"
+    ],
+    "biomeswevegone:windswept_desert": [
+      "Désert",
+      "Sableux"
+    ],
+    "biomeswevegone:zelkova_forest": [
+      "Forêt",
+      "Dense"
+    ],
+    "minecraft:frozen_river": [
+      "Rivière gelée"
+    ],
+    "minecraft:mushroom_fields": [
+      "Champignon"
+    ],
+    "minecraft:sunflower_plains": [
+      "Plaines de tournesols"
+    ],
+    "minecraft:snowy_beach": [
+      "Plage enneigée"
+    ],
+    "aether:skyroot_forest": [
+      "Éther"
+    ],
+    "aether:skyroot_woodland": [
+      "Éther"
+    ],
+    "aether:skyroot_grove": [
+      "Éther"
+    ],
+    "aether:skyroot_meadow": [
+      "Éther"
+    ],
+    "the_bumblezone:floral_meadow": [
+      "Prairie fleurie"
+    ],
+    "the_bumblezone:pollinated_fields": [
+      "Champs pollinisés"
+    ],
+    "the_bumblezone:crystal_canyon": [
+      "Canyon de cristal"
+    ],
+    "the_bumblezone:howling_constructs": [
+      "Constructions hurlantes"
+    ],
+    "biomesoplenty:crystalline_chasm": [
+      "Gouffre cristallin"
+    ],
+    "terralith:alpine_grove": [
+      "Forêt"
+    ],
+    "terralith:amethyst_canyon": [
+      "Jungle"
+    ],
+    "terralith:amethyst_rainforest": [
+      "Jungle"
+    ],
+    "terralith:birch_taiga": [
+      "Forêt",
+      "Taïga"
+    ],
+    "terralith:bryce_canyon": [
+      "Terres arides"
+    ],
+    "terralith:caldera": [
+      "Montagne"
+    ],
+    "terralith:cloud_forest": [
+      "Forêt",
+      "Collines"
+    ],
+    "terralith:emerald_peaks": [
+      "Montagne"
+    ],
+    "terralith:forested_highlands": [
+      "Forêt",
+      "Taïga"
+    ],
+    "terralith:fractured_savanna": [
+      "Savane",
+      "Collines"
+    ],
+    "terralith:gravel_beach": [
+      "Plage"
+    ],
+    "terralith:haze_mountain": [
+      "Collines"
+    ],
+    "terralith:jungle_mountains": [
+      "Jungle",
+      "Collines"
+    ],
+    "terralith:lavender_forest": [
+      "Forêt"
+    ],
+    "terralith:lavender_valley": [
+      "Forêt"
+    ],
+    "terralith:lush_valley": [
+      "Forêt",
+      "Taïga"
+    ],
+    "terralith:mirage_isles": [
+      "Forêt"
+    ],
+    "terralith:moonlight_grove": [
+      "Forêt"
+    ],
+    "terralith:moonlight_valley": [
+      "Forêt"
+    ],
+    "terralith:painted_mountains": [
+      "Terres arides"
+    ],
+    "terralith:rocky_jungle": [
+      "Jungle"
+    ],
+    "terralith:rocky_mountains": [
+      "Montagne"
+    ],
+    "terralith:sakura_grove": [
+      "Forêt"
+    ],
+    "terralith:sakura_valley": [
+      "Forêt"
+    ],
+    "terralith:savanna_badlands": [
+      "Terres arides"
+    ],
+    "terralith:savanna_slopes": [
+      "Savane"
+    ],
+    "terralith:scarlet_mountains": [
+      "Montagne"
+    ],
+    "terralith:shield": [
+      "Forêt",
+      "Taïga"
+    ],
+    "terralith:siberian_grove": [
+      "Forêt"
+    ],
+    "terralith:siberian_taiga": [
+      "Forêt"
+    ],
+    "terralith:snowy_cherry_grove": [
+      "Forêt",
+      "Montagne"
+    ],
+    "terralith:snowy_maple_forest": [
+      "Forêt"
+    ],
+    "terralith:snowy_shield": [
+      "Forêt"
+    ],
+    "terralith:temperate_highlands": [
+      "Forêt"
+    ],
+    "terralith:tropical_jungle": [
+      "Jungle"
+    ],
+    "terralith:volcanic_peaks": [
+      "Montagne"
+    ],
+    "terralith:warm_river": [
+      "Rivière"
+    ],
+    "terralith:white_cliffs": [
+      "Forêt"
+    ],
+    "terralith:wintry_forest": [
+      "Forêt",
+      "Taïga"
+    ],
+    "terralith:wintry_lowlands": [
+      "Forêt"
+    ],
+    "terralith:yellowstone": [
+      "Taïga"
+    ],
+    "terralith:yosemite_lowlands": [
+      "Forêt",
+      "Taïga"
+    ],
+    "wythers:ancient_copper_beech_forest": [
+      "Forêt"
+    ],
+    "wythers:ancient_emerald_beech_forest": [
+      "Forêt"
+    ],
+    "wythers:ancient_golden_beech_forest": [
+      "Forêt"
+    ],
+    "wythers:ancient_moss_forest": [
+      "Forêt"
+    ],
+    "wythers:andesite_crags": [
+      "Collines"
+    ],
+    "wythers:aspen_crags": [
+      "Collines"
+    ],
+    "wythers:autumnal_birch_forest": [
+      "Forêt"
+    ],
+    "wythers:autumnal_flower_forest": [
+      "Forêt"
+    ],
+    "wythers:autumnal_forest": [
+      "Forêt"
+    ],
+    "wythers:autumnal_forest_edge": [
+      "Forêt"
+    ],
+    "wythers:ayers_rock": [
+      "Terres arides"
+    ],
+    "wythers:badlands_canyon": [
+      "Terres arides"
+    ],
+    "wythers:badlands_desert": [
+      "Terres arides"
+    ],
+    "wythers:badlands_river": [
+      "Rivière"
+    ],
+    "wythers:bamboo_jungle_canyon": [
+      "Jungle"
+    ],
+    "wythers:bamboo_jungle_highlands": [
+      "Jungle"
+    ],
+    "wythers:bamboo_jungle_swamp": [
+      "Jungle"
+    ],
+    "wythers:bamboo_swamp": [
+      "Jungle"
+    ],
+    "wythers:billabong": [
+      "Rivière"
+    ],
+    "wythers:birch_taiga": [
+      "Taïga"
+    ],
+    "wythers:black_beach": [
+      "Plage"
+    ],
+    "wythers:black_river": [
+      "Rivière"
+    ],
+    "wythers:boreal_forest_red": [
+      "Taïga"
+    ],
+    "wythers:boreal_forest_yellow": [
+      "Taïga"
+    ],
+    "wythers:chaparral": [
+      "Savane"
+    ],
+    "wythers:coastal_mangroves": [
+      "Plage"
+    ],
+    "wythers:cold_island": [
+      "Taïga"
+    ],
+    "wythers:cool_forest": [
+      "Forêt"
+    ],
+    "wythers:cool_forest_edge": [
+      "Forêt"
+    ],
+    "wythers:cool_plains": [
+      "Montagne"
+    ],
+    "wythers:cool_stony_peaks": [
+      "Montagne"
+    ],
+    "wythers:crimson_tundra": [
+      "Montagne"
+    ],
+    "wythers:deep_dark_forest": [
+      "Forêt"
+    ],
+    "wythers:deep_desert_river": [
+      "Rivière"
+    ],
+    "wythers:deep_icy_ocean": [
+      "Grand océan"
+    ],
+    "wythers:deep_snowy_taiga": [
+      "Taïga"
+    ],
+    "wythers:desert_beach": [
+      "Plage"
+    ],
+    "wythers:desert_river": [
+      "Rivière"
+    ],
+    "wythers:dry_savanna": [
+      "Savane"
+    ],
+    "wythers:dry_tropical_forest": [
+      "Savane"
+    ],
+    "wythers:dry_tropical_grassland": [
+      "Savane",
+      "Jungle"
+    ],
+    "wythers:eucalyptus_deanei_forest": [
+      "Forêt"
+    ],
+    "wythers:eucalyptus_jungle": [
+      "Jungle"
+    ],
+    "wythers:eucalyptus_jungle_canyon": [
+      "Jungle"
+    ],
+    "wythers:eucalyptus_salubris_woodland": [
+      "Savane"
+    ],
+    "wythers:eucalyptus_woodland": [
+      "Savane"
+    ],
+    "wythers:fen": [
+      "Taïga"
+    ],
+    "wythers:flooded_jungle": [
+      "Jungle"
+    ],
+    "wythers:flooded_rainforest": [
+      "Jungle"
+    ],
+    "wythers:flooded_savanna": [
+      "Rivière",
+      "Savane"
+    ],
+    "wythers:flooded_temperate_rainforest": [
+      "Taïga"
+    ],
+    "wythers:flowering_pantanal": [
+      "Forêt"
+    ],
+    "wythers:forbidden_forest": [
+      "Forêt"
+    ],
+    "wythers:forested_highlands": [
+      "Taïga"
+    ],
+    "wythers:giant_sequoia_forest": [
+      "Savane"
+    ],
+    "wythers:gravelly_beach": [
+      "Plage"
+    ],
+    "wythers:gravelly_river": [
+      "Rivière"
+    ],
+    "wythers:highland_plains": [
+      "Montagne"
+    ],
+    "wythers:highland_tropical_rainforest": [
+      "Jungle"
+    ],
+    "wythers:highlands": [
+      "Montagne"
+    ],
+    "wythers:huangshan_highlands": [
+      "Montagne"
+    ],
+    "wythers:humid_tropical_grassland": [
+      "Savane"
+    ],
+    "wythers:icy_ocean": [
+      "Océan"
+    ],
+    "wythers:icy_river": [
+      "Rivière"
+    ],
+    "wythers:icy_shore": [
+      "Plage"
+    ],
+    "wythers:jacaranda_savanna": [
+      "Savane"
+    ],
+    "wythers:jade_highlands": [
+      "Taïga"
+    ],
+    "wythers:jungle_island": [
+      "Jungle"
+    ],
+    "wythers:jungle_river": [
+      "Rivière"
+    ],
+    "wythers:kwongan_heath": [
+      "Terres arides"
+    ],
+    "wythers:lantern_river": [
+      "Rivière"
+    ],
+    "wythers:larch_taiga": [
+      "Taïga"
+    ],
+    "wythers:maple_mountains": [
+      "Taïga",
+      "Montagne"
+    ],
+    "wythers:mushroom_island": [
+      "Jungle"
+    ],
+    "wythers:old_growth_taiga_crags": [
+      "Taïga"
+    ],
+    "wythers:old_growth_taiga_swamp": [
+      "Taïga"
+    ],
+    "wythers:outback": [
+      "Terres arides"
+    ],
+    "wythers:outback_desert": [
+      "Terres arides"
+    ],
+    "wythers:pantanal": [
+      "Jungle"
+    ],
+    "wythers:phantasmal_forest": [
+      "Forêt"
+    ],
+    "wythers:pine_barrens": [
+      "Taïga"
+    ],
+    "wythers:red_desert": [
+      "Terres arides"
+    ],
+    "wythers:red_rock_canyon": [
+      "Terres arides"
+    ],
+    "wythers:sakura_forest": [
+      "Forêt"
+    ],
+    "wythers:sand_dunes": [
+      "Plage"
+    ],
+    "wythers:sandy_jungle": [
+      "Jungle"
+    ],
+    "wythers:savanna_badlands": [
+      "Terres arides",
+      "Savane"
+    ],
+    "wythers:savanna_basaltic_incursions": [
+      "Savane"
+    ],
+    "wythers:savanna_river": [
+      "Rivière"
+    ],
+    "wythers:scrub_forest": [
+      "Savane"
+    ],
+    "wythers:scrubland": [
+      "Savane"
+    ],
+    "wythers:sparse_bamboo_jungle": [
+      "Jungle"
+    ],
+    "wythers:sparse_eucalyptus_jungle": [
+      "Jungle"
+    ],
+    "wythers:sparse_eucalyptus_woodland": [
+      "Jungle"
+    ],
+    "wythers:spring_flower_forest": [
+      "Forêt"
+    ],
+    "wythers:subtropical_forest": [
+      "Forêt"
+    ],
+    "wythers:subtropical_forest_edge": [
+      "Forêt"
+    ],
+    "wythers:taiga_crags": [
+      "Taïga"
+    ],
+    "wythers:temperate_rainforest": [
+      "Taïga"
+    ],
+    "wythers:temperate_rainforest_crags": [
+      "Taïga"
+    ],
+    "wythers:tepui": [
+      "Collines"
+    ],
+    "wythers:thermal_taiga": [
+      "Taïga"
+    ],
+    "wythers:thermal_taiga_crags": [
+      "Taïga"
+    ],
+    "wythers:tropical_beach": [
+      "Plage"
+    ],
+    "wythers:tropical_forest": [
+      "Savane"
+    ],
+    "wythers:tropical_grassland": [
+      "Savane"
+    ],
+    "wythers:tropical_rainforest": [
+      "Jungle"
+    ],
+    "wythers:tropical_volcano": [
+      "Montagne"
+    ],
+    "wythers:tsingy_forest": [
+      "Savane"
+    ],
+    "wythers:volcano": [
+      "Montagne"
+    ],
+    "wythers:warm_birch_forest": [
+      "Forêt"
+    ],
+    "wythers:windswept_jungle": [
+      "Jungle"
+    ],
+    "wythers:wistman_woods": [
+      "Forêt"
+    ],
+    "wythers:wooded_savanna": [
+      "Savane"
+    ]
+  },
+  "all_biomes_overrides": {
+    "All Jungle biomes": "Jungle",
+    "All Arid biomes": "Aride",
+    "All Floral biomes": "Floral",
+    "All Forest biomes": "Forêt",
+    "All Grassland biomes": "Prairie",
+    "All Magical biomes": "Magique",
+    "All Mirage Island biomes": "Ile Mirage",
+    "All Mountain biomes": "Montagne",
+    "All Mushroom biomes": "Champignon",
+    "All Swamp biomes": "Marais",
+    "All Tundra biomes": "Toundra",
+    "All Freezing biomes": "Glacial",
+    "All Taiga biomes": "Taïga",
+    "All Savanna biomes": "Savane",
+    "All Cold Ocean biomes": "Océan froid",
+    "All Frozen Ocean biomes": "Océan gelé",
+    "All Lukewarm Ocean biomes": "Océan tiède",
+    "All Warm Ocean biomes": "Océan chaud",
+    "All Highlands biomes": "Hautes terres",
+    "All Plains biomes": "Plaines",
+    "All Coast biomes": "Côte",
+    "All Deep Ocean biomes": "Grand océan",
+    "All Sandy biomes": "Aride",
+    "All Hill biomes": "Collines",
+    "All Peak biomes": "Sommet",
+    "All Glacial biomes": "Glaciaire",
+    "All Icy biomes": "Glacé",
+    "All Snowy Forest biomes": "Forêt enneigée",
+    "All River biomes": "Rivière",
+    "All Beach biomes": "Plage",
+    "All Cave biomes": "Grotte",
+    "All Underground biomes": "Sous terre",
+    "All Deep Dark biomes": "Abysses sombres",
+    "All Sky biomes": "Ciel",
+    "All Spooky biomes": "Effrayant",
+    "All Thermal biomes": "Thermal",
+    "All Volcanic biomes": "Volcanique",
+    "All Badlands biomes": "Terres arides",
+    "All Desert biomes": "Désert",
+    "All Lush biomes": "Luxuriant",
+    "All vanilla End biomes": "Fin",
+    "All Tropical Island biomes": "Île tropicale",
+    "All Island biomes": "Île",
+    "All Cold biomes": "Froid",
+    "All Freshwater biomes": "Eau douce",
+    "All Ocean biomes": "Océan",
+    "All Temperate biomes": "Tempéré",
+    "All Wythers' desert biomes": "Désert (Wythers)",
+    "All Wythers' Dark Forest biomes": "Forêt sombre (Wythers)",
+    "All Wythers' Swamp biomes": "Marais (Wythers)"
+  },
+  "mod_meta": {
+    "Vanilla Minecraft": {
+      "emoji": "🟩",
+      "order": 0
+    },
+    "Cobblemon": {
+      "emoji": "🟡",
+      "order": 1
+    },
+    "Terralith": {
+      "emoji": "🔵",
+      "order": 2
+    },
+    "Wythers' Overhauled Overworld": {
+      "emoji": "🟣",
+      "order": 3
+    },
+    "Oh The Biomes We've Gone": {
+      "emoji": "🌿",
+      "order": 4
+    },
+    "Aether mod": {
+      "emoji": "☁️",
+      "order": 5
+    },
+    "The Bumblezone": {
+      "emoji": "🐝",
+      "order": 6
+    },
+    "BetterNether": {
+      "emoji": "🔴",
+      "order": 7
+    },
+    "Gardens of the Dead": {
+      "emoji": "💀",
+      "order": 8
+    },
+    "Cinderscapes": {
+      "emoji": "⚫",
+      "order": 9
+    },
+    "Incendium": {
+      "emoji": "🔶",
+      "order": 10
+    }
+  },
+  "menu_themes": [
+    {
+      "icon": "🌊",
+      "label": "Océan & Eau",
+      "tags": [
+        "Océan",
+        "Grand océan",
+        "Océan chaud",
+        "Océan tiède",
+        "Océan froid",
+        "Océan gelé",
+        "Côte",
+        "Plage",
+        "Plage enneigée",
+        "Île",
+        "Île tropicale",
+        "Eau douce",
+        "Rivière",
+        "Rivière gelée",
+        "Marais",
+        "Boueux",
+        "Thermal"
+      ]
+    },
+    {
+      "icon": "❄️",
+      "label": "Froid & Neige",
+      "tags": [
+        "Froid",
+        "Glacial",
+        "Glaciaire",
+        "Glacé",
+        "Enneigé",
+        "Forêt enneigée",
+        "Taïga enneigée",
+        "Toundra",
+        "Hiver"
+      ]
+    },
+    {
+      "icon": "🌲",
+      "label": "Forêt",
+      "tags": [
+        "Forêt",
+        "Taïga",
+        "Dense",
+        "Bambou",
+        "Fleurs de cerisier"
+      ]
+    },
+    {
+      "icon": "🌿",
+      "label": "Plaines & Prairies",
+      "tags": [
+        "Prairie",
+        "Plaines",
+        "Plaines de tournesols",
+        "Floral",
+        "Tempéré",
+        "Printemps",
+        "Été",
+        "Automne",
+        "Clairsemé",
+        "Maquis"
+      ]
+    },
+    {
+      "icon": "🏜️",
+      "label": "Aride & Désert",
+      "tags": [
+        "Désert",
+        "Aride",
+        "Terres arides",
+        "Sableux",
+        "Savane"
+      ]
+    },
+    {
+      "icon": "🌴",
+      "label": "Jungle & Tropical",
+      "tags": [
+        "Jungle",
+        "Luxuriant"
+      ]
+    },
+    {
+      "icon": "⛰️",
+      "label": "Montagnes & Sommets",
+      "tags": [
+        "Montagne",
+        "Collines",
+        "Hautes terres",
+        "Sommet",
+        "Plateau",
+        "Ile Mirage"
+      ]
+    },
+    {
+      "icon": "🍄",
+      "label": "Spéciaux",
+      "tags": [
+        "Champignon",
+        "Champs de champignons",
+        "Magique",
+        "Effrayant",
+        "Sel",
+        "Volcanique",
+        "Stalactites",
+        "Ciel"
+      ]
+    },
+    {
+      "icon": "🕳️",
+      "label": "Souterrain",
+      "tags": [
+        "Grotte",
+        "Sous terre",
+        "Abysses sombres"
+      ]
+    },
+    {
+      "icon": "🔥",
+      "label": "Nether",
+      "tags": [
+        "Nether",
+        "Nether basaltique",
+        "Nether cramoisi",
+        "Désert du Nether",
+        "Forêt du Nether",
+        "Nether gelé",
+        "Nether fongique",
+        "Montagne du Nether",
+        "Végétation du Nether",
+        "Quartz du Nether",
+        "Nether feu de l'Âme",
+        "Nether sable de l'Âme",
+        "Nether toxique",
+        "Nether distordu",
+        "Terres dévastées du Nether"
+      ]
+    },
+    {
+      "icon": "🌌",
+      "label": "End & Dimensions",
+      "tags": [
+        "Fin",
+        "Monde de surface",
+        "Éther",
+        "Bumblezone",
+        "Canyon de cristal",
+        "Prairie fleurie",
+        "Champs pollinisés",
+        "Constructions hurlantes",
+        "Gouffre cristallin",
+        "Été aérien",
+        "Automne aérien",
+        "Printemps aérien",
+        "Hiver aérien"
+      ]
+    }
+  ],
+  "tag_icons": {
+    "Océan": "🌊",
+    "Grand océan": "🌊",
+    "Océan chaud": "🏝️",
+    "Océan tiède": "🌊",
+    "Océan froid": "🧊",
+    "Océan gelé": "🧊",
+    "Côte": "🏖️",
+    "Plage": "🏖️",
+    "Plage enneigée": "❄️",
+    "Île": "🏝️",
+    "Île tropicale": "🌴",
+    "Eau douce": "💧",
+    "Rivière": "🏞️",
+    "Rivière gelée": "🧊",
+    "Marais": "🐊",
+    "Boueux": "🟤",
+    "Thermal": "♨️",
+    "Froid": "❄️",
+    "Glacial": "🧊",
+    "Glaciaire": "🧊",
+    "Glacé": "🧊",
+    "Enneigé": "❄️",
+    "Forêt enneigée": "🌲",
+    "Taïga enneigée": "🌲",
+    "Toundra": "🥶",
+    "Hiver": "⛄",
+    "Forêt": "🌳",
+    "Taïga": "🌲",
+    "Dense": "🌲",
+    "Bambou": "🎋",
+    "Fleurs de cerisier": "🌸",
+    "Prairie": "🌾",
+    "Plaines": "🌾",
+    "Plaines de tournesols": "🌻",
+    "Floral": "🌸",
+    "Tempéré": "🍃",
+    "Printemps": "🌷",
+    "Été": "☀️",
+    "Automne": "🍂",
+    "Clairsemé": "🍂",
+    "Maquis": "🌾",
+    "Désert": "🏜️",
+    "Aride": "🌵",
+    "Terres arides": "🟫",
+    "Sableux": "🏜️",
+    "Savane": "🦒",
+    "Jungle": "🌴",
+    "Luxuriant": "🌱",
+    "Montagne": "⛰️",
+    "Collines": "🌄",
+    "Hautes terres": "🏔️",
+    "Sommet": "🏔️",
+    "Plateau": "🗻",
+    "Ile Mirage": "🏝️",
+    "Champignon": "🍄",
+    "Champs de champignons": "🍄",
+    "Magique": "✨",
+    "Effrayant": "👻",
+    "Sel": "🧂",
+    "Volcanique": "🌋",
+    "Stalactites": "🪨",
+    "Ciel": "☁️",
+    "Grotte": "🕳️",
+    "Sous terre": "⛏️",
+    "Abysses sombres": "🌑",
+    "Nether": "🔥",
+    "Nether basaltique": "🪨",
+    "Nether cramoisi": "🔴",
+    "Désert du Nether": "🏜️",
+    "Forêt du Nether": "🌲",
+    "Nether gelé": "🧊",
+    "Nether fongique": "🍄",
+    "Montagne du Nether": "⛰️",
+    "Végétation du Nether": "🌿",
+    "Quartz du Nether": "💎",
+    "Nether feu de l'Âme": "💙",
+    "Nether sable de l'Âme": "🔵",
+    "Nether toxique": "☠️",
+    "Nether distordu": "💜",
+    "Terres dévastées du Nether": "💀",
+    "Fin": "🌌",
+    "Monde de surface": "🌍",
+    "Éther": "☁️",
+    "Bumblezone": "🐝",
+    "Canyon de cristal": "💠",
+    "Prairie fleurie": "🌼",
+    "Champs pollinisés": "🌻",
+    "Constructions hurlantes": "🏗️",
+    "Gouffre cristallin": "💠",
+    "Été aérien": "☀️",
+    "Automne aérien": "🍂",
+    "Printemps aérien": "🌷",
+    "Hiver aérien": "⛄"
+  }
+}
