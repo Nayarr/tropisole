@@ -18,7 +18,7 @@ from biome_mapping import (expand_spawn_biomes, expand_biomes_by_mod, expand_spa
                            get_mod_color, BIOME_MAP, MOD_COLORS, get_all_real_biomes_sorted,
                            get_tags_for_biome, get_cobblemon_tags_for_fr_biomes, ALL_BIOMES_TO_FR_TAG,
                            FR_TAG_TO_COBBLEMON, FR_TAG_TO_RAW_IDS, get_parent_cobblemon_tags,
-                           COBBLEMON_TAG_TO_FR, build_biome_menu)
+                           COBBLEMON_TAG_TO_FR, build_biome_menu, tr_tag)
 
 app = Flask(__name__)
 app.secret_key = "bfcdc97aed922f455ccac7c0af8833b776446cc8b13466187c0b4c6f6ca8ef33"
@@ -116,7 +116,7 @@ def security_check():
           '/admin/reset-device', '/admin/logout', '/admin/set-expiry',
           '/admin/patchnote/add', '/admin/patchnote/delete', '/patchnotes',
           '/bugreport', '/bugreport/submit']
-    if request.path.startswith('/static') or request.path in public:
+    if request.path.startswith('/static') or request.path.startswith('/set-lang') or request.path in public:
         return
 
     if 'user_id' not in session:
@@ -257,6 +257,88 @@ WEATHER_FR = {
     "clear": "Ensoleillé",
     None:    "—"
 }
+
+# ── Internationalisation (EN par défaut, FR optionnel) ───────────────────────
+# Seuls les noms de biomes, de Pokémon et les champs de la page biome-spawn
+# sont traduits ; le reste de l'UI demeure en français.
+BUCKET_EN = {
+    "filler": "Fillers", "common": "Common", "uncommon": "Uncommon",
+    "rare": "Rare", "ultra-rare": "Ultra-rare", None: "—",
+}
+TIME_EN = {"day": "Day", "night": "Night", "dusk": "Dusk", None: "—"}
+WEATHER_EN = {"rain": "Rain", "clear": "Clear", None: "—"}
+
+# Libellés de champs de la page biome-spawn (clé -> {en, fr})
+UI_STRINGS = {
+    "rarity":       {"en": "Rarity",         "fr": "Rareté"},
+    "level":        {"en": "Level",          "fr": "Niveau"},
+    "weight":       {"en": "Weight",         "fr": "Poids"},
+    "time":         {"en": "Time",           "fr": "Moment"},
+    "weather":      {"en": "Weather",        "fr": "Météo"},
+    "biomes":       {"en": "Biomes",         "fr": "Biomes"},
+    "evs":          {"en": "EVs",            "fr": "EVs"},
+    "types":        {"en": "Types",          "fr": "Types"},
+    "conditions":   {"en": "Conditions",     "fr": "Conditions"},
+    "sort":         {"en": "Sort",           "fr": "Trier"},
+    "search":       {"en": "Search",         "fr": "Rechercher"},
+    "none":         {"en": "None",           "fr": "Aucun"},
+    "back":         {"en": "Back",           "fr": "Retour"},
+    "results":      {"en": "results",        "fr": "résultats"},
+    "shared_title": {"en": "Pokémon sharing these biomes",
+                     "fr": "Pokémon partageant ces biomes"},
+}
+
+LANGS = ("en", "fr")
+
+def current_lang():
+    return session.get("lang", "en")
+
+def _load_pokemon_names():
+    """Map numero -> {'fr': nom français, 'en': nom anglais} depuis la BDD."""
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT numero, pokemon, pokemon_en FROM pokemon_spawns"
+    ).fetchall()
+    conn.close()
+    out = {}
+    for r in rows:
+        if r["numero"] in out:
+            continue
+        en = (r["pokemon_en"] or "").strip()
+        out[r["numero"]] = {"fr": r["pokemon"], "en": en.title() if en else r["pokemon"]}
+    return out
+
+POKEMON_NAMES = _load_pokemon_names()
+
+def pokemon_name(numero, lang=None):
+    lang = lang or current_lang()
+    n = POKEMON_NAMES.get(numero)
+    if not n:
+        return ""
+    return n["en"] if lang == "en" else n["fr"]
+
+@app.context_processor
+def inject_i18n():
+    lang = current_lang()
+    buckets = BUCKET_EN if lang == "en" else BUCKET_FR
+    return dict(
+        lang=lang,
+        pkmn=lambda numero: pokemon_name(numero, lang),
+        tagname=lambda fr_tag: tr_tag(fr_tag, lang),
+        t=lambda key: UI_STRINGS.get(key, {}).get(lang, key),
+        bucket_fr=buckets,
+        # version sérialisable JSON (sans la clé None) pour injection JS
+        bucket_js={k: v for k, v in buckets.items() if k is not None},
+        time_fr=(TIME_EN if lang == "en" else TIME_FR),
+        weather_fr=(WEATHER_EN if lang == "en" else WEATHER_FR),
+    )
+
+@app.route("/set-lang/<lang>")
+def set_lang(lang):
+    if lang in LANGS:
+        session.permanent = True
+        session["lang"] = lang
+    return redirect(request.referrer or url_for("index"))
 
 def parse_conditions(conditions_str):
     """Parse the conditions JSON string into a structured dict."""
@@ -714,7 +796,7 @@ def api_pokemon():
 
     # Subquery: pick one row per (numero, pokemon) combo
     base_query = f"""
-        SELECT numero, pokemon,
+        SELECT numero, pokemon, MAX(pokemon_en) as pokemon_en,
                MAX(niveau_min) as niveau_min, MAX(niveau_max) as niveau_max,
                GROUP_CONCAT(DISTINCT bucket) as bucket,
                GROUP_CONCAT(DISTINCT time) as time,
@@ -734,20 +816,27 @@ def api_pokemon():
         def normalize(s):
             return unicodedata.normalize('NFD', s).encode('ascii', 'ignore').decode().lower()
         needle = normalize(search)
-        all_rows = [r for r in all_rows if needle in normalize(r["pokemon"])]
+        # Recherche cross-langue : on matche le nom FR OU le nom EN
+        all_rows = [r for r in all_rows
+                    if needle in normalize(r["pokemon"])
+                    or (r["pokemon_en"] and needle in normalize(r["pokemon_en"]))]
 
     total = len(all_rows)
     offset = (page - 1) * per_page
     rows = all_rows[offset: offset + per_page]
 
+    lang = current_lang()
+    bucket_labels = BUCKET_EN if lang == "en" else BUCKET_FR
     result = []
     for r in rows:
         bucket_val = r["bucket"].split(",")[0] if r["bucket"] else None
+        en = (r["pokemon_en"] or "").strip()
+        display_name = en.title() if (lang == "en" and en) else r["pokemon"]
         result.append({
             "numero": r["numero"],
-            "pokemon": r["pokemon"],
+            "pokemon": display_name,
             "bucket": bucket_val,
-            "bucket_fr": BUCKET_FR.get(bucket_val, bucket_val),
+            "bucket_fr": bucket_labels.get(bucket_val, bucket_val),
             "niveau_min": r["niveau_min"],
             "niveau_max": r["niveau_max"],
             "nb_entrees": r["nb_entrees"],
@@ -912,7 +1001,7 @@ def spawns_by_biome():
         params = [f"%{b}%" for b in biomes_list]
 
     rows = conn.execute(f"""
-        SELECT numero, pokemon, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
+        SELECT numero, pokemon, pokemon_en, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
                peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
                presets
@@ -1016,7 +1105,7 @@ def spawns_by_real_biome():
         params = [f"%{t}%" for t in tags_fr]
 
     rows = conn.execute(f"""
-        SELECT numero, pokemon, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
+        SELECT numero, pokemon, pokemon_en, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
                peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
                presets
@@ -2126,7 +2215,8 @@ def api_oracle_stream():
 
         chain_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(chain)]
 
-        ALLOWED_MODS = {'Vanilla Minecraft', 'Terralith', "Wythers' Overhauled Overworld"}
+        ALLOWED_MODS = {'Vanilla Minecraft', 'Terralith', "Wythers' Overhauled Overworld",
+                        "Oh The Biomes We've Gone"}
 
         # Structures ubiquitaires → traités comme biomes virtuels
         # (stronghold sous tout l'overworld, bastion/fortress dans tout le nether, etc.)

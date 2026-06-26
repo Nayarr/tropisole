@@ -6726,7 +6726,8 @@
         "Marais",
         "Boueux",
         "Thermal"
-      ]
+      ],
+      "label_en": "Ocean & Water"
     },
     {
       "icon": "❄️",
@@ -6741,7 +6742,8 @@
         "Taïga enneigée",
         "Toundra",
         "Hiver"
-      ]
+      ],
+      "label_en": "Cold & Snow"
     },
     {
       "icon": "🌲",
@@ -6752,7 +6754,8 @@
         "Dense",
         "Bambou",
         "Fleurs de cerisier"
-      ]
+      ],
+      "label_en": "Forest"
     },
     {
       "icon": "🌿",
@@ -6768,7 +6771,8 @@
         "Automne",
         "Clairsemé",
         "Maquis"
-      ]
+      ],
+      "label_en": "Plains & Grasslands"
     },
     {
       "icon": "🏜️",
@@ -6779,7 +6783,8 @@
         "Terres arides",
         "Sableux",
         "Savane"
-      ]
+      ],
+      "label_en": "Arid & Desert"
     },
     {
       "icon": "🌴",
@@ -6787,7 +6792,8 @@
       "tags": [
         "Jungle",
         "Luxuriant"
-      ]
+      ],
+      "label_en": "Jungle & Tropical"
     },
     {
       "icon": "⛰️",
@@ -6799,7 +6805,8 @@
         "Sommet",
         "Plateau",
         "Ile Mirage"
-      ]
+      ],
+      "label_en": "Mountains & Peaks"
     },
     {
       "icon": "🍄",
@@ -6813,7 +6820,8 @@
         "Volcanique",
         "Stalactites",
         "Ciel"
-      ]
+      ],
+      "label_en": "Special"
     },
     {
       "icon": "🕳️",
@@ -6822,7 +6830,8 @@
         "Grotte",
         "Sous terre",
         "Abysses sombres"
-      ]
+      ],
+      "label_en": "Underground"
     },
     {
       "icon": "🔥",
@@ -6843,7 +6852,8 @@
         "Nether toxique",
         "Nether distordu",
         "Terres dévastées du Nether"
-      ]
+      ],
+      "label_en": "Nether"
     },
     {
       "icon": "🌌",
@@ -6862,7 +6872,8 @@
         "Automne aérien",
         "Printemps aérien",
         "Hiver aérien"
-      ]
+      ],
+      "label_en": "End & Dimensions"
     }
   ],
   "tag_icons": {
@@ -6959,5 +6970,100 @@
     "Automne aérien": "🍂",
     "Printemps aérien": "🌷",
     "Hiver aérien": "⛄"
+  },
+  "tag_en": {
+    "Aride": "Arid",
+    "Terres arides": "Badlands",
+    "Plage": "Beach",
+    "Grotte": "Cave",
+    "Sous terre": "Underground",
+    "Côte": "Coast",
+    "Froid": "Cold",
+    "Abysses sombres": "Deep Dark",
+    "Grand océan": "Deep Ocean",
+    "Désert": "Desert",
+    "Stalactites": "Dripstone",
+    "Floral": "Floral",
+    "Forêt": "Forest",
+    "Glacial": "Freezing",
+    "Eau douce": "Freshwater",
+    "Océan gelé": "Frozen Ocean",
+    "Glaciaire": "Glacial",
+    "Prairie": "Grassland",
+    "Hautes terres": "Highlands",
+    "Collines": "Hills",
+    "Île": "Island",
+    "Jungle": "Jungle",
+    "Océan tiède": "Lukewarm Ocean",
+    "Luxuriant": "Lush",
+    "Magique": "Magical",
+    "Ile Mirage": "Mirage Island",
+    "Montagne": "Mountain",
+    "Champignon": "Mushroom",
+    "Océan": "Ocean",
+    "Sommet": "Peak",
+    "Plaines": "Plains",
+    "Plateau": "Plateau",
+    "Rivière": "River",
+    "Sel": "Salt",
+    "Sableux": "Sandy",
+    "Savane": "Savanna",
+    "Ciel": "Sky",
+    "Forêt enneigée": "Snowy Forest",
+    "Effrayant": "Spooky",
+    "Marais": "Swamp",
+    "Taïga": "Taiga",
+    "Tempéré": "Temperate",
+    "Thermal": "Thermal",
+    "Île tropicale": "Tropical Island",
+    "Toundra": "Tundra",
+    "Volcanique": "Volcanic",
+    "Océan chaud": "Warm Ocean",
+    "Monde de surface": "Overworld",
+    "Fin": "End",
+    "Nether": "Nether",
+    "Nether basaltique": "Basalt Nether",
+    "Nether cramoisi": "Crimson Nether",
+    "Désert du Nether": "Nether Desert",
+    "Forêt du Nether": "Nether Forest",
+    "Nether gelé": "Frozen Nether",
+    "Nether fongique": "Fungal Nether",
+    "Montagne du Nether": "Nether Mountain",
+    "Végétation du Nether": "Nether Overgrowth",
+    "Quartz du Nether": "Nether Quartz",
+    "Nether feu de l'Âme": "Soul Fire Nether",
+    "Nether sable de l'Âme": "Soul Sand Nether",
+    "Nether toxique": "Toxic Nether",
+    "Nether distordu": "Warped Nether",
+    "Terres dévastées du Nether": "Nether Wastes",
+    "Bumblezone": "Bumblezone",
+    "Automne": "Autumn",
+    "Printemps": "Spring",
+    "Été": "Summer",
+    "Hiver": "Winter",
+    "Dense": "Dense",
+    "Clairsemé": "Sparse",
+    "Canyon de cristal": "Crystal Canyon",
+    "Prairie fleurie": "Floral Meadow",
+    "Champs pollinisés": "Pollinated Fields",
+    "Constructions hurlantes": "Howling Constructs",
+    "Éther": "Aether",
+    "Bambou": "Bamboo",
+    "Glacé": "Icy",
+    "Boueux": "Muddy",
+    "Champs de champignons": "Mushroom Fields",
+    "Fleurs de cerisier": "Cherry Blossom",
+    "Enneigé": "Snowy",
+    "Plage enneigée": "Snowy Beach",
+    "Taïga enneigée": "Snowy Taiga",
+    "Rivière gelée": "Frozen River",
+    "Plaines de tournesols": "Sunflower Plains",
+    "Océan froid": "Cold Ocean",
+    "Maquis": "Shrubland",
+    "Été aérien": "Sky Summer",
+    "Automne aérien": "Sky Autumn",
+    "Printemps aérien": "Sky Spring",
+    "Hiver aérien": "Sky Winter",
+    "Gouffre cristallin": "Crystalline Chasm"
   }
 }

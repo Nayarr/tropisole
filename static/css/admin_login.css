@@ -1,0 +1,17 @@
+:root { --bg:#0a0a0f; --card:#16161f; --border:#2a2a3a; --accent:#e8ff47; --text:#e8e8f0; --muted:#6a6a88; --red:#ff4757; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); font-family:'Syne',sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+    body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px); background-size:40px 40px; opacity:.25; pointer-events:none; }
+    header { position:relative; z-index:10; padding:2.5rem 2rem 2rem; border-bottom:1px solid var(--border); display:flex; align-items:center; }
+    .logo-title { font-size:2.5rem; font-weight:800; color:var(--accent); letter-spacing:-.03em; text-shadow:0 0 40px rgba(232,255,71,.3); }
+    .logo-sub { font-family:'Space Mono',monospace; font-size:.72rem; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; margin-top:.3rem; }
+    main { flex:1; display:flex; align-items:center; justify-content:center; padding:3rem 1.5rem; position:relative; z-index:5; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2.5rem; width:100%; max-width:380px; display:flex; flex-direction:column; gap:1.5rem; }
+    .card-title { font-family:'Space Mono',monospace; font-size:.75rem; color:var(--muted); text-transform:uppercase; letter-spacing:.15em; }
+    .field { display:flex; flex-direction:column; gap:.5rem; }
+    .field label { font-family:'Space Mono',monospace; font-size:.68rem; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; }
+    .field input { width:100%; background:#111118; border:1px solid var(--border); border-radius:6px; color:var(--text); font-family:'Space Mono',monospace; font-size:.9rem; padding:.75rem 1rem; outline:none; transition:border-color .2s; }
+    .field input:focus { border-color:var(--accent); }
+    .btn { width:100%; background:var(--accent); color:var(--bg); border:none; border-radius:6px; font-family:'Syne',sans-serif; font-size:.95rem; font-weight:800; padding:.85rem 1rem; cursor:pointer; transition:opacity .2s,transform .15s; }
+    .btn:hover { opacity:.9; transform:translateY(-1px); }
+    .error { font-family:'Space Mono',monospace; font-size:.75rem; padding:.75rem 1rem; border-radius:6px; background:rgba(255,71,87,.1); border:1px solid rgba(255,71,87,.3); color:var(--red); }

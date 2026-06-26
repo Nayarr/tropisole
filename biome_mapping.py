@@ -14,6 +14,20 @@ BIOME_MAP = _DATA["biome_map"]
 
 MOD_COLORS = _DATA["mod_colors"]
 
+# Traductions EN des tags FR (les noms réels de biomes sont déjà en anglais)
+TAG_EN = _DATA.get("tag_en", {})
+
+
+def tr_tag(fr_tag, lang="en"):
+    """Traduit un tag FR en EN si lang == 'en'. Gère les tags dédiés « X (MOD) »
+    et laisse passer tel quel ce qui n'a pas de traduction (noms réels EN inclus)."""
+    if lang != "en" or not fr_tag:
+        return fr_tag
+    if fr_tag.endswith(")") and " (" in fr_tag:
+        base, _sep, suffix = fr_tag.rpartition(" (")
+        return "%s (%s" % (TAG_EN.get(base, base), suffix)
+    return TAG_EN.get(fr_tag, fr_tag)
+
 def get_real_biomes(tag_fr):
     """Retourne la liste des biomes réels pour un tag FR.
     Si tag_fr est un tag Cobblemon brut (#cobblemon:is_xxx), on le résout
@@ -356,6 +370,7 @@ def build_biome_menu():
             if tag_blocks:
                 theme_blocks.append({
                     "label": th["label"],
+                    "label_en": th.get("label_en", th["label"]),
                     "icon": th["icon"],
                     "tags": tag_blocks,
                 })
