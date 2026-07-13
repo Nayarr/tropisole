@@ -1800,6 +1800,10 @@
         "mod": "Wythers' Overhauled Overworld"
       },
       {
+        "biome": "Bamboo Jungle Canyon",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
         "biome": "Subtropical Forest",
         "mod": "Wythers' Overhauled Overworld"
       },
@@ -3210,6 +3214,10 @@
         "mod": "Wythers' Overhauled Overworld"
       },
       {
+        "biome": "Maple Mountains",
+        "mod": "Wythers' Overhauled Overworld"
+      },
+      {
         "biome": "Larch Taiga",
         "mod": "Wythers' Overhauled Overworld"
       },
@@ -4545,10 +4553,6 @@
         "mod": "Vanilla Minecraft"
       },
       {
-        "biome": "Bamboo Jungle Hills",
-        "mod": "Vanilla Minecraft"
-      },
-      {
         "biome": "Bamboo Jungle Highlands",
         "mod": "Vanilla Minecraft"
       },
@@ -5703,7 +5707,9 @@
       "#cobblemon:is_glacial",
       "#cobblemon:is_snowy_taiga"
     ],
-    "#cobblemon:is_peak": [],
+    "#cobblemon:is_peak": [
+      "#cobblemon:is_mountain"
+    ],
     "#cobblemon:is_highlands": [],
     "#cobblemon:is_glacial": [
       "#cobblemon:is_icy"
