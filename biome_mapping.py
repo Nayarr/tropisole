@@ -262,20 +262,47 @@ def get_parent_cobblemon_tags(cobblemon_tag):
     Ex: get_parent_cobblemon_tags('#cobblemon:is_tropical_island')
         -> {'#cobblemon:is_coast', '#cobblemon:is_ocean', '#cobblemon:is_overworld'}
     """
+    if not cobblemon_tag:
+        return set()
+
     parents = set()
-    for parent, children in COBBLEMON_TAG_HIERARCHY.items():
-        if cobblemon_tag in children:
-            parents.add(parent)
-            parents |= get_parent_cobblemon_tags(parent)
+    stack = [cobblemon_tag]
+    visited = set()
+
+    while stack:
+        current = stack.pop()
+        if current in visited:
+            continue
+        visited.add(current)
+
+        for parent, children in COBBLEMON_TAG_HIERARCHY.items():
+            if current in children and parent not in parents:
+                parents.add(parent)
+                stack.append(parent)
+
     return parents
 
 
 def get_children_cobblemon_tags(cobblemon_tag):
     """Retourne récursivement tous les tags enfants d'un tag donné."""
+    if not cobblemon_tag:
+        return set()
+
     children = set()
-    for child in COBBLEMON_TAG_HIERARCHY.get(cobblemon_tag, []):
-        children.add(child)
-        children |= get_children_cobblemon_tags(child)
+    stack = [cobblemon_tag]
+    visited = set()
+
+    while stack:
+        current = stack.pop()
+        if current in visited:
+            continue
+        visited.add(current)
+
+        for child in COBBLEMON_TAG_HIERARCHY.get(current, []):
+            if child not in children:
+                children.add(child)
+                stack.append(child)
+
     return children
 
 
