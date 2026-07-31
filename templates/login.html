@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TROPISOLE — Connexion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 <body>
 
-<div id="pending-notice" style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,171,64,.12);border-bottom:1px solid rgba(255,171,64,.3);padding:.75rem 2rem;font-family:'Space Mono',monospace;font-size:.75rem;color:#ffab40;text-align:center;">
+<div id="pending-notice" style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,171,64,.12);border-bottom:1px solid rgba(255,171,64,.3);padding:.75rem 2rem;font-family:'Geist',monospace;font-size:.75rem;color:#ffab40;text-align:center;">
   ⏳ Votre compte est en attente de validation par un administrateur.
 </div>
-<div id="expired-notice" style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,71,87,.1);border-bottom:1px solid rgba(255,71,87,.3);padding:.75rem 2rem;font-family:'Space Mono',monospace;font-size:.75rem;color:#ff4757;text-align:center;">
+<div id="expired-notice" style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,71,87,.1);border-bottom:1px solid rgba(255,71,87,.3);padding:.75rem 2rem;font-family:'Geist',monospace;font-size:.75rem;color:#ff4757;text-align:center;">
   🔒 Votre accès a expiré. Contactez un administrateur pour renouveler votre accès.
 </div>
 

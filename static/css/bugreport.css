@@ -1,12 +1,12 @@
 :root {
-      --bg:      #0a0a0f;
-      --surface: #111118;
-      --card:    #16161f;
-      --border:  #2a2a3a;
-      --accent:  #e8ff47;
+      --bg:      #0a0a0a;
+      --surface: #0e0e0e;
+      --card:    #0f0f0f;
+      --border:  #252525;
+      --accent:  #C9A24B;
       --accent2: #47ffe8;
-      --text:    #e8e8f0;
-      --muted:   #6a6a88;
+      --text:    #e7e7e7;
+      --muted:   #8a8a8a;
       --red:     #ff4757;
       --green:   #55efc4;
       --orange:  #ffab40;
@@ -14,29 +14,27 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg); color: var(--text);
-      font-family: 'Syne', sans-serif; min-height: 100vh;
+      font-family: 'Geist', sans-serif; min-height: 100vh;
       display: flex; flex-direction: column;
     }
     body::before {
       content: ''; position: fixed; inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 40px 40px; opacity: .25; pointer-events: none; z-index: 0;
+      
+      opacity: .25; pointer-events: none; z-index: 0;
     }
 
     header {
       position: relative; z-index: 10;
       padding: 2rem 2rem 1.5rem;
       border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(232,255,71,.04) 0%, transparent 100%);
+      background: linear-gradient(180deg, rgba(201,162,75,.04) 0%, transparent 100%);
       display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
     }
-    .logo-title { font-size: 2rem; font-weight: 800; color: var(--accent); letter-spacing: -.03em; text-shadow: 0 0 40px rgba(232,255,71,.3); }
-    .logo-sub { font-family: 'Space Mono', monospace; font-size: .68rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; margin-top: .2rem; }
+    .logo-title { font-size: 2rem; font-weight: 800; color: var(--accent); letter-spacing: -.03em; text-shadow: 0 0 40px rgba(201,162,75,.3); }
+    .logo-sub { font-family: 'Geist', monospace; font-size: .68rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; margin-top: .2rem; }
 
     .btn-back {
-      font-family: 'Space Mono', monospace; font-size: .68rem; text-transform: uppercase; letter-spacing: .1em;
+      font-family: 'Geist', monospace; font-size: .68rem; text-transform: uppercase; letter-spacing: .1em;
       padding: .5rem .9rem; border-radius: 6px; border: 1px solid var(--border);
       background: var(--card); color: var(--muted); cursor: pointer; text-decoration: none;
       transition: border-color .2s, color .2s;
@@ -51,7 +49,7 @@
 
     .page-header { display: flex; flex-direction: column; gap: .4rem; }
     .page-title { font-size: 1.6rem; font-weight: 800; }
-    .page-sub { font-family: 'Space Mono', monospace; font-size: .7rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+    .page-sub { font-family: 'Geist', monospace; font-size: .7rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
 
     /* ── Success state ── */
     .success-card {
@@ -62,7 +60,7 @@
     }
     .success-icon { font-size: 3rem; }
     .success-title { font-size: 1.4rem; font-weight: 800; color: var(--green); }
-    .success-sub { font-family: 'Space Mono', monospace; font-size: .78rem; color: var(--muted); line-height: 1.7; }
+    .success-sub { font-family: 'Geist', monospace; font-size: .78rem; color: var(--muted); line-height: 1.7; }
 
     /* ── Form card ── */
     .form-card {
@@ -73,14 +71,14 @@
 
     .field { display: flex; flex-direction: column; gap: .5rem; }
     .field label {
-      font-family: 'Space Mono', monospace; font-size: .65rem;
+      font-family: 'Geist', monospace; font-size: .65rem;
       color: var(--muted); letter-spacing: .12em; text-transform: uppercase;
     }
 
     .field input, .field textarea, .field select {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: 8px; color: var(--text);
-      font-family: 'Space Mono', monospace; font-size: .88rem;
+      font-family: 'Geist', monospace; font-size: .88rem;
       padding: .75rem 1rem; outline: none;
       transition: border-color .2s;
     }
@@ -97,7 +95,7 @@
       display: flex; flex-wrap: wrap; gap: .5rem;
     }
     .cat-pill {
-      font-family: 'Space Mono', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .08em;
+      font-family: 'Geist', monospace; font-size: .65rem; text-transform: uppercase; letter-spacing: .08em;
       padding: .35rem .75rem; border-radius: 20px; border: 1px solid var(--border);
       background: transparent; color: var(--muted); cursor: pointer;
       transition: all .15s; user-select: none;
@@ -109,12 +107,12 @@
     @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
 
     .char-count {
-      font-family: 'Space Mono', monospace; font-size: .6rem; color: var(--muted);
+      font-family: 'Geist', monospace; font-size: .6rem; color: var(--muted);
       text-align: right; margin-top: .2rem;
     }
 
     .hint {
-      font-family: 'Space Mono', monospace; font-size: .65rem; color: var(--muted);
+      font-family: 'Geist', monospace; font-size: .65rem; color: var(--muted);
       background: rgba(255,255,255,.03); border: 1px solid var(--border);
       border-radius: 6px; padding: .6rem .9rem; line-height: 1.6;
     }
@@ -122,7 +120,7 @@
     .btn-submit {
       align-self: flex-end;
       background: var(--accent); color: var(--bg); border: none; border-radius: 8px;
-      font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 800;
+      font-family: 'Geist', sans-serif; font-size: .95rem; font-weight: 800;
       padding: .8rem 2rem; cursor: pointer;
       transition: opacity .2s, transform .15s;
     }

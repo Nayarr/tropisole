@@ -74,7 +74,7 @@ const firebaseConfig = {
       { pct: '40%',  color: '#ff6b35', text: 'Faible' },
       { pct: '60%',  color: '#ffa07a', text: 'Moyen' },
       { pct: '80%',  color: '#55efc4', text: 'Fort' },
-      { pct: '100%', color: '#e8ff47', text: 'Très fort' },
+      { pct: '100%', color: '#C9A24B', text: 'Très fort' },
     ];
     const lvl = levels[Math.max(0, score - 1)] || levels[0];
     fill.style.width      = lvl.pct;

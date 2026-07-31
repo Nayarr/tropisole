@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tropisole — Oracle d'isolation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/oracle.css') }}">
 </head>
 <body>
@@ -15,7 +15,7 @@
     <div class="logo-sub">Oracle d'isolation</div>
   </div>
   <span class="oracle-badge">🔮 Oracle</span>
-  <a class="oracle-badge" href="/set-lang/{{ 'fr' if lang == 'en' else 'en' }}" style="text-decoration:none;margin-left:.5rem" title="Language / Langue">{{ '🇫🇷 FR' if lang == 'en' else '🇬🇧 EN' }}</a>
+  <select onchange="if(this.value)location.href='/set-lang/'+this.value" title="Langue" style="margin-left:.5rem;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.34rem .6rem;font-family:inherit;font-size:.8rem;cursor:pointer;outline:none">{% for l in languages %}<option value="{{ l.code }}"{{ ' selected' if l.code == lang }}>{{ l.label }}</option>{% endfor %}</select>
 </header>
 
 <main>

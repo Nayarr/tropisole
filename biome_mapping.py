@@ -90,7 +90,9 @@ def _build_reverse_map():
     for tag, biomes in BIOME_MAP.items():
         for b in biomes:
             key = b["biome"].lower()
-            reverse.setdefault(key, []).append(tag)
+            lst = reverse.setdefault(key, [])
+            if tag not in lst:          # dédoublonner (noms de biome partagés entre mods)
+                lst.append(tag)
     return reverse
 
 REVERSE_BIOME_MAP = _build_reverse_map()

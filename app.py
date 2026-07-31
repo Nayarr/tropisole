@@ -288,7 +288,12 @@ UI_STRINGS = {
                      "fr": "Pokémon partageant ces biomes"},
 }
 
-LANGS = ("en", "fr")
+# Langues disponibles (ajouter une entrée ici suffit pour l'ajouter au déroulé)
+LANGUAGES = [
+    {"code": "en", "label": "English"},
+    {"code": "fr", "label": "Français"},
+]
+LANGS = tuple(l["code"] for l in LANGUAGES)
 
 def current_lang():
     return session.get("lang", "en")
@@ -323,6 +328,7 @@ def inject_i18n():
     buckets = BUCKET_EN if lang == "en" else BUCKET_FR
     return dict(
         lang=lang,
+        languages=LANGUAGES,
         pkmn=lambda numero: pokemon_name(numero, lang),
         tagname=lambda fr_tag: tr_tag(fr_tag, lang),
         t=lambda key: UI_STRINGS.get(key, {}).get(lang, key),

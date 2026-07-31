@@ -1,39 +1,37 @@
 :root {
-      --bg:      #0a0a0f;
-      --surface: #111118;
-      --card:    #16161f;
-      --border:  #2a2a3a;
-      --accent:  #e8ff47;
+      --bg:      #0a0a0a;
+      --surface: #0e0e0e;
+      --card:    #0f0f0f;
+      --border:  #252525;
+      --accent:  #C9A24B;
       --accent2: #47ffe8;
-      --text:    #e8e8f0;
-      --muted:   #6a6a88;
+      --text:    #e7e7e7;
+      --muted:   #8a8a8a;
       --red:     #ff4757;
       --green:   #55efc4;
     }
     * { box-sizing:border-box; margin:0; padding:0; }
     body {
       background:var(--bg); color:var(--text);
-      font-family:'Syne',sans-serif; min-height:100vh;
+      font-family:'Geist',sans-serif; min-height:100vh;
     }
     body::before {
       content:''; position:fixed; inset:0;
-      background-image:
-        linear-gradient(var(--border) 1px,transparent 1px),
-        linear-gradient(90deg,var(--border) 1px,transparent 1px);
-      background-size:40px 40px; opacity:.25; pointer-events:none; z-index:0;
+      
+      opacity:.25; pointer-events:none; z-index:0;
     }
 
     header {
       position:relative; z-index:10;
       padding:2rem 2rem 1.5rem;
       border-bottom:1px solid var(--border);
-      background:linear-gradient(180deg,rgba(232,255,71,.04) 0%,transparent 100%);
+      background:linear-gradient(180deg,rgba(201,162,75,.04) 0%,transparent 100%);
       display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
     }
-    .logo-title { font-size:2rem; font-weight:800; color:var(--accent); letter-spacing:-.03em; text-shadow:0 0 40px rgba(232,255,71,.3); }
-    .logo-sub { font-family:'Space Mono',monospace; font-size:.68rem; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; margin-top:.2rem; }
+    .logo-title { font-size:2rem; font-weight:800; color:var(--accent); letter-spacing:-.03em; text-shadow:0 0 40px rgba(201,162,75,.3); }
+    .logo-sub { font-family:'Geist',monospace; font-size:.68rem; color:var(--muted); letter-spacing:.15em; text-transform:uppercase; margin-top:.2rem; }
     .btn-back {
-      font-family:'Space Mono',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.1em;
+      font-family:'Geist',monospace; font-size:.68rem; text-transform:uppercase; letter-spacing:.1em;
       padding:.5rem .9rem; border-radius:6px; border:1px solid var(--border);
       background:var(--card); color:var(--muted); cursor:pointer; text-decoration:none;
       transition:border-color .2s,color .2s;
@@ -48,12 +46,12 @@
 
     .page-header { display:flex; flex-direction:column; gap:.4rem; }
     .page-title { font-size:1.6rem; font-weight:800; }
-    .page-sub { font-family:'Space Mono',monospace; font-size:.7rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; }
+    .page-sub { font-family:'Geist',monospace; font-size:.7rem; color:var(--muted); letter-spacing:.1em; text-transform:uppercase; }
 
     .empty-state {
       display:flex; flex-direction:column; align-items:center; justify-content:center;
       gap:1rem; padding:4rem 2rem; color:var(--muted);
-      font-family:'Space Mono',monospace; font-size:.82rem; text-align:center;
+      font-family:'Geist',monospace; font-size:.82rem; text-align:center;
     }
     .empty-state .icon { font-size:2.5rem; }
 
@@ -74,7 +72,7 @@
       border-radius:50%; background:var(--card); border:2px solid var(--accent);
       display:flex; align-items:center; justify-content:center;
       font-size:.7rem; font-weight:800; color:var(--accent);
-      font-family:'Space Mono',monospace; z-index:1;
+      font-family:'Geist',monospace; z-index:1;
     }
     .note-item:not(:first-child) .note-dot {
       border-color:var(--border); color:var(--muted);
@@ -86,17 +84,17 @@
       margin-bottom:2rem; display:flex; flex-direction:column; gap:1rem;
     }
     .note-item:first-child .note-card {
-      border-color:rgba(232,255,71,.2);
-      box-shadow:0 0 20px rgba(232,255,71,.04);
+      border-color:rgba(201,162,75,.2);
+      box-shadow:0 0 20px rgba(201,162,75,.04);
     }
 
     .note-meta {
       display:flex; align-items:center; flex-wrap:wrap; gap:.75rem;
     }
     .note-version {
-      font-family:'Space Mono',monospace; font-size:.72rem;
+      font-family:'Geist',monospace; font-size:.72rem;
       padding:.25rem .7rem; border-radius:20px;
-      background:rgba(232,255,71,.1); border:1px solid rgba(232,255,71,.25); color:var(--accent);
+      background:rgba(201,162,75,.1); border:1px solid rgba(201,162,75,.25); color:var(--accent);
     }
     .note-item:not(:first-child) .note-version {
       background:rgba(106,106,136,.1); border-color:var(--border); color:var(--muted);
@@ -105,18 +103,18 @@
       font-size:1.05rem; font-weight:700; flex:1;
     }
     .note-date {
-      font-family:'Space Mono',monospace; font-size:.65rem; color:var(--muted); margin-left:auto;
+      font-family:'Geist',monospace; font-size:.65rem; color:var(--muted); margin-left:auto;
     }
 
     .note-content {
-      font-family:'Space Mono',monospace; font-size:.8rem; line-height:1.85;
+      font-family:'Geist',monospace; font-size:.8rem; line-height:1.85;
       color:#b8b8cc; white-space:pre-wrap;
       border-top:1px solid var(--border); padding-top:1rem;
     }
 
     /* ── Badge "NOUVEAU" ── */
     .badge-new {
-      font-family:'Space Mono',monospace; font-size:.6rem; letter-spacing:.1em;
+      font-family:'Geist',monospace; font-size:.6rem; letter-spacing:.1em;
       padding:.15rem .5rem; border-radius:20px; text-transform:uppercase;
       background:rgba(85,239,196,.12); border:1px solid rgba(85,239,196,.3); color:var(--green);
     }

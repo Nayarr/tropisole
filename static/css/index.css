@@ -1,12 +1,12 @@
 :root {
-      --bg: #0a0a0f;
-      --surface: #111118;
-      --card: #16161f;
-      --border: #2a2a3a;
-      --accent: #e8ff47;
-      --accent2: #47ffe8;
-      --text: #e8e8f0;
-      --muted: #6a6a88;
+      --bg: #0a0a0a;
+      --surface: #0e0e0e;
+      --card: #0f0f0f;
+      --border: #252525;
+      --accent: #C9A24B;
+      --accent2: #9c7c37;
+      --text: #e7e7e7;
+      --muted: #8a8a8a;
       --red: #ff4757;
       --common: #74b9ff;
       --uncommon: #55efc4;
@@ -20,7 +20,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Syne', sans-serif;
+      font-family: 'Geist', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
     }
@@ -30,10 +30,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 40px 40px;
+      
       opacity: 0.25;
       pointer-events: none;
       z-index: 0;
@@ -45,7 +42,7 @@
       z-index: 10;
       padding: 2.5rem 2rem 2rem;
       border-bottom: 1px solid var(--border);
-      background: linear-gradient(180deg, rgba(232,255,71,0.04) 0%, transparent 100%);
+      background: linear-gradient(180deg, rgba(201,162,75,0.04) 0%, transparent 100%);
       display: flex;
       align-items: center;
       gap: 2rem;
@@ -64,11 +61,11 @@
       letter-spacing: -0.03em;
       color: var(--accent);
       line-height: 1;
-      text-shadow: 0 0 40px rgba(232,255,71,0.3);
+      text-shadow: 0 0 40px rgba(201,162,75,0.3);
     }
 
     .logo-sub {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.72rem;
       color: var(--muted);
       letter-spacing: 0.15em;
@@ -96,7 +93,7 @@
     }
 
     .stat-pill .label {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.65rem;
       color: var(--muted);
       text-transform: uppercase;
@@ -129,7 +126,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text);
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.9rem;
       padding: 0.65rem 1rem 0.65rem 2.6rem;
       outline: none;
@@ -156,7 +153,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text);
-      font-family: 'Syne', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 0.85rem;
       padding: 0.65rem 1rem;
       outline: none;
@@ -178,7 +175,7 @@
     }
 
     .sort-group label {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.7rem;
       color: var(--muted);
       text-transform: uppercase;
@@ -213,7 +210,7 @@
       border-radius: 8px;
     }
     .type-filter-label {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.65rem;
       color: var(--muted);
       text-transform: uppercase;
@@ -222,7 +219,7 @@
       margin-right: 0.2rem;
     }
     .type-btn {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.62rem;
       font-weight: 700;
       padding: 0.2rem 0.55rem;
@@ -238,7 +235,7 @@
 
     .poke-types { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
     .type-badge {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.55rem;
       font-weight: 700;
       padding: 0.15rem 0.45rem;
@@ -248,7 +245,7 @@
     }
 
     .results-count {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.75rem;
       color: var(--muted);
       white-space: nowrap;
@@ -270,14 +267,14 @@
       display: flex; align-items: center; gap: 0.4rem;
       padding: 0.7rem 1.1rem; background: none; border: none;
       border-right: 1px solid var(--border);
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.72rem; color: var(--muted);
       cursor: pointer; white-space: nowrap;
       letter-spacing: 0.05em; text-transform: uppercase;
       transition: background 0.15s, color 0.15s;
     }
-    .biome-cat-btn:hover  { background: rgba(232,255,71,0.06); color: var(--accent); }
-    .biome-cat-btn.is-active { background: rgba(232,255,71,0.10); color: var(--accent); }
+    .biome-cat-btn:hover  { background: rgba(201,162,75,0.06); color: var(--accent); }
+    .biome-cat-btn.is-active { background: rgba(201,162,75,0.10); color: var(--accent); }
 
     /* L1 panel */
     .biome-panel {
@@ -296,7 +293,7 @@
       position: relative; display: flex; align-items: center;
       justify-content: space-between;
       padding: 0.55rem 0.85rem;
-      font-family: 'Space Mono', monospace; font-size: 0.68rem;
+      font-family: 'Geist', monospace; font-size: 0.68rem;
       color: var(--text); text-decoration: none;
       border-bottom: 1px solid rgba(42,42,58,0.4);
       cursor: pointer; gap: 0.45rem; white-space: nowrap;
@@ -304,7 +301,7 @@
     }
     .bp-item:last-child { border-bottom: none; }
     .bp-item:hover, .bp-item.sub-open {
-      background: rgba(232,255,71,0.07); color: var(--accent);
+      background: rgba(201,162,75,0.07); color: var(--accent);
     }
     .bp-item .item-icon  { font-size: 0.82rem; flex-shrink: 0; }
     .bp-item .item-label { flex: 1; }
@@ -329,7 +326,7 @@
     .bp-sub-direct {
       display: flex; align-items: center; gap: 0.45rem;
       padding: 0.5rem 0.8rem;
-      font-family: 'Space Mono', monospace; font-size: 0.65rem;
+      font-family: 'Geist', monospace; font-size: 0.65rem;
       color: var(--accent2); text-decoration: none;
       border-bottom: 2px solid rgba(71,255,232,0.15);
       background: rgba(71,255,232,0.04);
@@ -341,7 +338,7 @@
     /* Header mod dans L2 */
     .bp-mod-header {
       padding: 0.28rem 0.8rem 0.14rem;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.54rem; letter-spacing: 0.11em;
       text-transform: uppercase; color: var(--muted);
       border-bottom: 1px solid rgba(42,42,58,0.5);
@@ -353,7 +350,7 @@
       position: relative; display: flex; align-items: center;
       justify-content: space-between;
       padding: 0.48rem 0.8rem;
-      font-family: 'Space Mono', monospace; font-size: 0.65rem;
+      font-family: 'Geist', monospace; font-size: 0.65rem;
       color: var(--text); cursor: pointer; gap: 0.45rem;
       white-space: nowrap;
       border-bottom: 1px solid rgba(42,42,58,0.3);
@@ -368,7 +365,7 @@
     .bp-sub a {
       display: flex; align-items: center; gap: 0.45rem;
       padding: 0.48rem 0.8rem;
-      font-family: 'Space Mono', monospace; font-size: 0.65rem;
+      font-family: 'Geist', monospace; font-size: 0.65rem;
       color: var(--text); text-decoration: none;
       border-bottom: 1px solid rgba(42,42,58,0.3);
       transition: background 0.1s, color 0.1s, padding-left 0.12s;
@@ -394,7 +391,7 @@
     .bp-sub2 a {
       display: flex; align-items: center; gap: 0.45rem;
       padding: 0.46rem 0.8rem;
-      font-family: 'Space Mono', monospace; font-size: 0.64rem;
+      font-family: 'Geist', monospace; font-size: 0.64rem;
       color: var(--text); text-decoration: none;
       border-bottom: 1px solid rgba(42,42,58,0.25);
       transition: background 0.1s, color 0.1s, padding-left 0.12s;
@@ -445,7 +442,7 @@
       image-rendering: pixelated;
       object-fit: contain;
       opacity: 0.85;
-      filter: drop-shadow(0 0 6px rgba(232,255,71,0.2));
+      filter: drop-shadow(0 0 6px rgba(201,162,75,0.2));
       pointer-events: none;
     }
 
@@ -453,18 +450,18 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(232,255,71,0.04), transparent 50%);
+      background: linear-gradient(135deg, rgba(201,162,75,0.04), transparent 50%);
       pointer-events: none;
     }
 
     .poke-card:hover {
       transform: translateY(-3px);
       border-color: var(--accent);
-      box-shadow: 0 8px 30px rgba(232,255,71,0.1);
+      box-shadow: 0 8px 30px rgba(201,162,75,0.1);
     }
 
     .poke-num {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.65rem;
       color: var(--muted);
       letter-spacing: 0.1em;
@@ -487,7 +484,7 @@
     }
 
     .badge {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       font-weight: 700;
       padding: 0.2rem 0.5rem;
@@ -504,7 +501,7 @@
     .badge-grey      { background: rgba(106,106,136,0.15); color: var(--muted); border: 1px solid rgba(106,106,136,0.3); }
 
     .poke-lvl {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.65rem;
       color: var(--muted);
       margin-top: 0.4rem;
@@ -514,7 +511,7 @@
       position: absolute;
       top: 0.7rem;
       right: 0.8rem;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       color: var(--accent2);
       opacity: 0.7;
@@ -537,7 +534,7 @@
       color: var(--text);
       cursor: pointer;
       padding: 0.5rem 0.9rem;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.8rem;
       transition: all 0.15s;
     }
@@ -607,7 +604,7 @@
       height: 36px; padding: 0 .85rem;
       border: 1px solid var(--border); border-radius: 6px;
       color: var(--muted);
-      font-family: 'Space Mono', monospace; font-size: .63rem;
+      font-family: 'Geist', monospace; font-size: .63rem;
       text-transform: uppercase; letter-spacing: .08em;
       text-decoration: none; white-space: nowrap; align-self: center;
       transition: border-color 0.2s, color 0.2s;
@@ -630,7 +627,7 @@
       align-self: center;
     }
     .expiry-badge {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: .65rem;
       color: var(--muted);
       border: 1px solid var(--border);

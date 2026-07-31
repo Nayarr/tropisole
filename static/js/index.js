@@ -82,7 +82,7 @@ let currentPage = 1;
           <div class="poke-meta">
             ${p.bucket ? `<span class="badge ${cls}">${p.bucket_fr}</span>` : ''}
           </div>
-          ${p.types && p.types.length ? `<div class="poke-types">${p.types.map(t => `<span class="type-badge" style="background:${TYPE_COLORS[t]||'#6a6a88'}">${t}</span>`).join('')}</div>` : ''}
+          ${p.types && p.types.length ? `<div class="poke-types">${p.types.map(t => `<span class="type-badge" style="background:${TYPE_COLORS[t]||'#8a8a8a'}">${t}</span>`).join('')}</div>` : ''}
           <div class="poke-lvl">Niv. ${p.niveau_min || '?'} – ${p.niveau_max || '?'}</div>
           ${p.sprite ? `<img class="poke-card-sprite" src="/static/pokemon_icons/${p.sprite}" alt="${p.pokemon}" />` : ''}
         </a>`;

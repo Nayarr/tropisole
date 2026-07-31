@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Co-spawns — Tropisole</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/biome_spawns.css') }}">
 </head>
 <body>
@@ -19,7 +19,7 @@
   <span class="nav-title">{{ 'Pokémon from the same spawn' if lang == 'en' else 'Pokémon du même spawn' }}</span>
   <a href="/bugreport" class="nav-back" style="margin-left:auto;font-size:.62rem;">🐛 Bug</a>
   <a href="/favorites" class="nav-back" style="font-size:.72rem;">⭐ Signets</a>
-  <a href="/set-lang/{{ 'fr' if lang == 'en' else 'en' }}" class="nav-back" style="font-size:.72rem;" title="Language / Langue">{{ '🇫🇷 FR' if lang == 'en' else '🇬🇧 EN' }}</a>
+  <select onchange="if(this.value)location.href='/set-lang/'+this.value" title="Langue" style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.28rem .5rem;font-family:inherit;font-size:.72rem;cursor:pointer;outline:none">{% for l in languages %}<option value="{{ l.code }}"{{ ' selected' if l.code == lang }}>{{ l.label }}</option>{% endfor %}</select>
 </nav>
 
 <div class="hero">
@@ -50,11 +50,11 @@
       <span class="tags-via-chip">{{ tagname(t) }}</span>
       {% endfor %}
       <button id="btn-save-fav" onclick="openSaveFavModal()" title="Sauvegarder en signet"
-        style="margin-left:.5rem;font-family:'Space Mono',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:.25rem .65rem;transition:all .2s"
-        onmouseover="this.style.borderColor='#e8ff47';this.style.color='#e8ff47'"
+        style="margin-left:.5rem;font-family:'Geist',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:.25rem .65rem;transition:all .2s"
+        onmouseover="this.style.borderColor='#C9A24B';this.style.color='#C9A24B'"
         onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">⭐ Signet</button>
       <button id="btn-share" onclick="shareFilters()" title="Copier le lien avec les filtres actuels"
-        style="margin-left:.35rem;font-family:'Space Mono',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:.25rem .65rem;transition:all .2s"
+        style="margin-left:.35rem;font-family:'Geist',monospace;font-size:.65rem;cursor:pointer;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);padding:.25rem .65rem;transition:all .2s"
         onmouseover="this.style.borderColor='#47ffe8';this.style.color='#47ffe8'"
         onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">🔗 Partager</button>
     </div>
@@ -356,16 +356,6 @@
           <button class="ms-toggle incl" onclick="toggleOpt('special','structure','incl')">+</button>
           <button class="ms-toggle excl" onclick="toggleOpt('special','structure','excl')">−</button>
         </div>
-        <div class="ms-option" id="opt-special-no_structure">
-          <span class="ms-option-label">🚫 Hors structure</span>
-          <button class="ms-toggle incl" onclick="toggleOpt('special','no_structure','incl')">+</button>
-          <button class="ms-toggle excl" onclick="toggleOpt('special','no_structure','excl')">−</button>
-        </div>
-        <div class="ms-option" id="opt-special-treetop">
-          <span class="ms-option-label">🌲 Treetop (cime d'arbre)</span>
-          <button class="ms-toggle incl" onclick="toggleOpt('special','treetop','incl')">+</button>
-          <button class="ms-toggle excl" onclick="toggleOpt('special','treetop','excl')">−</button>
-        </div>
       </div>
     </div>
   </div>
@@ -582,7 +572,7 @@
           <button class="ms-toggle excl" onclick="toggleOpt('ev','spd','excl')">−</button>
         </div>
         <div class="ms-option" id="opt-ev-spe">
-          <span class="ms-option-label" style="color:#e8ff47">⚡ Vitesse</span>
+          <span class="ms-option-label" style="color:#C9A24B">⚡ Vitesse</span>
           <button class="ms-toggle incl" onclick="toggleOpt('ev','spe','incl')">+</button>
           <button class="ms-toggle excl" onclick="toggleOpt('ev','spe','excl')">−</button>
         </div>
@@ -722,10 +712,10 @@
     </div>
     <div style="display:flex;gap:0.4rem;margin-top:0.2rem;">
       <input type="number" id="y-min-input" value="-64" min="-64" max="320" step="1"
-        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Geist',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
         oninput="syncYFromInput()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       <input type="number" id="y-max-input" value="320" min="-64" max="320" step="1"
-        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Geist',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
         oninput="syncYFromInput()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
     </div>
     <button id="y-reset" onclick="resetYFilter()">Réinitialiser Y</button>
@@ -739,10 +729,10 @@
     </div>
     <div style="display:flex;gap:0.4rem;margin-top:0.2rem;">
       <input type="number" id="height-min-input" value="0" min="0" max="10" step="0.01"
-        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Geist',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
         oninput="syncHeightFromInput()" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'">
       <input type="number" id="height-max-input" value="10" min="0" max="10" step="0.01"
-        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
+        style="width:50%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'Geist',monospace;font-size:0.72rem;padding:0.25rem 0.4rem;outline:none;"
         oninput="syncHeightFromInput()" onfocus="this.style.borderColor='var(--accent2)'" onblur="this.style.borderColor='var(--border)'">
     </div>
     <button id="height-reset" onclick="resetHeightFilter()">Réinitialiser</button>

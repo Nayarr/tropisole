@@ -9,7 +9,7 @@ const BUCKET_CLASS = {
 };
 const EV_COLORS = {
   hp: '#ff6b81', atk: '#ffa07a', def: '#74b9ff',
-  spa: '#a29bfe', spd: '#55efc4', spe: '#e8ff47',
+  spa: '#a29bfe', spd: '#55efc4', spe: '#C9A24B',
 };
 const EV_LABELS = {
   hp: 'PV', atk: 'Atk', def: 'Déf', spa: 'A.S', spd: 'D.S', spe: 'Vit',
@@ -500,7 +500,7 @@ function render() {
         </td>
         <td style="white-space:nowrap;width:1%;vertical-align:middle;padding-left:3px;padding-right:3px">
           ${(p.types||[]).length
-            ? `<div class="type-badges">${(p.types||[]).map(t=>`<span class="type-badge" style="background:${TYPE_COLORS[t]||'#6a6a88'}">${t}</span>`).join('')}</div>`
+            ? `<div class="type-badges">${(p.types||[]).map(t=>`<span class="type-badge" style="background:${TYPE_COLORS[t]||'#8a8a8a'}">${t}</span>`).join('')}</div>`
             : '<span style="color:var(--muted);font-size:0.7rem">—</span>'}
         </td>
         <td><span class="badge ${bClass}">${bLabel}</span></td>
@@ -586,7 +586,7 @@ setTimeout(() => {
 
   const container = document.getElementById('structure-options-list');
   if (allStructures.size === 0) {
-    container.innerHTML = '<div style="padding:0.6rem 0.75rem;font-family:\'Space Mono\',monospace;font-size:0.72rem;color:var(--muted)">Aucune structure dans ces données</div>';
+    container.innerHTML = '<div style="padding:0.6rem 0.75rem;font-family:\'Geist\',monospace;font-size:0.72rem;color:var(--muted)">Aucune structure dans ces données</div>';
     return;
   }
 
@@ -640,7 +640,7 @@ setTimeout(() => {
 
   const container = document.getElementById('egg-group-options-list');
   if (presentGroups.size === 0) {
-    container.innerHTML = '<div style="padding:0.6rem 0.75rem;font-family:\'Space Mono\',monospace;font-size:0.72rem;color:var(--muted)">Aucun groupe d\'œuf dans ces données</div>';
+    container.innerHTML = '<div style="padding:0.6rem 0.75rem;font-family:\'Geist\',monospace;font-size:0.72rem;color:var(--muted)">Aucun groupe d\'œuf dans ces données</div>';
     return;
   }
 
@@ -1090,7 +1090,7 @@ function showBiomeToast(msg, ok = true) {
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'biome-toast';
-    toast.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(3rem);background:#16161f;border:1px solid #2a2a3a;border-radius:8px;padding:.7rem 1.4rem;font-family:Space Mono,monospace;font-size:.78rem;color:#e8e8f0;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none';
+    toast.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(3rem);background:#0f0f0f;border:1px solid #252525;border-radius:8px;padding:.7rem 1.4rem;font-family:Geist,monospace;font-size:.78rem;color:#e7e7e7;z-index:9999;transition:transform .3s,opacity .3s;opacity:0;pointer-events:none';
     document.body.appendChild(toast);
   }
   toast.textContent = msg;
@@ -1105,7 +1105,10 @@ function showBiomeToast(msg, ok = true) {
 }
 
 // ── bouton scroll-top ──
-const _scrollBtn = document.getElementById('scroll-top-btn');
+// Le script est chargé avant l'élément bouton dans le HTML : on attend le DOM.
+function _initScrollTop() {
+  const _scrollBtn = document.getElementById('scroll-top-btn');
+  if (!_scrollBtn) return;
   window.addEventListener('scroll', () => {
     _scrollBtn.style.display = window.scrollY > 400 ? 'flex' : 'none';
     _scrollBtn.style.alignItems = 'center';
@@ -1113,3 +1116,9 @@ const _scrollBtn = document.getElementById('scroll-top-btn');
   }, { passive: true });
   _scrollBtn.addEventListener('mouseover', () => { _scrollBtn.style.borderColor='var(--accent)'; _scrollBtn.style.color='var(--accent)'; });
   _scrollBtn.addEventListener('mouseout',  () => { _scrollBtn.style.borderColor='var(--border)'; _scrollBtn.style.color='var(--muted)'; });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _initScrollTop);
+} else {
+  _initScrollTop();
+}

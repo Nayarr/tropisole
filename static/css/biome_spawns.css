@@ -1,18 +1,18 @@
 :root {
-      --bg: #0a0a0f;
-      --surface: #111118;
-      --card: #16161f;
-      --border: #2a2a3a;
-      --accent: #e8ff47;
+      --bg: #0a0a0a;
+      --surface: #0e0e0e;
+      --card: #0f0f0f;
+      --border: #252525;
+      --accent: #C9A24B;
       --accent2: #47ffe8;
-      --text: #e8e8f0;
-      --muted: #6a6a88;
+      --text: #e7e7e7;
+      --muted: #8a8a8a;
       --hp:  #ff6b81;
       --atk: #ffa07a;
       --def: #74b9ff;
       --spa: #a29bfe;
       --spd: #55efc4;
-      --spe: #e8ff47;
+      --spe: #C9A24B;
       --common: #74b9ff;
       --uncommon: #55efc4;
       --rare: #fd79a8;
@@ -25,7 +25,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Syne', sans-serif;
+      font-family: 'Geist', sans-serif;
       min-height: 100vh;
     }
 
@@ -33,10 +33,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image:
-        linear-gradient(var(--border) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 40px 40px;
+      
       opacity: 0.2;
       pointer-events: none;
       z-index: 0;
@@ -62,7 +59,7 @@
       gap: 0.5rem;
       color: var(--muted);
       text-decoration: none;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.8rem;
       letter-spacing: 0.05em;
       transition: color 0.15s;
@@ -85,7 +82,7 @@
     }
 
     .hero-label {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.7rem;
       color: var(--muted);
       letter-spacing: 0.15em;
@@ -123,7 +120,7 @@
     }
 
     .biome-expand-tag {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.65rem;
       color: var(--accent2);
       text-transform: uppercase;
@@ -138,7 +135,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
@@ -166,7 +163,7 @@
     }
 
     .tags-via-label {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.58rem;
       color: var(--muted);
       text-transform: uppercase;
@@ -175,11 +172,11 @@
     }
 
     .tags-via-chip {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       color: var(--accent);
-      background: rgba(232,255,71,0.07);
-      border: 1px solid rgba(232,255,71,0.2);
+      background: rgba(201,162,75,0.07);
+      border: 1px solid rgba(201,162,75,0.2);
       border-radius: 4px;
       padding: 0.15rem 0.5rem;
     }
@@ -187,8 +184,8 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      background: rgba(232,255,71,0.06);
-      border: 1px solid rgba(232,255,71,0.15);
+      background: rgba(201,162,75,0.06);
+      border: 1px solid rgba(201,162,75,0.15);
       border-radius: 8px;
       padding: 0.8rem 1.2rem;
       margin-top: 0.5rem;
@@ -196,7 +193,7 @@
     }
 
     .source-info .src-label {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.65rem;
       color: var(--muted);
       text-transform: uppercase;
@@ -236,7 +233,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text);
-      font-family: 'Syne', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 0.85rem;
       padding: 0.55rem 0.85rem;
       cursor: pointer;
@@ -254,9 +251,9 @@
       align-items: center;
       justify-content: center;
       background: var(--accent2);
-      color: #0a0a0f;
+      color: #0a0a0a;
       border-radius: 10px;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       font-weight: 700;
       min-width: 16px;
@@ -289,14 +286,14 @@
       background: rgba(255,255,255,0.03);
     }
     .ms-dropdown-header span {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.1em;
     }
     .ms-clear-btn {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       color: var(--muted);
       background: none;
@@ -316,7 +313,7 @@
       border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .ms-legend span {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.55rem;
       color: var(--muted);
       text-transform: uppercase;
@@ -357,7 +354,7 @@
       align-items: center;
       justify-content: center;
       transition: all 0.15s;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
     }
 
     /* Include toggle */
@@ -394,7 +391,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text);
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.85rem;
       padding: 0.55rem 1rem 0.55rem 2.4rem;
       outline: none;
@@ -417,7 +414,7 @@
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text);
-      font-family: 'Syne', sans-serif;
+      font-family: 'Geist', sans-serif;
       font-size: 0.85rem;
       padding: 0.55rem 2rem 0.55rem 0.85rem;
       outline: none;
@@ -431,7 +428,7 @@
     select:focus { border-color: var(--accent2); }
 
     .results-count {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.72rem;
       color: var(--muted);
       margin-left: auto;
@@ -451,9 +448,9 @@
     .y-filter-label {
       font-size: 0.75rem;
       color: var(--muted);
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
     }
-    .y-filter-label span { color: #e8ff47; font-weight: 700; }
+    .y-filter-label span { color: #C9A24B; font-weight: 700; }
     .y-slider-row {
       display: flex;
       flex-direction: column;
@@ -461,7 +458,7 @@
     }
     .y-slider-row input[type=range] {
       width: 100%;
-      accent-color: #e8ff47;
+      accent-color: #C9A24B;
       height: 4px;
     }
     #y-reset {
@@ -487,7 +484,7 @@
     .height-filter-label {
       font-size: 0.75rem;
       color: var(--muted);
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
     }
     .height-filter-label span { color: #47ffe8; font-weight: 700; }
     .height-slider-row {
@@ -511,7 +508,7 @@
     }
     #height-reset:hover { background: rgba(255,255,255,0.06); color: var(--text); }
     .td-height {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.72rem;
       color: #47ffe8;
       white-space: nowrap;
@@ -550,7 +547,7 @@
     .cond-tag.slime { border-color: #00b89444; background: #27ae6015; }
     .cond-tag.dark { border-color: #6c5ce744; background: #6c5ce715; }
     .cond-tag.height { border-color: #fdcb6e44; background: #fdcb6e15; }
-    .cond-tag.y_range { border-color: #e8ff4744; background: #e8ff4710; }
+    .cond-tag.y_range { border-color: #C9A24B44; background: #C9A24B10; }
     .cond-tags-cell { display: inline-flex; flex-direction: column; gap: 3px; align-items: flex-start; }
 
     /* Anti-conditions : rose/rouge */
@@ -562,7 +559,7 @@
 
     /* Types de conditions spécifiques */
     .cond-tag.sky         { border-color: #fdcb6e44; background: #fdcb6e15; color: #fdcb6e; }
-    .cond-tag.no_sky      { border-color: #6a6a8844; background: #6a6a8815; color: var(--muted); }
+    .cond-tag.no_sky      { border-color: #8a8a8a44; background: #8a8a8a15; color: var(--muted); }
     .cond-tag.bright      { border-color: #fdcb6e44; background: #fdcb6e15; color: #fdcb6e; }
     .cond-tag.light       { border-color: #a29bfe44; background: #a29bfe15; color: #a29bfe; }
     .cond-tag.moon        { border-color: #a29bfe44; background: #a29bfe15; color: #a29bfe; }
@@ -590,7 +587,7 @@
       display: flex;
       align-items: center;
       gap: 0.35rem;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       color: var(--muted);
       text-transform: uppercase;
@@ -626,7 +623,7 @@
     }
 
     thead th {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -654,7 +651,7 @@
       to { opacity: 1; transform: translateX(0); }
     }
 
-    tbody tr:hover { background: rgba(232,255,71,0.03); }
+    tbody tr:hover { background: rgba(201,162,75,0.03); }
 
     td {
       padding: 0.45rem 0.5rem;
@@ -662,7 +659,7 @@
     }
 
     .td-num {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.7rem;
       color: var(--muted);
       white-space: nowrap;
@@ -684,14 +681,14 @@
       object-fit: contain;
       flex-shrink: 0;
       opacity: 0.92;
-      filter: drop-shadow(0 0 4px rgba(232,255,71,0.15));
+      filter: drop-shadow(0 0 4px rgba(201,162,75,0.15));
       cursor: pointer;
       border-radius: 4px;
       transition: transform .15s, filter .15s, outline .15s;
     }
     .row-sprite:hover {
       transform: scale(1.25);
-      filter: drop-shadow(0 0 6px rgba(232,255,71,0.5));
+      filter: drop-shadow(0 0 6px rgba(201,162,75,0.5));
     }
     .row-sprite.fav-selected {
       outline: 2px solid #f9ca24;
@@ -704,9 +701,9 @@
       display: none;
       position: fixed; bottom: 1.5rem; left: 50%;
       transform: translateX(-50%);
-      background: #16161f; border: 1px solid rgba(249,202,36,.4);
+      background: #0f0f0f; border: 1px solid rgba(249,202,36,.4);
       border-radius: 10px; padding: .65rem 1.2rem;
-      font-family: 'Space Mono', monospace; font-size: .72rem; color: #f9ca24;
+      font-family: 'Geist', monospace; font-size: .72rem; color: #f9ca24;
       z-index: 999; gap: .7rem; align-items: center;
       box-shadow: 0 4px 24px rgba(0,0,0,.5);
     }
@@ -715,8 +712,8 @@
       width: 28px; height: 28px; image-rendering: pixelated;
     }
     #fav-selection-bar button {
-      background: #f9ca24; color: #0a0a0f; border: none; border-radius: 6px;
-      font-family: 'Space Mono', monospace; font-size: .68rem; font-weight: 700;
+      background: #f9ca24; color: #0a0a0a; border: none; border-radius: 6px;
+      font-family: 'Geist', monospace; font-size: .68rem; font-weight: 700;
       padding: .3rem .75rem; cursor: pointer;
     }
     #fav-selection-bar .cancel-sel {
@@ -724,7 +721,7 @@
     }
 
     .badge {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.58rem;
       font-weight: 700;
       padding: 0.2rem 0.5rem;
@@ -742,7 +739,7 @@
     .badge-grey      { background: rgba(106,106,136,0.15); color: var(--muted);    border: 1px solid rgba(106,106,136,0.3); }
 
     .ev-total {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 1rem;
       font-weight: 700;
       color: var(--accent);
@@ -780,7 +777,7 @@
     }
 
     .ev-bar-num {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.55rem;
       color: var(--muted);
     }
@@ -794,14 +791,14 @@
     .ev-str.none { color: var(--muted); opacity: 0.4; font-size: 0.75rem; }
 
     .td-level {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.72rem;
       color: var(--muted);
       white-space: nowrap;
     }
 
     .td-poids {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.68rem;
       color: var(--accent2);
       white-space: nowrap;
@@ -815,13 +812,13 @@
     }
 
     .rank-num {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.65rem;
       color: var(--muted);
     }
 
     /* HIGHLIGHT current pokemon */
-    tr.is-source { background: rgba(232,255,71,0.04); }
+    tr.is-source { background: rgba(201,162,75,0.04); }
     tr.is-source td { border-left: 2px solid var(--accent); }
     tr.is-source:first-child td:first-child { border-radius: 0; }
 
@@ -841,7 +838,7 @@
     }
 
     .lum-badge {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.58rem;
       padding: 0.18rem 0.45rem;
       border-radius: 4px;
@@ -852,7 +849,7 @@
       gap: 0.2rem;
     }
 
-    .lum-sky-yes  { background: rgba(232,255,71,0.08);  color: #e8ff47; border-color: rgba(232,255,71,0.25); }
+    .lum-sky-yes  { background: rgba(201,162,75,0.08);  color: #C9A24B; border-color: rgba(201,162,75,0.25); }
     .lum-sky-no   { background: rgba(106,106,136,0.12); color: var(--muted); border-color: rgba(106,106,136,0.25); }
     .lum-bright   { background: rgba(253,203,110,0.1);  color: #fdcb6e; border-color: rgba(253,203,110,0.3); }
     .lum-dark     { background: rgba(99,110,255,0.1);   color: #8e9bff; border-color: rgba(99,110,255,0.25); }
@@ -866,7 +863,7 @@
     }
 
     .badge-contexte {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
@@ -884,7 +881,7 @@
     .badge-ctx-seafloor  { background: rgba(253,121,168,0.1); color: #fd79a8; border-color: rgba(253,121,168,0.25); }
 
     .badge-time, .badge-weather {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.6rem;
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
@@ -894,13 +891,13 @@
       align-items: center;
       gap: 0.25rem;
     }
-    .badge-time    { background: rgba(232,255,71,0.08); color: #e8ff47; border-color: rgba(232,255,71,0.2); }
+    .badge-time    { background: rgba(201,162,75,0.08); color: #C9A24B; border-color: rgba(201,162,75,0.2); }
     .badge-weather { background: rgba(116,185,255,0.08); color: #74b9ff; border-color: rgba(116,185,255,0.2); }
     .td-time, .td-weather { white-space: nowrap; }
 
     /* CANSEESKY BADGE */
-    .badge-sky-yes  { background: rgba(232,255,71,0.09);  color: #e8ff47; border: 1px solid rgba(232,255,71,0.28); font-family:'Space Mono',monospace; font-size:0.6rem; padding:0.2rem 0.5rem; border-radius:4px; white-space:nowrap; }
-    .badge-sky-no   { background: rgba(106,106,136,0.13); color: var(--muted); border: 1px solid rgba(106,106,136,0.28); font-family:'Space Mono',monospace; font-size:0.6rem; padding:0.2rem 0.5rem; border-radius:4px; white-space:nowrap; }
+    .badge-sky-yes  { background: rgba(201,162,75,0.09);  color: #C9A24B; border: 1px solid rgba(201,162,75,0.28); font-family:'Geist',monospace; font-size:0.6rem; padding:0.2rem 0.5rem; border-radius:4px; white-space:nowrap; }
+    .badge-sky-no   { background: rgba(106,106,136,0.13); color: var(--muted); border: 1px solid rgba(106,106,136,0.28); font-family:'Geist',monospace; font-size:0.6rem; padding:0.2rem 0.5rem; border-radius:4px; white-space:nowrap; }
     .badge-sky-any  { color: var(--muted); font-size:0.7rem; }
 
     /* PRESET BADGES */
@@ -913,7 +910,7 @@
     .badge-forme-reg {
       display: inline-flex;
       align-items: center;
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.58rem;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -931,7 +928,7 @@
       font-style: italic;
     }
     .badge-preset {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.55rem;
       padding: 0.15rem 0.45rem;
       border-radius: 4px;
@@ -951,7 +948,7 @@
     /* TYPE BADGES dans la table */
     .type-badges { display: flex; gap: 2px; flex-wrap: nowrap; }
     .type-badge {
-      font-family: 'Space Mono', monospace;
+      font-family: 'Geist', monospace;
       font-size: 0.55rem;
       font-weight: 700;
       padding: 0.1rem 0.28rem;
@@ -971,7 +968,7 @@
       position: fixed; z-index: 9999;
       background: #1e1e2e; border: 1px solid #3a3a5a;
       border-radius: 8px; padding: .65rem .9rem;
-      font-family: 'Space Mono', monospace; font-size: .65rem;
+      font-family: 'Geist', monospace; font-size: .65rem;
       color: #b8b8cc; line-height: 1.7; max-width: 300px;
       box-shadow: 0 4px 24px rgba(0,0,0,.6);
       pointer-events: none;

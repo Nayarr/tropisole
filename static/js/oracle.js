@@ -43,7 +43,7 @@ searchInput.addEventListener('input', () => {
     const FORME_COLORS = { Alola:'#00b4d8', Galar:'#9b5de5', Hisui:'#e9c46a', Paldea:'#f4a261', Valencia:'#2dc653' };
     const formeMatch = p.name.match(/\(([^)]+)\)$/);
     const formeBadge = formeMatch
-      ? `<span style="font-size:.58rem;padding:.1rem .4rem;border-radius:10px;background:${(FORME_COLORS[formeMatch[1]]||'#6a6a88')}22;border:1px solid ${(FORME_COLORS[formeMatch[1]]||'#6a6a88')}55;color:${(FORME_COLORS[formeMatch[1]]||'#6a6a88')}">${formeMatch[1]}</span>`
+      ? `<span style="font-size:.58rem;padding:.1rem .4rem;border-radius:10px;background:${(FORME_COLORS[formeMatch[1]]||'#8a8a8a')}22;border:1px solid ${(FORME_COLORS[formeMatch[1]]||'#8a8a8a')}55;color:${(FORME_COLORS[formeMatch[1]]||'#8a8a8a')}">${formeMatch[1]}</span>`
       : '';
     const baseName = formeMatch ? p.name.replace(/\s*\([^)]+\)$/, '') : p.name;
     return `<div class="ac-item" data-num="${p.numero}" data-name="${p.name}">
@@ -222,7 +222,8 @@ function buildBiomeUrl(r) {
     // covered = bloquer ciel absent → exclure les spawns no_sky
     p.set('excl_special', combo.block_sky === 'open' ? 'sky' : 'no_sky');
   }
-  if (combo.require_preset) p.set('incl_special', combo.require_preset);
+  // require_preset (treetop/water/lava) → déroulé Preset (et non Conditions, pour éviter le doublon)
+  if (combo.require_preset) p.set('incl_preset', combo.require_preset);
   // Preset filter : incl_preset=none ou excl_preset=treetop,foliage,...
   if (combo.incl_preset) p.set('incl_preset', combo.incl_preset);
   if (combo.excl_preset_list?.length) p.set('excl_preset', combo.excl_preset_list.join(','));
@@ -265,7 +266,7 @@ function renderCard(r, i) {
   const isGold  = rawPct === 100 && r.competitors_names.length === 0 && fillerNames.length === 0;
   const pctClass = isGold ? 'pgold' : rawPct === 100 ? 'p100' : onlyUltra ? 'ponly' : rawPct >= 75 ? 'p75' : rawPct >= 50 ? 'p50' : 'plow';
   const cardClass = isGold ? 'gold' : rawPct === 100 ? 'perfect' : onlyUltra ? 'great' : rawPct >= 75 ? 'great' : '';
-  const barColor  = isGold ? '#ffc439' : rawPct === 100 ? '#55efc4' : onlyUltra ? '#a29bfe' : rawPct >= 75 ? '#e8ff47' : rawPct >= 50 ? '#ffab40' : '#6a6a88';
+  const barColor  = isGold ? '#ffc439' : rawPct === 100 ? '#55efc4' : onlyUltra ? '#a29bfe' : rawPct >= 75 ? '#C9A24B' : rawPct >= 50 ? '#ffab40' : '#8a8a8a';
 
   const combo = r.combo || {};
 
@@ -306,14 +307,14 @@ function renderCard(r, i) {
     }`;
 
 
-  const BUCKET_COLORS = { 'ultra-rare': '#a29bfe', 'rare': '#e8ff47', 'uncommon': '#55efc4', 'common': '#6a6a88' };
+  const BUCKET_COLORS = { 'ultra-rare': '#a29bfe', 'rare': '#C9A24B', 'uncommon': '#55efc4', 'common': '#8a8a8a' };
   const compHtml = r.competitors_names.length === 0
     ? `<span class="no-competitors">✅ Isolation parfaite avec la chaîne</span>`
     : `<div class="competitors-wrap">
         <span class="filter-label">Concurrents</span>
         ${r.competitors_names.slice(0, 8).map((n, i) => {
           const bkt = (r.competitors_buckets || [])[i];
-          const col = BUCKET_COLORS[bkt] || '#6a6a88';
+          const col = BUCKET_COLORS[bkt] || '#8a8a8a';
           return `<span class="competitor-chip" style="border-color:${col}44;color:${col}">${n}</span>`;
         }).join('')}
         ${r.competitors_names.length > 8 ? `<span class="competitor-chip">+${r.competitors_names.length - 8}</span>` : ''}
@@ -325,8 +326,8 @@ function renderCard(r, i) {
   const modColor = {
     "Vanilla Minecraft": "#74b9ff", "Terralith": "#55efc4",
     "Wythers\' Overhauled Overworld": "#fd79a8", "Oh The Biomes We\'ve Gone": "#6ab04c",
-    "BetterNether": "#ff7675", "Cobblemon": "#e8ff47",
-  }[r.mod] || "#6a6a88";
+    "BetterNether": "#ff7675", "Cobblemon": "#C9A24B",
+  }[r.mod] || "#8a8a8a";
 
   const reductPct = totalBase > 0 ? ((totalBase - totalFilt) / totalBase * 100).toFixed(1) : '0.0';
 
@@ -349,7 +350,7 @@ function renderCard(r, i) {
              onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='inherit'">
             ${r.biome_name || r.biome_fr} ↗
           </a>
-          <div style="font-family:'Space Mono',monospace;font-size:.6rem;margin-top:2px;color:${modColor}">${r.mod || ""}</div>
+          <div style="font-family:'Geist',monospace;font-size:.6rem;margin-top:2px;color:${modColor}">${r.mod || ""}</div>
         </div>
         <div style="text-align:right">
           <span class="result-pct ${pctClass}">−${reductPct}%</span>
