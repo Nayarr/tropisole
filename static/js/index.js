@@ -4,6 +4,7 @@ let currentPage = 1;
   let totalPages = 1;
 
   let activeType = '';
+  let activeEv = '';
 
   const BUCKET_CLASS = {
     'filler': 'badge-filler',
@@ -25,6 +26,7 @@ let currentPage = 1;
       q:      document.getElementById('search').value,
       bucket: document.getElementById('filter-bucket').value,
       type:   activeType,
+      ev:     activeEv,
       sort:   document.getElementById('sort').value,
       order: currentOrder,
       page: currentPage,
@@ -134,6 +136,15 @@ let currentPage = 1;
     activeType = (activeType === t) ? '' : t;
     document.querySelectorAll('.type-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.type === activeType);
+    });
+    resetPage();
+    loadPokemon();
+  }
+
+  function toggleEv(s) {
+    activeEv = (activeEv === s) ? '' : s;
+    document.querySelectorAll('.ev-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.ev === activeEv);
     });
     resetPage();
     loadPokemon();

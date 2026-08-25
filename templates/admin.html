@@ -124,6 +124,14 @@
               title="{{ '🔒 Device enregistré' if u.device_id else '⬜ Pas de device' }}"
             >{{ '🔒 Reset device' if u.device_id else '⬜ Pas de device' }}</button>
           </form>
+          <form method="POST" action="/admin/toggle-oracle" style="display:inline">
+            <input type="hidden" name="uid" value="{{ u.firebase_uid }}" />
+            <button type="submit"
+              style="font-family:'Geist',monospace;font-size:.7rem;font-weight:700;padding:.4rem .7rem;border-radius:8px;cursor:pointer;transition:.15s;
+                     {% if u.oracle_access %}background:var(--accent);color:#0a0a0a;border:1px solid var(--accent);{% else %}background:transparent;color:var(--muted);border:1px solid var(--border);{% endif %}"
+              title="{{ 'Accès Oracle activé — cliquer pour retirer' if u.oracle_access else 'Pas d’accès Oracle — cliquer pour donner' }}"
+            >{{ '🔮 Oracle ✓' if u.oracle_access else '🔮 Oracle ✕' }}</button>
+          </form>
           <button class="btn-refuse" onclick="confirmRefuse('{{ u.firebase_uid }}', '{{ u.email or u.firebase_uid }}')">✕ Révoquer</button>
         </div>
       </div>

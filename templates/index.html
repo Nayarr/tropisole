@@ -24,6 +24,7 @@
 <span class="num" id="stat-total-spawns">—</span>
 <span class="label">Spawns</span>
 </div>
+{% if oracle_access %}<a class="btn-patchnotes" href="/oracle" title="Oracle d'isolation" style="border-color:var(--accent);color:var(--accent)">🔮 Oracle</a>{% endif %}
 <a class="btn-patchnotes" href="/favorites" title="Mes signets">⭐ Signets</a>
 <a class="btn-patchnotes" href="/patchnotes" title="Patch Notes">📋 Patch Notes</a>
 <a class="btn-patchnotes" href="/bugreport" title="Signaler un bug" style="color:var(--muted)">🐛 Bug</a>
@@ -81,6 +82,12 @@
 <span class="type-filter-label">Type</span>
     {% for t in all_types %}
     <button class="type-btn" data-type="{{ t }}" onclick="toggleType('{{ t }}')" style="background:{{ type_colors[t] }}22;border-color:{{ type_colors[t] }}66;color:{{ type_colors[t] }}">{{ t }}</button>
+    {% endfor %}
+  </div>
+<div class="type-filter-wrap ev-filter-wrap">
+<span class="type-filter-label">{{ 'EV yield' if lang == 'en' else 'EV' }}</span>
+    {% for code, fr, en in ev_stats %}
+    <button class="ev-btn" data-ev="{{ code }}" onclick="toggleEv('{{ code }}')">{{ en if lang == 'en' else fr }}</button>
     {% endfor %}
   </div>
 <div class="sort-group">

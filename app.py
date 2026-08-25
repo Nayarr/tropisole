@@ -29,6 +29,33 @@ DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cobbledex.db
 cred = credentials.Certificate(os.path.join(os.path.dirname(os.path.abspath(__file__)), "tropisole-e9cc2-firebase-adminsdk-fbsvc-f4fb28a221.json"))
 firebase_admin.initialize_app(cred)
 
+
+def _ensure_schema():
+    """Migrations légères idempotentes au démarrage."""
+    conn = sqlite3.connect(DB_PATH)
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(users)")]
+    if "oracle_access" not in cols:
+        conn.execute("ALTER TABLE users ADD COLUMN oracle_access INTEGER DEFAULT 0")
+        conn.commit()
+    conn.close()
+
+_ensure_schema()
+
+
+def has_oracle_access():
+    """True si l'utilisateur courant a le rôle Oracle (les admins l'ont toujours)."""
+    if session.get('is_admin'):
+        return True
+    uid = session.get('user_id')
+    if not uid:
+        return False
+    conn = sqlite3.connect(DB_PATH)
+    row = conn.execute(
+        "SELECT oracle_access FROM users WHERE firebase_uid = ?", (uid,)
+    ).fetchone()
+    conn.close()
+    return bool(row and row[0])
+
 def generate_hardware_id(client_fingerprint=None):
     """
     Signature de l'appareil.
@@ -113,7 +140,7 @@ def pokemon_icon(filename):
 @app.before_request
 def security_check():
     public = ['/login', '/firebase-auth', '/logout', '/admin', '/admin/validate', '/admin/refuse',
-          '/admin/reset-device', '/admin/logout', '/admin/set-expiry',
+          '/admin/reset-device', '/admin/logout', '/admin/set-expiry', '/admin/toggle-oracle',
           '/admin/patchnote/add', '/admin/patchnote/delete', '/patchnotes',
           '/bugreport', '/bugreport/submit']
     if request.path.startswith('/static') or request.path.startswith('/set-lang') or request.path in public:
@@ -337,6 +364,7 @@ def inject_i18n():
         bucket_js={k: v for k, v in buckets.items() if k is not None},
         time_fr=(TIME_EN if lang == "en" else TIME_FR),
         weather_fr=(WEATHER_EN if lang == "en" else WEATHER_FR),
+        oracle_access=has_oracle_access(),
     )
 
 @app.route("/set-lang/<lang>")
@@ -766,13 +794,27 @@ def index():
                            bucket_fr=BUCKET_FR,
                            all_types=ALL_TYPES,
                            type_colors=TYPE_COLORS,
+                           ev_stats=EV_FILTER_STATS,
                            user_expires_at=user_expires_at)
+
+# Stats EV pour le filtre de la page d'accueil : (colonne, label FR, label EN)
+EV_FILTER_STATS = [
+    ("hp",  "PV",       "HP"),
+    ("atk", "Attaque",  "Attack"),
+    ("def", "Défense",  "Defense"),
+    ("spa", "Att. Spé", "Sp. Atk"),
+    ("spd", "Déf. Spé", "Sp. Def"),
+    ("spe", "Vitesse",  "Speed"),
+]
+EV_STAT_COLS = {c for c, _fr, _en in EV_FILTER_STATS}
+
 
 @app.route("/api/pokemon")
 def api_pokemon():
     search      = request.args.get("q", "").strip()
     bucket      = request.args.get("bucket", "")
     type_filter = request.args.get("type", "")
+    ev_filter   = request.args.get("ev", "")
     sort        = request.args.get("sort", "numero")
     order       = request.args.get("order", "asc")
     page        = int(request.args.get("page", 1))
@@ -791,6 +833,12 @@ def api_pokemon():
     if type_filter:
         where_clauses.append("numero IN (SELECT numero FROM pokemon_types WHERE type = ?)")
         params.append(type_filter)
+
+    # Filtre par EV lâchée : ne garde que les Pokémon qui donnent des EV dans la stat
+    # choisie. Colonne validée contre une liste blanche (aucune injection possible).
+    if ev_filter in EV_STAT_COLS:
+        where_clauses.append(
+            "numero IN (SELECT numero FROM pokemon_ev WHERE %s > 0)" % ev_filter)
 
     where_sql = ("WHERE " + " AND ".join(where_clauses)) if where_clauses else ""
 
@@ -1238,6 +1286,21 @@ def admin_reset_device():
     if uid:
         conn = sqlite3.connect(DB_PATH)
         conn.execute("UPDATE users SET device_id = '' WHERE firebase_uid = ?", (uid,))
+        conn.commit()
+        conn.close()
+    return redirect('/admin')
+
+
+@app.route('/admin/toggle-oracle', methods=['POST'])
+def admin_toggle_oracle():
+    if not session.get('is_admin'):
+        return redirect('/admin')
+    uid = request.form.get('uid')
+    if uid:
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute(
+            "UPDATE users SET oracle_access = 1 - COALESCE(oracle_access, 0) "
+            "WHERE firebase_uid = ?", (uid,))
         conn.commit()
         conn.close()
     return redirect('/admin')
@@ -2176,6 +2239,8 @@ def _oracle_best_combo(in_biome, chain, is_virtual_biome=False):
 
 @app.route('/oracle')
 def oracle():
+    if not has_oracle_access():
+        return render_template('oracle_denied.html'), 403
     conn = get_db()
     rows = conn.execute(
         "SELECT DISTINCT numero, pokemon, forme FROM pokemon_spawns ORDER BY numero"
@@ -2196,6 +2261,8 @@ def oracle():
 
 @app.route('/api/oracle/stream')
 def api_oracle_stream():
+    if not has_oracle_access():
+        return jsonify({'error': 'Accès Oracle non autorisé'}), 403
     numero = request.args.get('numero', type=int)
     focus  = request.args.get('focus', '0') == '1'
     if not numero:

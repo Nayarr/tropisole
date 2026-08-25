@@ -233,6 +233,27 @@
     .type-btn:hover  { opacity: 0.85; transform: translateY(-1px); }
     .type-btn.active { opacity: 1;    transform: translateY(-1px); box-shadow: 0 0 8px rgba(255,255,255,0.15); }
 
+    .ev-btn {
+      font-family: 'Geist', monospace;
+      font-size: 0.62rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s, border-color 0.15s, color 0.15s;
+    }
+    .ev-btn:hover  { color: var(--text); border-color: var(--accent); transform: translateY(-1px); }
+    .ev-btn.active {
+      color: var(--bg);
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 0 8px rgba(201,162,75,0.35);
+    }
+
     .poke-types { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
     .type-badge {
       font-family: 'Geist', monospace;

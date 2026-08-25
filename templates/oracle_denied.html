@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tropisole — Oracle</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#0a0a0a; --card:#0f0f0f; --border:#252525; --accent:#C9A24B; --text:#e7e7e7; --muted:#8a8a8a; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); font-family:'Geist','Segoe UI',sans-serif;
+           min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem; }
+    .box { max-width:520px; text-align:center; background:var(--card); border:1px solid var(--border);
+           border-radius:16px; padding:2.6rem 2.2rem; }
+    .lock { font-size:2.6rem; margin-bottom:1rem; }
+    h1 { font-size:1.35rem; font-weight:800; letter-spacing:-.01em; margin-bottom:.6rem; }
+    h1 .g { color:var(--accent); }
+    p { color:var(--muted); font-size:.92rem; line-height:1.6; margin-bottom:1.6rem; }
+    a.home { display:inline-block; font-family:'Geist Mono',monospace; font-size:.8rem; font-weight:600;
+             text-decoration:none; color:#0a0a0a; background:var(--accent); border-radius:9px;
+             padding:.6rem 1.1rem; transition:.15s; }
+    a.home:hover { filter:brightness(1.08); transform:translateY(-1px); }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="lock">🔮🔒</div>
+    <h1>L'<span class="g">Oracle</span> est réservé</h1>
+    <p>Cet outil est accessible uniquement aux membres à qui l'accès a été accordé.
+       Contacte l'administrateur de Tropisole si tu penses devoir y avoir accès.</p>
+    <a class="home" href="/">← Retour à l'accueil</a>
+  </div>
+</body>
+</html>
