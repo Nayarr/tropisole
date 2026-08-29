@@ -371,3 +371,16 @@ function renderCard(r, i) {
       </div>
     </div>`;
 }
+
+// ── Auto-lancement depuis l'URL (/oracle?numero=X&focus=1) ──
+// Utilisé par le Classement d'isolation : clic sur un Pokémon → relance la simu.
+(function autorunFromURL() {
+  const p = new URLSearchParams(location.search);
+  const num = parseInt(p.get('numero'), 10);
+  if (!num) return;
+  const entry = POKEMON_LIST.find(x => x.numero === num);
+  if (!entry) return;
+  if (p.get('focus') === '1' && !focusMode) toggleFocus();
+  selectPokemon(num, entry.name);
+  analyze();
+})();

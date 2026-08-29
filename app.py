@@ -2259,6 +2259,36 @@ def oracle():
     return render_template('oracle.html', pokemon_list=pokemon_list)
 
 
+CTX_LABELS_FR = {
+    'grounded': '🌿 Sol', 'submerged': "🌊 Sous l'eau", 'surface': '💧 Surface',
+    'seafloor': '🪨 Fond marin', 'fishing': '🎣 Pêche',
+}
+
+
+@app.route('/oracle/ranking')
+def oracle_ranking():
+    if not has_oracle_access():
+        return render_template('oracle_denied.html'), 403
+    conn = get_db()
+    rows = [dict(r) for r in conn.execute(
+        "SELECT * FROM oracle_ranking "
+        "ORDER BY (best_pct IS NULL), best_pct DESC, competitors ASC, only_ultra ASC, numero ASC"
+    ).fetchall()]
+    conn.close()
+    for r in rows:
+        r['sprite'] = get_sprite(r['numero'])
+        r['types']  = get_types(r['numero'])
+        try:
+            r['filters_list'] = json.loads(r['filters']) if r['filters'] else []
+        except Exception:
+            r['filters_list'] = []
+    computed_at = rows[0]['computed_at'] if rows else None
+    return render_template('oracle_ranking.html', rows=rows,
+                           type_colors=TYPE_COLORS, mod_colors=MOD_COLORS,
+                           ctx_labels=CTX_LABELS_FR,
+                           ev_labels=EV_LABELS_ORACLE, computed_at=computed_at)
+
+
 @app.route('/api/oracle/stream')
 def api_oracle_stream():
     if not has_oracle_access():

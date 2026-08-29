@@ -1,0 +1,135 @@
+:root {
+  --bg:#0a0a0a; --card:#0f0f0f; --surface:#0e0e0e; --border:#252525;
+  --accent:#C9A24B; --accent-2:#D9BC6A; --accent2:#47ffe8;
+  --text:#e7e7e7; --muted:#8a8a8a;
+  --green:#55efc4; --orange:#ffab40; --red:#ff4757; --pink:#fd79a8;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:'Geist','Segoe UI',sans-serif; min-height:100vh; }
+
+/* ── HEADER (identique à la page Oracle) ── */
+header {
+  position:relative; z-index:10;
+  padding:1.5rem 2rem;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(201,162,75,.05) 0%, transparent 100%);
+  display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;
+}
+.logo { font-size:1.6rem; font-weight:800; color:var(--accent); letter-spacing:-.03em; }
+.logo-sub {
+  font-family:'Geist',monospace; font-size:.65rem; color:var(--muted);
+  letter-spacing:.15em; text-transform:uppercase; margin-top:.2rem;
+}
+.oracle-badge {
+  font-family:'Geist',monospace; font-size:.62rem; letter-spacing:.1em;
+  padding:.25rem .7rem; border-radius:20px; text-transform:uppercase;
+  background:rgba(71,255,232,.1); border:1px solid rgba(71,255,232,.3); color:var(--accent2);
+}
+.header-link {
+  font-family:'Geist',monospace; font-size:.75rem; text-decoration:none; color:var(--accent);
+  border:1px solid var(--accent); border-radius:8px; padding:.34rem .7rem; transition:.15s;
+}
+.header-link:hover { background:rgba(201,162,75,.1); }
+.header-link.muted { color:var(--muted); border-color:var(--border); }
+.header-link.muted:hover { color:var(--text); border-color:var(--muted); background:transparent; }
+header select {
+  background:var(--card); color:var(--text); border:1px solid var(--border);
+  border-radius:8px; padding:.34rem .6rem; font-family:inherit; font-size:.8rem; cursor:pointer; outline:none;
+}
+
+/* ── HERO (pleine largeur, comme la page biome) ── */
+.hero {
+  position:relative; z-index:5; padding:2.5rem 2rem 1.5rem; border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg, rgba(71,255,232,.04) 0%, transparent 60%);
+}
+.hero-label {
+  font-family:'Geist Mono',monospace; font-size:.7rem; color:var(--muted);
+  letter-spacing:.15em; text-transform:uppercase; margin-bottom:.7rem;
+}
+.hero-title { font-size:clamp(1.7rem,4vw,2.7rem); font-weight:800; letter-spacing:-.03em; line-height:1.1; }
+.hero-title span { color:var(--accent2); }
+.hero-sub { color:var(--muted); font-size:.92rem; line-height:1.55; margin-top:.9rem; max-width:840px; }
+.hero-sub strong { color:var(--text); font-weight:600; }
+.stamp { font-family:'Geist Mono',monospace; font-size:.75rem; opacity:.65; }
+
+main { max-width:1220px; margin:0 auto; padding:1.4rem 2rem 4rem; }
+
+/* ── Controls ── */
+.controls { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:1rem; }
+.controls input, .controls select {
+  background:var(--card); color:var(--text); border:1px solid var(--border);
+  border-radius:8px; padding:.55rem .75rem; font-family:inherit; font-size:.85rem; outline:none; transition:border-color .15s;
+}
+.controls input { flex:1; min-width:220px; }
+.controls input:focus, .controls select:focus { border-color:var(--accent2); }
+.count { font-family:'Geist Mono',monospace; font-size:.78rem; color:var(--muted); margin-left:auto; }
+
+/* ── Table ── */
+.table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:14px; background:var(--surface); }
+table { width:100%; border-collapse:collapse; font-size:.86rem; min-width:860px; }
+thead tr { background:rgba(255,255,255,.015); }
+thead th {
+  text-align:left; font-family:'Geist Mono',monospace; font-size:.66rem; text-transform:uppercase;
+  letter-spacing:.09em; color:var(--muted); padding:.85rem .9rem; border-bottom:1px solid var(--border);
+  white-space:nowrap; vertical-align:middle;
+}
+th.sortable { cursor:pointer; user-select:none; transition:color .12s; }
+th.sortable:hover { color:var(--text); }
+th.sortable.sorted { color:var(--accent); }
+tbody tr { border-bottom:1px solid #191919; cursor:pointer; transition:background .12s; }
+tbody tr:hover { background:rgba(201,162,75,.045); }
+tbody tr:last-child { border-bottom:none; }
+td { padding:.62rem .9rem; vertical-align:middle; }
+
+.c-rank { width:46px; color:var(--muted); font-family:'Geist Mono',monospace; font-size:.82rem; text-align:center; }
+.c-poke { min-width:230px; display:flex; align-items:center; gap:.65rem; }
+.sprite { width:42px; height:42px; image-rendering:pixelated; flex-shrink:0; filter:drop-shadow(0 2px 4px rgba(0,0,0,.4)); }
+.poke-id { display:flex; flex-direction:column; }
+.poke-name { font-weight:600; }
+.poke-num { font-family:'Geist Mono',monospace; font-size:.66rem; color:var(--muted); }
+.types { display:flex; gap:3px; margin-left:.3rem; }
+.type { font-family:'Geist Mono',monospace; font-size:.52rem; font-weight:700; color:#0a0a0a; padding:.13rem .4rem; border-radius:3px; }
+
+.c-iso { width:150px; }
+.iso-cell { display:flex; flex-direction:column; gap:.3rem; }
+.iso-pct { font-family:'Geist Mono',monospace; font-weight:800; font-size:1rem; }
+.iso-bar { height:6px; background:#1c1c1c; border-radius:3px; overflow:hidden; }
+.iso-fill { height:100%; background:var(--accent); border-radius:3px; box-shadow:0 0 8px currentColor; }
+
+.c-pur { width:92px; }
+.pur-pct { font-family:'Geist Mono',monospace; font-weight:700; font-size:.85rem; opacity:.92; }
+
+.c-biome { min-width:210px; }
+.biome-name { display:block; font-weight:600; color:var(--accent2); }
+.mod-badge { display:inline-flex; align-items:center; gap:.3rem; font-family:'Geist Mono',monospace; font-size:.6rem; color:var(--muted); margin-top:.15rem; }
+.mod-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+
+.c-setup { min-width:230px; }
+.chip {
+  display:inline-block; font-family:'Geist Mono',monospace; font-size:.62rem; padding:.18rem .45rem;
+  border-radius:5px; border:1px solid var(--border); color:var(--text); margin:.1rem .15rem .1rem 0; white-space:nowrap;
+}
+/* contextes — mêmes couleurs que la page biome */
+.badge-ctx-grounded  { background:rgba(85,239,196,.1);  color:#55efc4; border-color:rgba(85,239,196,.28); }
+.badge-ctx-fishing   { background:rgba(116,185,255,.1); color:#74b9ff; border-color:rgba(116,185,255,.28); }
+.badge-ctx-submerged { background:rgba(71,255,232,.1);  color:#47ffe8; border-color:rgba(71,255,232,.28); }
+.badge-ctx-surface   { background:rgba(162,155,254,.1); color:#a29bfe; border-color:rgba(162,155,254,.28); }
+.badge-ctx-seafloor  { background:rgba(253,121,168,.1); color:#fd79a8; border-color:rgba(253,121,168,.28); }
+.chip.ev      { background:rgba(71,255,232,.06); border-color:rgba(71,255,232,.22); color:var(--accent2); }
+.chip.filters { background:rgba(201,162,75,.07); border-color:rgba(201,162,75,.35); color:var(--accent); cursor:help; }
+.chip.ultra   { background:rgba(162,155,254,.1); border-color:rgba(162,155,254,.3); color:#a29bfe; }
+
+.c-comp { width:100px; text-align:center; font-family:'Geist Mono',monospace; color:var(--muted); }
+.na { color:var(--muted); font-style:italic; font-size:.8rem; }
+
+.empty { text-align:center; padding:4rem 1rem; color:var(--muted); }
+.empty-icon { font-size:2.5rem; margin-bottom:.6rem; }
+.empty h3 { color:var(--text); margin-bottom:.4rem; }
+.empty pre {
+  display:inline-block; margin-top:.8rem; background:var(--card); border:1px solid var(--border);
+  border-radius:8px; padding:.6rem 1rem; font-family:'Geist Mono',monospace; color:var(--accent2);
+}
+
+@media (max-width:640px) {
+  nav, .hero, main { padding-left:1rem; padding-right:1rem; }
+}

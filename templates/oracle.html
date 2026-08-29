@@ -15,6 +15,7 @@
     <div class="logo-sub">Oracle d'isolation</div>
   </div>
   <span class="oracle-badge">🔮 Oracle</span>
+  <a href="/oracle/ranking" title="Classement d'isolation" style="margin-left:.5rem;text-decoration:none;font-family:'Geist Mono',monospace;font-size:.75rem;color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:.34rem .7rem">📊 Classement</a>
   <select onchange="if(this.value)location.href='/set-lang/'+this.value" title="Langue" style="margin-left:.5rem;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.34rem .6rem;font-family:inherit;font-size:.8rem;cursor:pointer;outline:none">{% for l in languages %}<option value="{{ l.code }}"{{ ' selected' if l.code == lang }}>{{ l.label }}</option>{% endfor %}</select>
 </header>
 
