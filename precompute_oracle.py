@@ -11,7 +11,9 @@ Usage :
     python precompute_oracle.py --limit 50  # ne fait que 50 (test)
 """
 import sys, io, json, time, sqlite3
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+# line_buffering=True : la progression s'affiche en direct dans la console
+# (sinon la sortie est bufferisée et on ne voit rien pendant tout le calcul).
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", line_buffering=True)
 
 FORCE = "--force" in sys.argv
 LIMIT = None
@@ -38,16 +40,21 @@ CREATE TABLE IF NOT EXISTS oracle_ranking (
 )
 """
 
-def get_session_uid():
-    c = sqlite3.connect(DB)
-    row = c.execute(
-        "SELECT firebase_uid FROM users WHERE validated=1 "
-        "AND (expires_at IS NULL OR expires_at > '2099') LIMIT 1"
-    ).fetchone()
-    c.close()
-    return row[0] if row else None
+def make_client():
+    """Client de test avec l'accès Oracle, sans dépendre d'un compte utilisateur.
+
+    On neutralise les hooks before_request (contrôle de session/appareil/expiration) :
+    ce script tourne hors ligne, il ne sert aucune requête réelle. Le garde-fou de la
+    route (has_oracle_access) reste satisfait par is_admin dans la session.
+    """
+    A.app.before_request_funcs[None] = []
+    cl = A.app.test_client()
+    with cl.session_transaction() as s:
+        s["is_admin"] = True
+    return cl
 
 def main():
+    print("Base : %s" % DB)
     conn = sqlite3.connect(DB)
     conn.execute(DDL)
     conn.commit()
@@ -65,15 +72,7 @@ def main():
         targets = targets[:LIMIT]
     conn.close()
 
-    uid = get_session_uid()
-    if not uid:
-        print("Aucun utilisateur validé en base — impossible d'ouvrir une session de calcul.")
-        return
-
-    cl = A.app.test_client()
-    with cl.session_transaction() as s:
-        s["user_id"] = uid
-        s["is_admin"] = True  # has_oracle_access -> True
+    cl = make_client()
 
     total = len(targets)
     print("À calculer : %d Pokémon%s" % (total, " (FORCE)" if FORCE else ""))
@@ -82,6 +81,10 @@ def main():
     for idx, (numero, name) in enumerate(targets, 1):
         t = time.time()
         r = cl.get("/api/oracle/stream?numero=%d&focus=1" % numero)
+        if r.status_code != 200:
+            print("ERREUR : /api/oracle/stream a répondu %s (attendu 200). "
+                  "Calcul interrompu." % r.status_code)
+            return
         raw = r.get_data().decode("utf-8", "ignore")
         top = None
         for chunk in raw.split("\n\n"):
