@@ -62,6 +62,10 @@
     <select id="filter-mod">
       <option value="">— Mod —</option>
     </select>
+    <select id="filter-bucket">
+      <option value="">— {{ 'Rarity' if lang == 'en' else 'Rareté' }} —</option>
+      {% for code, lbl in bucket_labels.items() %}{% if code %}<option value="{{ code }}">{{ lbl }}</option>{% endif %}{% endfor %}
+    </select>
     <select id="filter-iso">
       <option value="0">Isolation ≥ 0%</option>
       <option value="50">≥ 50%</option>
@@ -80,6 +84,7 @@
           <th class="c-poke">Pokémon</th>
           <th class="c-iso sortable sorted" data-sort="iso" title="Probabilité réelle que le spawn tiré soit la cible (bucket + poids de spawn)">Isolation ▾</th>
           <th class="c-pur sortable" data-sort="pur" title="Part des entrées de spawn restantes qui sont la cible (structure du pool)">Pureté</th>
+          <th class="c-bucket sortable" data-sort="rar" title="Rareté sous laquelle la cible apparaît dans ce setup">{{ 'Rarity' if lang == 'en' else 'Rareté' }}</th>
           <th class="c-biome">Meilleur biome</th>
           <th class="c-setup">Setup</th>
           <th class="c-comp sortable" data-sort="comp">Concurrents</th>
@@ -94,6 +99,8 @@
             data-comp="{{ r.competitors if r.competitors is not none else 9999 }}"
             data-pur="{{ r.raw_pct if r.raw_pct is not none else -1 }}"
             data-ultra="{{ '1' if r.only_ultra else '0' }}"
+            data-bucket="{{ r.bucket or '' }}"
+            data-rar="{{ bucket_order.get(r.bucket, 99) }}"
             onclick="location.href='/oracle?numero={{ r.numero }}&focus={{ 1 if r.mode == 'focus' else 0 }}'">
           <td class="c-rank">{{ r.rank }}</td>
           <td class="c-poke">
@@ -115,6 +122,12 @@
           <td class="c-pur">
             {% if r.raw_pct is not none %}
             <span class="pur-pct" data-pct="{{ r.raw_pct }}">{{ r.raw_pct }}%</span>
+            {% else %}<span class="na">—</span>{% endif %}
+          </td>
+          <td class="c-bucket">
+            {% if r.bucket %}
+            <span class="badge-rar badge-{{ r.bucket }}"
+                  title="{{ r.buckets.replace(',', ' · ') if r.buckets else r.bucket }}">{{ bucket_labels.get(r.bucket, r.bucket) }}</span>
             {% else %}<span class="na">—</span>{% endif %}
           </td>
           <td class="c-biome">

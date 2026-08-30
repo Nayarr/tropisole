@@ -8,6 +8,7 @@
   const fCtx = document.getElementById('filter-ctx');
   const fMod = document.getElementById('filter-mod');
   const fIso = document.getElementById('filter-iso');
+  const fBucket = document.getElementById('filter-bucket');
   const count = document.getElementById('count');
   const modeBtns = [...document.querySelectorAll('.mode-btn')];
   let activeMode = 'chain';   // 'chain' = lignée complète, 'focus' = Pokémon seul
@@ -50,6 +51,7 @@
   function apply() {
     const q = (search.value || '').toLowerCase().trim();
     const ctx = fCtx.value, mod = fMod.value, iso = parseFloat(fIso.value || '0');
+    const bucket = fBucket.value;
     let shown = 0, inMode = 0;
     rows.forEach(r => {
       const okMode = r.dataset.mode === activeMode;
@@ -58,7 +60,8 @@
       const okCtx = !ctx || r.dataset.ctx === ctx;
       const okMod = !mod || r.dataset.mod === mod;
       const okIso = parseFloat(r.dataset.iso) >= iso;
-      const vis = okMode && okName && okCtx && okMod && okIso;
+      const okBucket = !bucket || r.dataset.bucket === bucket;
+      const vis = okMode && okName && okCtx && okMod && okIso && okBucket;
       r.style.display = vis ? '' : 'none';
       if (vis) {
         shown++;
@@ -72,8 +75,9 @@
   function sortBy(key) {
     // Nouveau critère : décroissant pour les scores, croissant pour les concurrents.
     if (sortKey === key) sortDir = -sortDir;
-    else { sortKey = key; sortDir = (key === 'comp') ? 1 : -1; }
-    const attr = key;  // 'iso' | 'pur' | 'comp'
+    // Concurrents et rareté : croissant d'abord (0 concurrent / le plus commun en tête).
+    else { sortKey = key; sortDir = (key === 'comp' || key === 'rar') ? 1 : -1; }
+    const attr = key;  // 'iso' | 'pur' | 'rar' | 'comp'
     const sorted = rows.slice().sort((a, b) => {
       const av = parseFloat(a.dataset[attr]), bv = parseFloat(b.dataset[attr]);
       if (av !== bv) return (av - bv) * sortDir;
@@ -95,7 +99,7 @@
     apply();
   }));
 
-  [search, fCtx, fMod, fIso].forEach(el => el.addEventListener('input', apply));
+  [search, fCtx, fMod, fIso, fBucket].forEach(el => el.addEventListener('input', apply));
   table.querySelectorAll('th.sortable').forEach(th =>
     th.addEventListener('click', () => sortBy(th.dataset.sort)));
 

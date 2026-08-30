@@ -44,7 +44,7 @@ def _ensure_schema():
     ).fetchone()
     if has_rank:
         rank_cols = [r[1] for r in conn.execute("PRAGMA table_info(oracle_ranking)")]
-        if "mode" not in rank_cols:
+        if "mode" not in rank_cols or "bucket" not in rank_cols:
             conn.execute("DROP TABLE oracle_ranking")
             conn.commit()
     conn.close()
@@ -1495,6 +1495,11 @@ import math as _math
 # (Cobblemon 1.7.2, data/cobblemon/spawning/best-spawner-config.json).
 # Cobblemon tire d'abord un bucket, PUIS un spawn au poids à l'intérieur.
 # « filler » n'est pas dans la config : il est traité comme uncommon.
+# Du plus commun au plus rare — sert au tri par rareté du classement.
+BUCKET_RARITY_ORDER = {
+    'common': 0, 'uncommon': 1, 'rare': 2, 'ultra-rare': 3, 'filler': 4,
+}
+
 ORACLE_BUCKET_SHARE = {
     'common': 94.3, 'uncommon': 5.0, 'rare': 0.5, 'ultra-rare': 0.2,
     'filler': 5.0,
@@ -2413,7 +2418,10 @@ def oracle_ranking():
                 r['filters_list'] = []
         rows.extend(sub)
     computed_at = all_rows[0]['computed_at'] if all_rows else None
+    lang = current_lang()
     return render_template('oracle_ranking.html', rows=rows,
+                           bucket_labels=(BUCKET_EN if lang == 'en' else BUCKET_FR),
+                           bucket_order=BUCKET_RARITY_ORDER,
                            type_colors=TYPE_COLORS, mod_colors=MOD_COLORS,
                            ctx_labels=CTX_LABELS_FR,
                            ev_labels=EV_LABELS_ORACLE, computed_at=computed_at)
@@ -2588,6 +2596,11 @@ def api_oracle_stream():
                 'combo':           combo,
                 'competitors_names': competitors_names,
                 'competitors_buckets': [s['bucket'] for s in filtered if s['numero'] not in chain],
+                # Raretés sous lesquelles la cible peut encore apparaître dans ce
+                # setup — la plus commune détermine la facilité de farm.
+                'target_buckets': sorted({s['bucket'] for s in filtered
+                                          if s['numero'] in chain and s['bucket']},
+                                         key=lambda b: BUCKET_RARITY_ORDER.get(b, 99)),
                 'filler_names':      filler_names,
             }
             results.append(result)

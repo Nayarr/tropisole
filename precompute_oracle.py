@@ -43,6 +43,8 @@ CREATE TABLE IF NOT EXISTS oracle_ranking (
     filters      TEXT,
     competitors  INTEGER,
     only_ultra   INTEGER,
+    bucket       TEXT,
+    buckets      TEXT,
     computed_at  TEXT,
     PRIMARY KEY (numero, mode)
 )
@@ -112,19 +114,21 @@ def main():
             combo = top.get("combo", {})
             conn.execute(
                 "INSERT OR REPLACE INTO oracle_ranking "
-                "(numero,mode,name,best_pct,raw_pct,biome,mod,context,ev,filters,competitors,only_ultra,computed_at) "
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))",
+                "(numero,mode,name,best_pct,raw_pct,biome,mod,context,ev,filters,competitors,only_ultra,bucket,buckets,computed_at) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))",
                 (numero, mode, name, top.get("pct"), top.get("raw_pct", top.get("pct")),
                  top.get("biome_fr"), top.get("mod"), combo.get("contexte"),
                  combo.get("ev"), json.dumps(combo.get("removed", []), ensure_ascii=False),
-                 len(top.get("competitors_names", [])), int(bool(top.get("only_ultra")))),
+                 len(top.get("competitors_names", [])), int(bool(top.get("only_ultra"))),
+                 (top.get("target_buckets") or [None])[0],
+                 ",".join(top.get("target_buckets") or [])),
             )
         else:
             conn.execute(
                 "INSERT OR REPLACE INTO oracle_ranking "
-                "(numero,mode,name,best_pct,raw_pct,biome,mod,context,ev,filters,competitors,only_ultra,computed_at) "
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))",
-                (numero, mode, name, None, None, None, None, None, None, "[]", None, None),
+                "(numero,mode,name,best_pct,raw_pct,biome,mod,context,ev,filters,competitors,only_ultra,bucket,buckets,computed_at) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))",
+                (numero, mode, name, None, None, None, None, None, None, "[]", None, None, None, None),
             )
         conn.commit()
         conn.close()
