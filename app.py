@@ -37,6 +37,16 @@ def _ensure_schema():
     if "oracle_access" not in cols:
         conn.execute("ALTER TABLE users ADD COLUMN oracle_access INTEGER DEFAULT 0")
         conn.commit()
+    # oracle_ranking a gagné une colonne 'mode' (classement chaîne + focus).
+    # C'est une table 100% dérivée : on la reconstruit via precompute_oracle.py.
+    has_rank = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='oracle_ranking'"
+    ).fetchone()
+    if has_rank:
+        rank_cols = [r[1] for r in conn.execute("PRAGMA table_info(oracle_ranking)")]
+        if "mode" not in rank_cols:
+            conn.execute("DROP TABLE oracle_ranking")
+            conn.commit()
     conn.close()
 
 _ensure_schema()
@@ -1481,6 +1491,16 @@ def admin_bugreport_delete():
 import numpy as _np
 import math as _math
 
+# Probabilité de tirage de chaque bucket, d'après la config du serveur
+# (Cobblemon 1.7.2, data/cobblemon/spawning/best-spawner-config.json).
+# Cobblemon tire d'abord un bucket, PUIS un spawn au poids à l'intérieur.
+# « filler » n'est pas dans la config : il est traité comme uncommon.
+ORACLE_BUCKET_SHARE = {
+    'common': 94.3, 'uncommon': 5.0, 'rare': 0.5, 'ultra-rare': 0.2,
+    'filler': 5.0,
+}
+ORACLE_BUCKETS = sorted(ORACLE_BUCKET_SHARE)
+
 EV_LABELS_ORACLE = {
     'hp': 'PV', 'atk': 'Attaque', 'def': 'Defense',
     'spa': 'Att. Spe', 'spd': 'Def. Spe', 'spe': 'Vitesse'
@@ -1509,13 +1529,15 @@ def _oracle_load_spawns():
     rows = conn.execute("""
         SELECT numero, pokemon, biomes_tags, biomes_exclus_tags,
                contexte, time, weather, conditions, peut_voir_ciel,
-               structures, lune, presets, bucket, lumiere_min, lumiere_max
+               structures, lune, presets, bucket, lumiere_min, lumiere_max,
+               anticonditions, poids
         FROM pokemon_spawns WHERE est_actif = 1
     """).fetchall()
     conn.close()
     COLS = ['numero','pokemon','biomes_tags','biomes_exclus_tags',
             'contexte','time','weather','conditions','peut_voir_ciel',
-            'structures','lune','presets','bucket','lumiere_min','lumiere_max']
+            'structures','lune','presets','bucket','lumiere_min','lumiere_max',
+            'anticonditions','poids']
     spawns = []
     for r in rows:
         s = dict(zip(COLS, r))
@@ -1529,6 +1551,26 @@ def _oracle_load_spawns():
         s['needed_blocks']      = bool(needed_nearby)
         s['needed_blocks_list'] = needed_nearby if isinstance(needed_nearby, list) else ([needed_nearby] if needed_nearby else [])
         s['needed_base_blocks'] = bool(cond.get('neededBaseBlocks'))
+        # Chunk à slime : certains spawns l'exigent (isSlimeChunk), d'autres
+        # l'excluent (anticondition). Se placer dans/hors d'un chunk à slime est
+        # donc un filtre d'isolation à part entière.
+        try:
+            _anti = json.loads(s['anticonditions']) if s['anticonditions'] else {}
+        except Exception:
+            _anti = {}
+        s['need_slime'] = bool(cond.get('isSlimeChunk'))
+        s['anti_slime'] = bool(_anti.get('isSlimeChunk'))
+        # Pêche : niveau de leurre exigé/exclu, canne et appât spéciaux.
+        # Ce sont des réglages que le joueur choisit à la main (canne équipée),
+        # donc de vrais leviers d'isolation.
+        s['min_lure']      = cond.get('minLureLevel')
+        s['max_lure']      = cond.get('maxLureLevel')
+        s['anti_min_lure'] = _anti.get('minLureLevel')
+        s['special_rod']   = bool(cond.get('rodType') or cond.get('bait'))
+        # Phase de lune : cycle de 8 nuits, on peut attendre la bonne → vrai levier.
+        s['moon_set'] = frozenset(
+            p.strip() for p in str(s['lune']).split(',') if p.strip()
+        ) if s['lune'] else frozenset()
         s['lumiere_min']   = s.get('lumiere_min')   # None si pas de contrainte
         s['lumiere_max']   = s.get('lumiere_max')   # None si pas de contrainte
         s['preset_set'] = set(p.strip() for p in (s['presets'] or '').split(',') if p.strip())
@@ -1579,6 +1621,9 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     fc_preset  = {}   # 7. presets
     fc_time    = {}   # 8. temps
     fc_weather = {}   # 9. météo
+    fc_slime   = {}   # 10. chunk à slime
+    fc_lure    = {}   # 11. leurre / canne (pêche)
+    fc_moon    = {}   # 12. phase de lune
 
     # MÉTÉO
     all_weathers = sorted({s['weather'] for s in subset if s['weather']})
@@ -1694,6 +1739,51 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     # Bloquer les spawns qui nécessitent un sol spécifique (herbe, pierre, etc.)
     if any(s['needed_base_blocks'] for s in subset):
         fc_blocks['block_baseBlocks:1'] = _np.array([not s['needed_base_blocks'] for s in subset])
+    # PHASE DE LUNE : se placer une nuit de phase P élimine les spawns qui exigent
+    # une autre phase (les spawns sans contrainte restent).
+    _moons = set()
+    for s in subset:
+        _moons |= s['moon_set']
+    if _moons:
+        for mp in sorted(_moons):
+            fc_moon['moon:' + mp] = _np.array(
+                [(not s['moon_set']) or (mp in s['moon_set']) for s in subset]
+            )
+
+    # LEURRE (pêche) : le joueur choisit le niveau de leurre de sa canne.
+    # Un spawn est actif au niveau L si sa plage [min,max] contient L et que son
+    # anticondition (« pas au-dessus de tel leurre ») ne le bloque pas.
+    def _lure_ok(sp, L):
+        if sp['min_lure'] is not None and L < sp['min_lure']:
+            return False
+        if sp['max_lure'] is not None and L > sp['max_lure']:
+            return False
+        if sp['anti_min_lure'] is not None and L >= sp['anti_min_lure']:
+            return False
+        return True
+
+    if any(s['min_lure'] is not None or s['max_lure'] is not None
+           or s['anti_min_lure'] is not None for s in subset):
+        _levels = {0}
+        for s in subset:
+            for v in (s['min_lure'], s['max_lure'], s['anti_min_lure']):
+                if v is not None:
+                    _levels.add(int(v))
+        for L in sorted(_levels):
+            fc_lure['lure:' + str(L)] = _np.array([_lure_ok(s, L) for s in subset])
+
+    # CANNE / APPÂT SPÉCIAL : pêcher à la canne normale exclut les spawns qui
+    # exigent une canne ou un appât particulier.
+    if any(s['special_rod'] for s in subset):
+        fc_lure['block_rod:1'] = _np.array([not s['special_rod'] for s in subset])
+
+    # CHUNK À SLIME : se placer hors d'un chunk à slime élimine les spawns qui en
+    # exigent un ; s'y placer élimine ceux qui l'excluent (anticondition).
+    if any(s['need_slime'] for s in subset):
+        fc_slime['block_slime:1'] = _np.array([not s['need_slime'] for s in subset])
+    if any(s['anti_slime'] for s in subset):
+        fc_slime['require_slime:1'] = _np.array([not s['anti_slime'] for s in subset])
+
     # Filtres luminosité basés sur la plage de lumière de la CIBLE
     # block_darkness : si la cible a besoin de lumière (lum_min>0), exclure les spawns d'obscurité
     if chain_lum_min is not None and chain_lum_min > 0:
@@ -1782,28 +1872,47 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     fc.update(fc_light)
     fc.update(fc_sky)
     fc.update(fc_blocks)
+    fc.update(fc_slime)
+    fc.update(fc_lure)
+    fc.update(fc_moon)
     fc.update(fc_y)
     fc.update(fc_hmax)
     fc.update(fc_preset)
     fc.update(fc_time)
     fc.update(fc_weather)
 
+    # ── Modèle de probabilité réel ────────────────────────────────────────────
+    # Cobblemon tire un bucket (common 94.3 %, uncommon 5 %, rare 0.5 %,
+    # ultra-rare 0.2 %) PUIS un spawn au poids parmi ceux de ce bucket.
+    # On calcule donc P(le spawn tiré est la cible), en ne comptant que les
+    # buckets qui ont encore au moins un spawn actif.
+    _w = _np.array([float(s['poids'] or 0.0) for s in subset])
+    _bmask = _np.array([[1.0 if s['bucket'] == b else 0.0 for b in ORACLE_BUCKETS]
+                        for s in subset])
+    _share = _np.array([ORACLE_BUCKET_SHARE[b] for b in ORACLE_BUCKETS])
+
+    def _wpct(mask, tmask):
+        wm = _w * mask
+        sw = wm @ _bmask                      # poids total actif par bucket
+        alive = sw > 0
+        if not alive.any():
+            return 0.0
+        tw = (wm * tmask) @ _bmask            # poids de la cible par bucket
+        denom = float(_share[alive].sum())
+        num = float((_share[alive] * (tw[alive] / sw[alive])).sum())
+        return (num / denom * 100.0) if denom > 0 else 0.0
+
+    _all = _np.ones(ns, dtype=bool)
+
     if not fc:
-        tgt = int(is_t.sum())
-        return round(tgt / ns * 100, 1), ns, base_combo, subset
+        return round(_wpct(_all, is_t), 1), ns, base_combo, subset
 
     fn = list(fc.keys())
     fa = [fc[k] for k in fn]
-    is_ultra  = _np.array([s['is_ultra_rare'] for s in subset])
-    n_tgt_init  = int(is_t.sum())
-    n_ultra_init= int((is_ultra & ~is_t).sum())
-    n_norm_init = ns - n_tgt_init - n_ultra_init
-    _wd = n_tgt_init + n_norm_init + n_ultra_init * 0.1
-    best_pct  = (n_tgt_init / _wd * 100) if _wd > 0 else 0
+    best_pct = _wpct(_all, is_t)
     best_mask = _np.ones(ns, dtype=bool)
     best_keys = []
     beam = [(_np.ones(ns, dtype=bool), [])]
-    is_ultra_arr = _np.array([s['is_ultra_rare'] for s in subset])
 
     for _d in range(9):
         nb = []
@@ -1844,11 +1953,8 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                     eff_is_t = is_t
                 t2  = int((nm & eff_is_t).sum())
                 if t2 == 0: continue
-                # Score pondéré : les ultra-rare comptent 0.1 comme concurrent
-                n_ultra = int((nm & is_ultra_arr).sum()) - int((nm & eff_is_t & is_ultra_arr).sum())
-                n_norm  = cnt - t2 - n_ultra
-                weighted_denom = t2 + n_norm + n_ultra * 0.1
-                weighted_pct = (t2 / weighted_denom * 100) if weighted_denom > 0 else 0
+                # Probabilité réelle que le spawn tiré soit la cible
+                weighted_pct = _wpct(nm, eff_is_t)
                 nb.append((weighted_pct, cnt, nm, new_active_combo))
         if not nb: break
         nb.sort(key=lambda x: (-x[0], x[1]))
@@ -1866,7 +1972,6 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     # Couvre le cas où 4 filtres sont nécessaires (ex: Ouistempo dans Tropical Beach :
     # require_treetop + farm_time:night + block_neededBlocks + hmax:1.0 → 100%).
     if best_pct < 100.0:
-        is_ultra_arr_fp = _np.array([s['is_ultra_rare'] for s in subset])
         # Candidats : meilleur état global + derniers états du beam (peuvent diverger)
         fp_candidates = [(best_mask, best_keys)] + [
             (m, a) for m, a in beam if list(a) != list(best_keys)
@@ -1905,10 +2010,7 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 t2 = int((nm & eff_is_t_fp).sum())
                 if t2 == 0:
                     continue
-                n_ultra_fp = int((nm & is_ultra_arr_fp).sum()) - int((nm & eff_is_t_fp & is_ultra_arr_fp).sum())
-                n_norm_fp  = cnt - t2 - n_ultra_fp
-                wd = t2 + n_norm_fp + n_ultra_fp * 0.1
-                wpct = (t2 / wd * 100) if wd > 0 else 0
+                wpct = _wpct(nm, eff_is_t_fp)
                 if wpct > best_pct or (wpct == best_pct and cnt < int(best_mask.sum())):
                     best_pct  = wpct
                     best_mask = nm
@@ -2061,6 +2163,23 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
                 removed.append(f"Blocs requis à proximité exclus : {', '.join(clean)}")
             else:
                 removed.append("Blocs requis à proximité exclus")
+        elif cat == 'moon':
+            combo['moon_phase'] = val
+            removed.append("Nuit de %s requise" % MOON_PHASE_FR.get(int(val), "lune " + val)
+                           if val.isdigit() else "Phase de lune %s requise" % val)
+        elif cat == 'lure':
+            combo['lure_level'] = int(val)
+            removed.append("Canne sans leurre (niveau 0)" if val == '0'
+                           else "Leurre niveau %s requis" % val)
+        elif cat == 'block_rod':
+            combo['block_special_rod'] = True
+            removed.append("Canne/appât spécial exclu — pêcher à la canne normale")
+        elif cat == 'block_slime':
+            combo['block_slime'] = True
+            removed.append("Chunks à slime exclus — farmer hors d'un chunk à slime")
+        elif cat == 'require_slime':
+            combo['require_slime'] = True
+            removed.append("Se placer dans un chunk à slime")
         elif cat == 'block_baseBlocks':
             combo['block_base_blocks'] = True
             removed.append("Sol spécifique bloqué (herbe, pierre, etc.)")
@@ -2270,19 +2389,30 @@ def oracle_ranking():
     if not has_oracle_access():
         return render_template('oracle_denied.html'), 403
     conn = get_db()
-    rows = [dict(r) for r in conn.execute(
-        "SELECT * FROM oracle_ranking "
-        "ORDER BY (best_pct IS NULL), best_pct DESC, competitors ASC, only_ultra ASC, numero ASC"
-    ).fetchall()]
+    try:
+        all_rows = [dict(r) for r in conn.execute(
+            "SELECT * FROM oracle_ranking "
+            "ORDER BY (best_pct IS NULL), best_pct DESC, competitors ASC, "
+            "only_ultra ASC, numero ASC"
+        ).fetchall()]
+    except sqlite3.OperationalError:
+        all_rows = []          # table pas encore générée (precompute_oracle.py)
     conn.close()
-    for r in rows:
-        r['sprite'] = get_sprite(r['numero'])
-        r['types']  = get_types(r['numero'])
-        try:
-            r['filters_list'] = json.loads(r['filters']) if r['filters'] else []
-        except Exception:
-            r['filters_list'] = []
-    computed_at = rows[0]['computed_at'] if rows else None
+
+    # Un classement par mode : 'chain' (lignée complète) et 'focus' (Pokémon seul).
+    rows = []
+    for mode in ('chain', 'focus'):
+        sub = [r for r in all_rows if r.get('mode') == mode]
+        for rank, r in enumerate(sub, 1):
+            r['rank'] = rank
+            r['sprite'] = get_sprite(r['numero'])
+            r['types']  = get_types(r['numero'])
+            try:
+                r['filters_list'] = json.loads(r['filters']) if r['filters'] else []
+            except Exception:
+                r['filters_list'] = []
+        rows.extend(sub)
+    computed_at = all_rows[0]['computed_at'] if all_rows else None
     return render_template('oracle_ranking.html', rows=rows,
                            type_colors=TYPE_COLORS, mod_colors=MOD_COLORS,
                            ctx_labels=CTX_LABELS_FR,
@@ -2462,12 +2592,20 @@ def api_oracle_stream():
             }
             results.append(result)
             def _sort_key(x):
-                raw = x['raw_pct'] if 'raw_pct' in x else x['pct']
-                # Le crépuscule dure ~30s dans Minecraft → pénalité forte sur le score affiché
+                # Critère principal : la probabilité réelle que le spawn tiré soit la
+                # cible (bucket + poids). C'est la mesure complète — elle intègre déjà
+                # le nombre ET la rareté des concurrents. La pureté ne sert qu'à départager.
+                pct = x['pct']
+                raw = x.get('raw_pct', pct)
+                # Le crépuscule dure ~30s dans Minecraft → pénalité forte
                 if x.get('combo', {}).get('farm_time') == 'dusk':
+                    pct = pct * 0.25
                     raw = raw * 0.25
                 reduct = (x['total_base'] - x['total_filtered']) / x['total_base'] if x['total_base'] > 0 else 0
-                return (-raw, -reduct)
+                # À score égal, un setup sans concurrent ni filler est strictement meilleur.
+                n_comp = len(x.get('competitors_names', []))
+                n_fill = len(x.get('filler_names', []))
+                return (-pct, n_comp, n_fill, -raw, -reduct)
             results_sorted = sorted(results, key=_sort_key)
 
             _msg = json.dumps({

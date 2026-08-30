@@ -9,6 +9,8 @@
   const fMod = document.getElementById('filter-mod');
   const fIso = document.getElementById('filter-iso');
   const count = document.getElementById('count');
+  const modeBtns = [...document.querySelectorAll('.mode-btn')];
+  let activeMode = 'chain';   // 'chain' = lignée complète, 'focus' = Pokémon seul
 
   // Échelle de couleur reprise EXACTEMENT de l'Oracle (oracle.js).
   function scoreColor(p, comp, ultra) {
@@ -48,17 +50,23 @@
   function apply() {
     const q = (search.value || '').toLowerCase().trim();
     const ctx = fCtx.value, mod = fMod.value, iso = parseFloat(fIso.value || '0');
-    let shown = 0;
+    let shown = 0, inMode = 0;
     rows.forEach(r => {
+      const okMode = r.dataset.mode === activeMode;
+      if (okMode) inMode++;
       const okName = !q || r.dataset.name.includes(q) || ('#' + String(r.dataset.num).padStart(4, '0')).includes(q);
       const okCtx = !ctx || r.dataset.ctx === ctx;
       const okMod = !mod || r.dataset.mod === mod;
       const okIso = parseFloat(r.dataset.iso) >= iso;
-      const vis = okName && okCtx && okMod && okIso;
+      const vis = okMode && okName && okCtx && okMod && okIso;
       r.style.display = vis ? '' : 'none';
-      if (vis) shown++;
+      if (vis) {
+        shown++;
+        const cell = r.querySelector('.c-rank');
+        if (cell) cell.textContent = shown;   // renumérote ce qui est affiché
+      }
     });
-    count.textContent = shown + ' / ' + rows.length + ' Pokémon';
+    count.textContent = shown + ' / ' + inMode + ' Pokémon';
   }
 
   function sortBy(key) {
@@ -80,6 +88,12 @@
       th.textContent = active ? base + (sortDir === -1 ? ' ▾' : ' ▴') : base;
     });
   }
+
+  modeBtns.forEach(btn => btn.addEventListener('click', () => {
+    activeMode = btn.dataset.mode;
+    modeBtns.forEach(b => b.classList.toggle('active', b === btn));
+    apply();
+  }));
 
   [search, fCtx, fMod, fIso].forEach(el => el.addEventListener('input', apply));
   table.querySelectorAll('th.sortable').forEach(th =>

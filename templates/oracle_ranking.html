@@ -24,8 +24,9 @@
   <div class="hero-label">📊 Oracle · Classement</div>
   <div class="hero-title">Classement d'<span>isolation</span></div>
   <div class="hero-sub">
-    Chaque Pokémon classé par sa <strong>meilleure isolation possible</strong> (mode focus) et
-    <strong>où</strong> l'atteindre. Clique une ligne pour relancer la simulation Oracle en confirmation.
+    Chaque Pokémon classé par sa <strong>meilleure isolation possible</strong> et
+    <strong>où</strong> l'atteindre — au choix pour <strong>toute la lignée</strong> ou pour le
+    <strong>Pokémon seul</strong>. Clique une ligne pour relancer la simulation Oracle en confirmation.
     {% if computed_at %}<span class="stamp">· calculé le {{ computed_at }}</span>{% endif %}
   </div>
 </div>
@@ -36,10 +37,21 @@
   <div class="empty">
     <div class="empty-icon">📭</div>
     <h3>Aucun classement pour l'instant</h3>
-    <p>Lance le précalcul depuis la console :</p>
+    <p>Lance le précalcul (les deux modes) depuis la console :</p>
     <pre>python precompute_oracle.py</pre>
   </div>
   {% else %}
+
+  <div class="mode-switch" role="tablist">
+    <button class="mode-btn active" data-mode="chain" role="tab">
+      🔗 {{ 'Chain' if lang == 'en' else 'Chaîne' }}
+      <span>{{ 'whole evolution line' if lang == 'en' else 'lignée complète' }}</span>
+    </button>
+    <button class="mode-btn" data-mode="focus" role="tab">
+      🎯 Focus
+      <span>{{ 'this Pokémon only' if lang == 'en' else 'ce Pokémon seul' }}</span>
+    </button>
+  </div>
 
   <div class="controls">
     <input type="text" id="search" placeholder="Rechercher un Pokémon…" autocomplete="off" />
@@ -66,8 +78,8 @@
         <tr>
           <th class="c-rank">#</th>
           <th class="c-poke">Pokémon</th>
-          <th class="c-iso sortable sorted" data-sort="iso" title="Chance pondérée par le poids de spawn">Isolation ▾</th>
-          <th class="c-pur sortable" data-sort="pur" title="Part des spawns restants qui sont la cible">Pureté</th>
+          <th class="c-iso sortable sorted" data-sort="iso" title="Probabilité réelle que le spawn tiré soit la cible (bucket + poids de spawn)">Isolation ▾</th>
+          <th class="c-pur sortable" data-sort="pur" title="Part des entrées de spawn restantes qui sont la cible (structure du pool)">Pureté</th>
           <th class="c-biome">Meilleur biome</th>
           <th class="c-setup">Setup</th>
           <th class="c-comp sortable" data-sort="comp">Concurrents</th>
@@ -76,13 +88,14 @@
       <tbody>
         {% for r in rows %}
         <tr class="row" data-name="{{ r.name|lower }}" data-num="{{ r.numero }}"
+            data-mode="{{ r.mode }}"
             data-ctx="{{ r.context or '' }}" data-mod="{{ r.mod or '' }}"
             data-iso="{{ r.best_pct if r.best_pct is not none else -1 }}"
             data-comp="{{ r.competitors if r.competitors is not none else 9999 }}"
             data-pur="{{ r.raw_pct if r.raw_pct is not none else -1 }}"
             data-ultra="{{ '1' if r.only_ultra else '0' }}"
-            onclick="location.href='/oracle?numero={{ r.numero }}&focus=1'">
-          <td class="c-rank">{{ loop.index }}</td>
+            onclick="location.href='/oracle?numero={{ r.numero }}&focus={{ 1 if r.mode == 'focus' else 0 }}'">
+          <td class="c-rank">{{ r.rank }}</td>
           <td class="c-poke">
             {% if r.sprite %}<img class="sprite" src="/static/pokemon_icons/{{ r.sprite }}" alt="" onerror="this.style.display='none'" />{% endif %}
             <div class="poke-id">

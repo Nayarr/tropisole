@@ -242,7 +242,13 @@ def _propagate_children_to_parents():
         if not changed:
             break
 
-_propagate_children_to_parents()
+# DÉSACTIVÉ depuis la régénération de biomes.json depuis le registre serveur.
+# Le dump (/dumpbiometags) utilise streamTags(), qui renvoie déjà TOUS les tags
+# d'un biome, imbrications de tags résolues par Minecraft. Propager en plus la
+# hiérarchie fabriquait des appartenances inexistantes : les biomes de l'End
+# (is_cold) se retrouvaient dans « Monde de surface », Sommet passait de 20 à 56
+# biomes, etc. — d'où de faux spawns et de fausses isolations dans l'Oracle.
+# _propagate_children_to_parents()
 
 # ── Mapping raw biome IDs (minecraft:, aether:, etc.) → liste de tags FR ────
 # Un biome peut appartenir à plusieurs tags (ex: is_forest + is_taiga).
