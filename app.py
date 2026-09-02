@@ -6,6 +6,7 @@ import sqlite3
 import os
 import math
 import hashlib
+import secrets
 from datetime import timedelta, datetime, timezone
 from ev_yields import get_ev, EV_STAT_LABELS, EV_STAT_COLORS
 from pokemon_types import get_types, ALL_TYPES, TYPE_COLORS
@@ -37,6 +38,10 @@ def _ensure_schema():
     if "oracle_access" not in cols:
         conn.execute("ALTER TABLE users ADD COLUMN oracle_access INTEGER DEFAULT 0")
         conn.commit()
+    # Jeton d'appareil : remplace l'empreinte matérielle (voir DEVICE_COOKIE).
+    if "device_token" not in cols:
+        conn.execute("ALTER TABLE users ADD COLUMN device_token TEXT")
+        conn.commit()
     # oracle_ranking a gagné une colonne 'mode' (classement chaîne + focus).
     # C'est une table 100% dérivée : on la reconstruit via precompute_oracle.py.
     has_rank = conn.execute(
@@ -66,22 +71,50 @@ def has_oracle_access():
     conn.close()
     return bool(row and row[0])
 
-def generate_hardware_id(client_fingerprint=None):
+# ── Appareil unique : jeton secret en cookie ──────────────────────────────────
+# On n'essaie plus de DEVINER l'appareil via une empreinte matérielle (GPU,
+# CPU, timezone...) : ces valeurs changent à chaque mise à jour de pilote, de
+# navigateur ou de Windows, ce qui bloquait les comptes sans raison.
+# À la place le serveur ATTRIBUE un secret aléatoire au premier login, le pose
+# en cookie httpOnly longue durée et n'en garde que le hash en base.
+DEVICE_COOKIE = "cbx_device"
+DEVICE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365   # 1 an
+
+
+def _hash_device_token(token):
+    return hashlib.sha256(("cobbledex_device_v1:" + token).encode()).hexdigest()
+
+
+def _is_https():
+    """HTTPS réel, y compris derrière le proxy PythonAnywhere.
+
+    request.is_secure vaut False derrière le reverse proxy (l'app ne voit que
+    du HTTP en interne) : sans ce fallback le cookie perdrait le flag Secure.
     """
-    Signature de l'appareil.
-    - Si le client envoie un fingerprint JS (canvas + GPU + écran + CPU...),
-      on l'utilise directement — il est déjà sha256 côté client.
-    - Sinon fallback sur User-Agent + Accept-Language (moins fiable).
-    Le fingerprint est indépendant du réseau : WiFi ou 4G -> même valeur.
-    """
-    if client_fingerprint and len(client_fingerprint) >= 16:
-        # Re-hash côté serveur pour éviter qu'un attaquant envoie
-        # directement le hash volé d'une autre personne.
-        return hashlib.sha256(f"cobbledex_v2:{client_fingerprint}".encode()).hexdigest()
-    # Fallback legacy
-    user_agent = request.headers.get('User-Agent', '')
-    accept_lang = request.headers.get('Accept-Language', '')
-    return hashlib.sha256(f"{user_agent}{accept_lang}".encode()).hexdigest()
+    if request.is_secure:
+        return True
+    return request.headers.get("X-Forwarded-Proto", "").split(",")[0].strip() == "https"
+
+
+def _set_device_cookie(resp, token):
+    resp.set_cookie(
+        DEVICE_COOKIE, token,
+        max_age=DEVICE_COOKIE_MAX_AGE,
+        httponly=True,                 # inaccessible au JS
+        secure=_is_https(),            # HTTPS en prod, utilisable en local
+        samesite="Lax",
+        path="/",
+    )
+    return resp
+
+
+def device_token_matches(stored_hash):
+    """True si le cookie de cet appareil correspond au jeton enregistré."""
+    if not stored_hash:
+        return True                    # aucun appareil lié : rien à vérifier
+    token = request.cookies.get(DEVICE_COOKIE)
+    return bool(token) and _hash_device_token(token) == stored_hash
+
 
 ADMIN_PASSWORD = os.environ.get("COBBLEDEX_ADMIN_PASSWORD", "tropisole_pokesnap")
 
@@ -160,20 +193,19 @@ def security_check():
         return redirect(url_for('login'))
 
     user_id = session['user_id']
-    session_fp = session.get('device_fp')  # fingerprint JS mémorisé au moment du login
 
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    cursor.execute("SELECT device_id, validated FROM users WHERE firebase_uid = ?", (user_id,))
+    cursor.execute("SELECT device_token, validated FROM users WHERE firebase_uid = ?", (user_id,))
     row = cursor.fetchone()
 
     if row:
-        device_id, validated = row
-        # On compare uniquement si les deux côtés ont un fingerprint JS robuste.
-        # Si session_fp est absent (session legacy ou navigateur sans SubtleCrypto),
-        # on skip la vérification matérielle — le token Firebase suffit.
-        if session_fp and device_id and device_id.strip() and session_fp != device_id:
+        device_token, validated = row
+        # Vérification à chaque requête : le cookie d'appareil doit correspondre.
+        # Un compte sans jeton (pas encore relié) passe : il sera lié au login.
+        if not device_token_matches(device_token):
             conn.close()
+            session.clear()
             return "🛑 Cet appareil n'est pas autorisé pour ce compte.", 403
         if not validated:
             conn.close()
@@ -203,7 +235,6 @@ def security_check():
 def firebase_auth():
     id_token = request.json.get('idToken')
     username  = (request.json.get('username') or '').strip()
-    client_fp = request.json.get('deviceFingerprint', None)
     try:
         decoded_token = auth.verify_id_token(id_token, clock_skew_seconds=10)
         uid   = decoded_token['uid']
@@ -215,11 +246,11 @@ def firebase_auth():
         row = cursor.fetchone()
 
         if row is None:
-            device_id = generate_hardware_id(client_fp)
+            # L'appareil sera lié au premier login validé (cookie), pas ici.
             expires_at = (datetime.now(timezone.utc) + timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute(
-                "INSERT INTO users (firebase_uid, device_id, email, username, validated, expires_at) VALUES (?, ?, ?, ?, 0, ?)",
-                (uid, device_id, email, username, expires_at)
+                "INSERT INTO users (firebase_uid, email, username, validated, expires_at) VALUES (?, ?, ?, 0, ?)",
+                (uid, email, username, expires_at)
             )
             conn.commit()
             conn.close()
@@ -231,30 +262,33 @@ def firebase_auth():
             conn.close()
             return {"status": "pending", "message": "Votre compte est en attente de validation par un administrateur."}, 202
 
-        # Récupérer le device_id enregistré en DB
-        cursor.execute("SELECT device_id FROM users WHERE firebase_uid = ?", (uid,))
-        device_row = cursor.fetchone()
-        stored_device_id = device_row[0] if device_row else None
+        # ── Appareil unique : jeton en cookie ──
+        cursor.execute("SELECT device_token FROM users WHERE firebase_uid = ?", (uid,))
+        token_row = cursor.fetchone()
+        stored_token = token_row[0] if token_row else None
 
-        if client_fp:
-            incoming_device_id = generate_hardware_id(client_fp)
-            if not stored_device_id:
-                # Compte legacy sans device_id → on l'enregistre une seule fois, puis verrouillé
-                cursor.execute("UPDATE users SET device_id = ? WHERE firebase_uid = ?", (incoming_device_id, uid))
-                conn.commit()
-                stored_device_id = incoming_device_id
-            elif incoming_device_id != stored_device_id:
-                conn.close()
-                return {"status": "error", "message": "Cet appareil n'est pas autorisé pour ce compte."}, 403
+        new_token = None
+        if not stored_token:
+            # Premier login (ou après un reset admin) : on lie l'appareil ici.
+            new_token = secrets.token_urlsafe(32)
+            cursor.execute("UPDATE users SET device_token = ? WHERE firebase_uid = ?",
+                           (_hash_device_token(new_token), uid))
+            conn.commit()
+        elif not device_token_matches(stored_token):
+            conn.close()
+            return {"status": "error",
+                    "message": "Cet appareil n'est pas autorisé pour ce compte."}, 403
 
         conn.close()
 
         session.permanent = True
         session['user_id'] = uid
         session['email']   = email
-        if client_fp:
-            session['device_fp'] = stored_device_id
-        return {"status": "success"}, 200
+
+        resp = jsonify({"status": "success"})
+        if new_token:
+            _set_device_cookie(resp, new_token)
+        return resp, 200
 
     except Exception as e:
         return {"status": "error", "message": str(e)}, 401
@@ -1295,7 +1329,9 @@ def admin_reset_device():
     uid = request.form.get('uid')
     if uid:
         conn = sqlite3.connect(DB_PATH)
-        conn.execute("UPDATE users SET device_id = '' WHERE firebase_uid = ?", (uid,))
+        # Délie l'appareil : le prochain login rattachera celui utilisé alors.
+        conn.execute("UPDATE users SET device_id = '', device_token = NULL "
+                     "WHERE firebase_uid = ?", (uid,))
         conn.commit()
         conn.close()
     return redirect('/admin')

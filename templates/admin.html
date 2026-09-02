@@ -120,9 +120,9 @@
           <form method="POST" action="/admin/reset-device" style="display:inline">
             <input type="hidden" name="uid" value="{{ u.firebase_uid }}" />
             <button type="submit" class="btn-device"
-              onclick="return confirm('Réinitialiser le device ID de {{ u.email or u.firebase_uid }} ?')"
-              title="{{ '🔒 Device enregistré' if u.device_id else '⬜ Pas de device' }}"
-            >{{ '🔒 Reset device' if u.device_id else '⬜ Pas de device' }}</button>
+              onclick="return confirm('Delier cet appareil pour {{ u.email or u.firebase_uid }} ? Le prochain login liera le nouvel appareil.')"
+              title="{{ '🔒 Appareil lié — cliquer pour délier' if u.device_token else '⬜ Aucun appareil lié' }}"
+            >{{ '🔒 Délier appareil' if u.device_token else '⬜ Aucun appareil' }}</button>
           </form>
           <form method="POST" action="/admin/toggle-oracle" style="display:inline">
             <input type="hidden" name="uid" value="{{ u.firebase_uid }}" />

@@ -83,50 +83,6 @@ const firebaseConfig = {
     label.style.color     = lvl.color;
   }
 
-  // ── DEVICE FINGERPRINT ────────────────────────────────────────────────────
-  async function getDeviceFingerprint() {
-    const components = [];
-
-    // CPU / mémoire (stables, liés au matériel)
-    components.push('cores:' + (navigator.hardwareConcurrency || 0));
-    components.push('mem:'   + (navigator.deviceMemory       || 0));
-
-    // OS / plateforme / timezone (stables, liés au système)
-    components.push('plat:' + (navigator.platform || ''));
-    components.push('tz:'   + Intl.DateTimeFormat().resolvedOptions().timeZone);
-    components.push('lang:' + navigator.language);
-
-    // Tactile (stable, lié au matériel)
-    components.push('touch:' + navigator.maxTouchPoints);
-
-    // WebGL renderer (nom du GPU — stable, lié au matériel)
-    try {
-      const gl  = document.createElement('canvas').getContext('webgl');
-      const ext = gl && gl.getExtension('WEBGL_debug_renderer_info');
-      if (ext) {
-        components.push('gpu:' + gl.getParameter(ext.UNMASKED_RENDERER_WEBGL));
-        components.push('gvnd:' + gl.getParameter(ext.UNMASKED_VENDOR_WEBGL));
-      } else {
-        components.push('gpu:n/a');
-      }
-    } catch (e) {
-      components.push('gpu:err');
-    }
-
-    // Hash SHA-256 côté client (TextEncoder + SubtleCrypto)
-    const raw = components.join('|');
-    try {
-      const buf    = new TextEncoder().encode(raw);
-      const digest = await crypto.subtle.digest('SHA-256', buf);
-      const hex    = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2,'0')).join('');
-      return hex;
-    } catch (e) {
-      // Fallback : simple hash maison si SubtleCrypto indisponible (très rare)
-      let h = 0;
-      for (let i = 0; i < raw.length; i++) { h = Math.imul(31, h) + raw.charCodeAt(i) | 0; }
-      return 'fb_' + Math.abs(h).toString(16).padStart(8, '0');
-    }
-  }
 
   // ── LOGIN ─────────────────────────────────────────────────────────────────
   async function login() {
@@ -144,11 +100,10 @@ const firebaseConfig = {
       const cred    = await firebase.auth().signInWithEmailAndPassword(email, password);
       const idToken = await cred.user.getIdToken();
 
-      const deviceFingerprint = await getDeviceFingerprint();
       const res = await fetch('/firebase-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken, deviceFingerprint })
+        body: JSON.stringify({ idToken })
       });
 
       if (res.status === 202) {
@@ -200,11 +155,10 @@ const firebaseConfig = {
       const idToken = await cred.user.getIdToken();
 
       // On connecte directement après création
-      const deviceFingerprint = await getDeviceFingerprint();
       const res = await fetch('/firebase-auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken, username, deviceFingerprint })
+        body: JSON.stringify({ idToken, username })
       });
 
       if (res.status === 202) {
