@@ -42,15 +42,18 @@ def _ensure_schema():
     if "device_token" not in cols:
         conn.execute("ALTER TABLE users ADD COLUMN device_token TEXT")
         conn.commit()
-    # oracle_ranking a gagné une colonne 'mode' (classement chaîne + focus).
-    # C'est une table 100% dérivée : on la reconstruit via precompute_oracle.py.
+    # oracle_ranking a gagné les colonnes 'mode' (chaîne/focus) et 'bucket' (rareté).
+    # Table dérivée, mais un précalcul coûte plusieurs heures : on ARCHIVE l'ancienne
+    # version au lieu de la détruire (oracle_ranking_old), la nouvelle est recréée
+    # vide par precompute_oracle.py.
     has_rank = conn.execute(
         "SELECT 1 FROM sqlite_master WHERE type='table' AND name='oracle_ranking'"
     ).fetchone()
     if has_rank:
         rank_cols = [r[1] for r in conn.execute("PRAGMA table_info(oracle_ranking)")]
         if "mode" not in rank_cols or "bucket" not in rank_cols:
-            conn.execute("DROP TABLE oracle_ranking")
+            conn.execute("DROP TABLE IF EXISTS oracle_ranking_old")
+            conn.execute("ALTER TABLE oracle_ranking RENAME TO oracle_ranking_old")
             conn.commit()
     conn.close()
 
@@ -247,9 +250,12 @@ def firebase_auth():
 
         if row is None:
             # L'appareil sera lié au premier login validé (cookie), pas ici.
+            # device_id est une colonne legacy NOT NULL, plus utilisée pour l'auth :
+            # on l'insère vide pour satisfaire la contrainte.
             expires_at = (datetime.now(timezone.utc) + timedelta(days=7)).strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute(
-                "INSERT INTO users (firebase_uid, email, username, validated, expires_at) VALUES (?, ?, ?, 0, ?)",
+                "INSERT INTO users (firebase_uid, device_id, email, username, validated, expires_at) "
+                "VALUES (?, '', ?, ?, 0, ?)",
                 (uid, email, username, expires_at)
             )
             conn.commit()
