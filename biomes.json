@@ -2,6 +2,22 @@
  "biome_map": {
   "Abysses sombres": [
    {
+    "biome": "Deep Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mantle Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Tuff Caves",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Deep Dark",
     "mod": "Vanilla Minecraft"
    },
@@ -54,6 +70,86 @@
    {
     "biome": "Windswept Desert",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Ancient Sands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Brushland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Bryce Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fractured Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Hot Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Red Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sandstone Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Slopes",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warped Mesa",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Mesa",
+    "mod": "Terralith"
    },
    {
     "biome": "Badlands",
@@ -312,6 +408,10 @@
   ],
   "Boueux": [
    {
+    "biome": "Underground Jungle",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Mangrove Swamp",
     "mod": "Vanilla Minecraft"
    },
@@ -321,6 +421,14 @@
    }
   ],
   "Champignon": [
+   {
+    "biome": "Fungal Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mirage Isles",
+    "mod": "Terralith"
+   },
    {
     "biome": "Dark Forest",
     "mod": "Vanilla Minecraft"
@@ -366,6 +474,24 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Ciel": [
+   {
+    "biome": "Skylands Autumn",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Spring",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Summer",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Winter",
+    "mod": "Terralith"
+   }
+  ],
   "Collines": [
    {
     "biome": "Canadian Shield",
@@ -378,6 +504,106 @@
    {
     "biome": "Windswept Desert",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Caldera",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Forested Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fractured Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Haze Mountain",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Slopes",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Stony Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Temperate Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Tropical Jungle",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Crater",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Windswept Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Cherry Grove",
@@ -534,6 +760,22 @@
     "mod": "Oh The Biomes We've Gone"
    },
    {
+    "biome": "Basalt Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Granite Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Beach",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Cliffs",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Beach",
     "mod": "Vanilla Minecraft"
    },
@@ -630,6 +872,34 @@
    {
     "biome": "Windswept Desert",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Ancient Sands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Red Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sandstone Valley",
+    "mod": "Terralith"
    },
    {
     "biome": "Desert",
@@ -742,6 +1012,18 @@
    {
     "biome": "White Mangrove Marshes",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Orchid Swamp",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warm River",
+    "mod": "Terralith"
    },
    {
     "biome": "Frozen River",
@@ -930,6 +1212,14 @@
   ],
   "Effrayant": [
    {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Infested Caves",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Dark Forest",
     "mod": "Vanilla Minecraft"
    },
@@ -998,6 +1288,90 @@
    {
     "biome": "Shattered Glacier",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Emerald Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frozen Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Glacial Chasm",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Frozen Peaks",
@@ -1128,6 +1502,14 @@
   ],
   "Fleurs de cerisier": [
    {
+    "biome": "Sakura Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Valley",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Cherry Grove",
     "mod": "Vanilla Minecraft"
    },
@@ -1164,6 +1546,42 @@
    {
     "biome": "Sakura Grove",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cloud Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Valley",
+    "mod": "Terralith"
    },
    {
     "biome": "Cherry Grove",
@@ -1286,6 +1704,70 @@
    {
     "biome": "Zelkova Forest",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpha Islands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Birch Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cloud Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Forested Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mirage Isles",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Temperate Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Birch Forest",
@@ -1426,6 +1908,26 @@
   ],
   "Forêt enneigée": [
    {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Huangshan Highlands",
     "mod": "Wythers' Overhauled Overworld"
    },
@@ -1510,6 +2012,162 @@
    {
     "biome": "Zelkova Forest",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Birch Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Bryce Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cloud Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Emerald Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Forested Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frozen Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Glacial Chasm",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Haze Mountain",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shield Clearing",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Windswept Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Lowlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yellowstone",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Cold Ocean",
@@ -1818,6 +2476,78 @@
     "mod": "Oh The Biomes We've Gone"
    },
    {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Emerald Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frozen Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Glacial Chasm",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Lowlands",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Frozen Peaks",
     "mod": "Vanilla Minecraft"
    },
@@ -1858,6 +2588,90 @@
    {
     "biome": "Shattered Glacier",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Emerald Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frozen Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Glacial Chasm",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Deep Frozen Ocean",
@@ -1986,6 +2800,10 @@
   ],
   "Grand océan": [
    {
+    "biome": "Deep Warm Ocean",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Deep Cold Ocean",
     "mod": "Vanilla Minecraft"
    },
@@ -2007,6 +2825,50 @@
    }
   ],
   "Grotte": [
+   {
+    "biome": "Andesite Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Deep Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Diorite Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fungal Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Granite Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Infested Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mantle Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Thermal Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Tuff Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Underground Jungle",
+    "mod": "Terralith"
+   },
    {
     "biome": "Deep Dark",
     "mod": "Vanilla Minecraft"
@@ -2078,6 +2940,22 @@
   ],
   "Hautes terres": [
    {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Highlands",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Meadow",
     "mod": "Vanilla Minecraft"
    },
@@ -2114,6 +2992,12 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Ile Mirage": [
+   {
+    "biome": "Mirage Isles",
+    "mod": "Terralith"
+   }
+  ],
   "Jungle": [
    {
     "biome": "Crag Gardens",
@@ -2130,6 +3014,30 @@
    {
     "biome": "Tropical Rainforest",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Amethyst Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Amethyst Rainforest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Jungle Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Jungle",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Tropical Jungle",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Underground Jungle",
+    "mod": "Terralith"
    },
    {
     "biome": "Bamboo Jungle",
@@ -2266,6 +3174,14 @@
   ],
   "Luxuriant": [
    {
+    "biome": "Fungal Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Underground Jungle",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Lush Caves",
     "mod": "Vanilla Minecraft"
    },
@@ -2310,6 +3226,62 @@
    {
     "biome": "Weeping Witch Forest",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Amethyst Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Amethyst Rainforest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mirage Isles",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Autumn",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Spring",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Summer",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Skylands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warped Mesa",
+    "mod": "Terralith"
    },
    {
     "biome": "Dark Forest",
@@ -2369,6 +3341,34 @@
    }
   ],
   "Maquis": [
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Brushland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Hot Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shrubland",
+    "mod": "Terralith"
+   },
    {
     "biome": "Berry Bog",
     "mod": "Wythers' Overhauled Overworld"
@@ -2442,6 +3442,14 @@
    {
     "biome": "White Mangrove Marshes",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Orchid Swamp",
+    "mod": "Terralith"
    },
    {
     "biome": "Mangrove Swamp",
@@ -2796,6 +3804,366 @@
    {
     "biome": "Zelkova Forest",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpha Islands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Amethyst Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Amethyst Rainforest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ancient Sands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Andesite Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Basalt Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Birch Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Brushland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Bryce Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Caldera",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cloud Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Deep Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Diorite Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Emerald Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Forested Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fractured Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frostfire Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frozen Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fungal Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Glacial Chasm",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Granite Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Granite Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Beach",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Haze Mountain",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Hot Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Infested Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Jungle Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mantle Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mirage Isles",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Orchid Swamp",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Red Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Jungle",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sandstone Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Slopes",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shield Clearing",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Steppe",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Stony Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Temperate Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Thermal Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Tropical Jungle",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Tuff Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Underground Jungle",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Valley Clearing",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Crater",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warm River",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warped Mesa",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Mesa",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Windswept Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Lowlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yellowstone",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Badlands",
@@ -3792,6 +5160,130 @@
     "mod": "Oh The Biomes We've Gone"
    },
    {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Caldera",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Emerald Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Forested Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fractured Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Haze Mountain",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Slopes",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Stony Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Temperate Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Tropical Jungle",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Crater",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Windswept Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Cliffs",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Lowlands",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Cherry Grove",
     "mod": "Vanilla Minecraft"
    },
@@ -4072,6 +5564,14 @@
     "mod": "Oh The Biomes We've Gone"
    },
    {
+    "biome": "Deep Warm Ocean",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Frozen Cliffs",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Cold Ocean",
     "mod": "Vanilla Minecraft"
    },
@@ -4146,6 +5646,10 @@
   ],
   "Océan gelé": [
    {
+    "biome": "Frozen Cliffs",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Deep Frozen Ocean",
     "mod": "Vanilla Minecraft"
    },
@@ -4196,6 +5700,10 @@
    {
     "biome": "Rainbow Beach",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Gravel Beach",
+    "mod": "Terralith"
    },
    {
     "biome": "Beach",
@@ -4274,6 +5782,38 @@
    {
     "biome": "Temperate Grove",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Brushland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Steppe",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Valley Clearing",
+    "mod": "Terralith"
    },
    {
     "biome": "Meadow",
@@ -4386,6 +5926,22 @@
   ],
   "Plateau": [
    {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Mesa",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Cliffs",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Cherry Grove",
     "mod": "Vanilla Minecraft"
    },
@@ -4454,6 +6010,66 @@
    {
     "biome": "Temperate Grove",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Brushland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fractured Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Hot Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Red Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Slopes",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Steppe",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Valley Clearing",
+    "mod": "Terralith"
    },
    {
     "biome": "Meadow",
@@ -4646,6 +6262,10 @@
   ],
   "Rivière": [
    {
+    "biome": "Warm River",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Frozen River",
     "mod": "Vanilla Minecraft"
    },
@@ -4738,6 +6358,62 @@
    {
     "biome": "Windswept Desert",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Ancient Sands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Bryce Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Spires",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lush Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Red Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sandstone Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warped Mesa",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Mesa",
+    "mod": "Terralith"
    },
    {
     "biome": "Badlands",
@@ -4874,6 +6550,46 @@
     "mod": "Oh The Biomes We've Gone"
    },
    {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Brushland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Desert Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Fractured Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Hot Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Red Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Slopes",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shrubland",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Savanna",
     "mod": "Vanilla Minecraft"
    },
@@ -4976,6 +6692,30 @@
     "mod": "Oh The Biomes We've Gone"
    },
    {
+    "biome": "Emerald Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Scarlet Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Peaks",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Windswept Spires",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Frozen Peaks",
     "mod": "Vanilla Minecraft"
    },
@@ -5050,6 +6790,14 @@
   ],
   "Stalactites": [
    {
+    "biome": "Fractured Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Stony Spires",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Dripstone Caves",
     "mod": "Vanilla Minecraft"
    },
@@ -5082,6 +6830,82 @@
    {
     "biome": "Maple Taiga",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Birch Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Bryce Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cloud Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Forested Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Haze Mountain",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Ice Marsh",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Lowlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yellowstone",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Grove",
@@ -5193,6 +7017,34 @@
    }
   ],
   "Taïga enneigée": [
+   {
+    "biome": "Alpine Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Siberian Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Maple Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Shield",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Wintry Lowlands",
+    "mod": "Terralith"
+   },
    {
     "biome": "Grove",
     "mod": "Vanilla Minecraft"
@@ -5326,6 +7178,102 @@
    {
     "biome": "Zelkova Forest",
     "mod": "Oh The Biomes We've Gone"
+   },
+   {
+    "biome": "Alpha Islands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpine Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Arid Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Birch Taiga",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Plateau",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Blooming Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Brushland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Cloud Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Forested Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Forest",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Lavender Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mirage Isles",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Moonlight Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Sakura Valley",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Cherry Grove",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Steppe",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Temperate Highlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Valley Clearing",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yosemite Lowlands",
+    "mod": "Terralith"
    },
    {
     "biome": "Birch Forest",
@@ -5574,6 +7522,38 @@
     "mod": "Oh The Biomes We've Gone"
    },
    {
+    "biome": "Ashen Savanna",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Bryce Canyon",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Painted Mountains",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Red Oasis",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Savanna Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warped Mesa",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "White Mesa",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Badlands",
     "mod": "Vanilla Minecraft"
    },
@@ -5634,6 +7614,18 @@
   ],
   "Thermal": [
    {
+    "biome": "Caldera",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Thermal Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yellowstone",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Calcite Caverns",
     "mod": "Wythers' Overhauled Overworld"
    },
@@ -5663,6 +7655,26 @@
    }
   ],
   "Toundra": [
+   {
+    "biome": "Cold Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Gravel Desert",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Rocky Shrubland",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Snowy Badlands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Yellowstone",
+    "mod": "Terralith"
+   },
    {
     "biome": "Ice Spikes",
     "mod": "Vanilla Minecraft"
@@ -5698,6 +7710,18 @@
   ],
   "Volcanique": [
    {
+    "biome": "Mantle Caves",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Crater",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Volcanic Peaks",
+    "mod": "Terralith"
+   },
+   {
     "biome": "Icy Volcano",
     "mod": "Wythers' Overhauled Overworld"
    },
@@ -5719,6 +7743,22 @@
    }
   ],
   "Île": [
+   {
+    "biome": "Alpha Islands",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Alpha Islands Winter",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Mirage Isles",
+    "mod": "Terralith"
+   },
+   {
+    "biome": "Warped Mesa",
+    "mod": "Terralith"
+   },
    {
     "biome": "Mushroom Fields",
     "mod": "Vanilla Minecraft"
@@ -5789,6 +7829,7 @@
  },
  "mod_colors": {
   "Vanilla Minecraft": "#74b9ff",
+  "Terralith": "#55efc4",
   "Oh The Biomes We've Gone": "#6ab04c",
   "Wythers' Overhauled Overworld": "#fd79a8"
  },
@@ -6802,6 +8843,705 @@
    "Plateau",
    "Sableux",
    "Terres arides"
+  ],
+  "terralith:alpha_islands": [
+   "Forêt",
+   "Monde de surface",
+   "Tempéré",
+   "Île"
+  ],
+  "terralith:alpha_islands_winter": [
+   "Enneigé",
+   "Forêt",
+   "Forêt enneigée",
+   "Froid",
+   "Glacial",
+   "Monde de surface",
+   "Tempéré",
+   "Île"
+  ],
+  "terralith:alpine_grove": [
+   "Collines",
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Montagne",
+   "Taïga",
+   "Taïga enneigée"
+  ],
+  "terralith:alpine_highlands": [
+   "Collines",
+   "Froid",
+   "Hautes terres",
+   "Maquis",
+   "Monde de surface",
+   "Montagne",
+   "Plaines",
+   "Prairie",
+   "Tempéré"
+  ],
+  "terralith:amethyst_canyon": [
+   "Jungle",
+   "Magique",
+   "Monde de surface"
+  ],
+  "terralith:amethyst_rainforest": [
+   "Jungle",
+   "Magique",
+   "Monde de surface"
+  ],
+  "terralith:ancient_sands": [
+   "Aride",
+   "Désert",
+   "Monde de surface",
+   "Sableux"
+  ],
+  "terralith:arid_highlands": [
+   "Aride",
+   "Collines",
+   "Hautes terres",
+   "Maquis",
+   "Monde de surface",
+   "Montagne",
+   "Plaines",
+   "Prairie",
+   "Savane",
+   "Tempéré"
+  ],
+  "terralith:ashen_savanna": [
+   "Aride",
+   "Collines",
+   "Monde de surface",
+   "Montagne",
+   "Prairie",
+   "Sableux",
+   "Savane",
+   "Terres arides"
+  ],
+  "terralith:basalt_cliffs": [
+   "Côte",
+   "Monde de surface"
+  ],
+  "terralith:birch_taiga": [
+   "Forêt",
+   "Froid",
+   "Monde de surface",
+   "Taïga",
+   "Tempéré"
+  ],
+  "terralith:blooming_plateau": [
+   "Collines",
+   "Floral",
+   "Hautes terres",
+   "Monde de surface",
+   "Montagne",
+   "Plaines",
+   "Plateau",
+   "Prairie",
+   "Tempéré"
+  ],
+  "terralith:blooming_valley": [
+   "Collines",
+   "Floral",
+   "Forêt",
+   "Monde de surface",
+   "Montagne",
+   "Tempéré"
+  ],
+  "terralith:brushland": [
+   "Aride",
+   "Maquis",
+   "Monde de surface",
+   "Plaines",
+   "Prairie",
+   "Savane",
+   "Tempéré"
+  ],
+  "terralith:bryce_canyon": [
+   "Aride",
+   "Froid",
+   "Monde de surface",
+   "Sableux",
+   "Taïga",
+   "Terres arides"
+  ],
+  "terralith:caldera": [
+   "Collines",
+   "Monde de surface",
+   "Montagne",
+   "Thermal"
+  ],
+  "terralith:cave/andesite_caves": [
+   "Grotte",
+   "Monde de surface"
+  ],
+  "terralith:cave/deep_caves": [
+   "Abysses sombres",
+   "Grotte",
+   "Monde de surface"
+  ],
+  "terralith:cave/diorite_caves": [
+   "Grotte",
+   "Monde de surface"
+  ],
+  "terralith:cave/frostfire_caves": [
+   "Abysses sombres",
+   "Effrayant",
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Grotte",
+   "Monde de surface"
+  ],
+  "terralith:cave/fungal_caves": [
+   "Champignon",
+   "Grotte",
+   "Luxuriant",
+   "Monde de surface"
+  ],
+  "terralith:cave/granite_caves": [
+   "Grotte",
+   "Monde de surface"
+  ],
+  "terralith:cave/infested_caves": [
+   "Effrayant",
+   "Grotte",
+   "Monde de surface"
+  ],
+  "terralith:cave/mantle_caves": [
+   "Abysses sombres",
+   "Grotte",
+   "Monde de surface",
+   "Volcanique"
+  ],
+  "terralith:cave/thermal_caves": [
+   "Grotte",
+   "Monde de surface",
+   "Thermal"
+  ],
+  "terralith:cave/tuff_caves": [
+   "Abysses sombres",
+   "Grotte",
+   "Monde de surface"
+  ],
+  "terralith:cave/underground_jungle": [
+   "Boueux",
+   "Grotte",
+   "Jungle",
+   "Luxuriant",
+   "Monde de surface"
+  ],
+  "terralith:cloud_forest": [
+   "Floral",
+   "Forêt",
+   "Froid",
+   "Monde de surface",
+   "Taïga",
+   "Tempéré"
+  ],
+  "terralith:cold_shrubland": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Maquis",
+   "Monde de surface",
+   "Taïga",
+   "Taïga enneigée",
+   "Toundra"
+  ],
+  "terralith:deep_warm_ocean": [
+   "Grand océan",
+   "Océan"
+  ],
+  "terralith:desert_canyon": [
+   "Aride",
+   "Désert",
+   "Monde de surface",
+   "Sableux"
+  ],
+  "terralith:desert_oasis": [
+   "Aride",
+   "Désert",
+   "Monde de surface",
+   "Prairie",
+   "Sableux",
+   "Savane"
+  ],
+  "terralith:desert_spires": [
+   "Aride",
+   "Désert",
+   "Monde de surface",
+   "Sableux"
+  ],
+  "terralith:emerald_peaks": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Montagne",
+   "Sommet"
+  ],
+  "terralith:forested_highlands": [
+   "Collines",
+   "Forêt",
+   "Froid",
+   "Monde de surface",
+   "Montagne",
+   "Taïga",
+   "Tempéré"
+  ],
+  "terralith:fractured_savanna": [
+   "Aride",
+   "Collines",
+   "Monde de surface",
+   "Montagne",
+   "Prairie",
+   "Savane",
+   "Stalactites"
+  ],
+  "terralith:frozen_cliffs": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Océan",
+   "Océan gelé"
+  ],
+  "terralith:glacial_chasm": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface"
+  ],
+  "terralith:granite_cliffs": [
+   "Côte",
+   "Monde de surface"
+  ],
+  "terralith:gravel_beach": [
+   "Côte",
+   "Monde de surface",
+   "Plage"
+  ],
+  "terralith:gravel_desert": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Toundra"
+  ],
+  "terralith:haze_mountain": [
+   "Collines",
+   "Froid",
+   "Monde de surface",
+   "Montagne",
+   "Taïga"
+  ],
+  "terralith:highlands": [
+   "Collines",
+   "Hautes terres",
+   "Monde de surface",
+   "Montagne",
+   "Plaines",
+   "Prairie",
+   "Tempéré"
+  ],
+  "terralith:hot_shrubland": [
+   "Aride",
+   "Maquis",
+   "Monde de surface",
+   "Prairie",
+   "Savane"
+  ],
+  "terralith:ice_marsh": [
+   "Eau douce",
+   "Enneigé",
+   "Forêt enneigée",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Marais",
+   "Monde de surface",
+   "Taïga"
+  ],
+  "terralith:jungle_mountains": [
+   "Jungle",
+   "Monde de surface"
+  ],
+  "terralith:lavender_forest": [
+   "Floral",
+   "Forêt",
+   "Magique",
+   "Monde de surface",
+   "Tempéré"
+  ],
+  "terralith:lavender_valley": [
+   "Collines",
+   "Floral",
+   "Forêt",
+   "Magique",
+   "Monde de surface",
+   "Montagne",
+   "Tempéré"
+  ],
+  "terralith:lush_desert": [
+   "Aride",
+   "Désert",
+   "Monde de surface",
+   "Sableux"
+  ],
+  "terralith:lush_valley": [
+   "Collines",
+   "Froid",
+   "Monde de surface",
+   "Montagne"
+  ],
+  "terralith:mirage_isles": [
+   "Champignon",
+   "Forêt",
+   "Ile Mirage",
+   "Magique",
+   "Monde de surface",
+   "Tempéré",
+   "Île"
+  ],
+  "terralith:moonlight_grove": [
+   "Floral",
+   "Forêt",
+   "Froid",
+   "Magique",
+   "Monde de surface",
+   "Taïga",
+   "Tempéré"
+  ],
+  "terralith:moonlight_valley": [
+   "Collines",
+   "Floral",
+   "Forêt",
+   "Froid",
+   "Magique",
+   "Monde de surface",
+   "Montagne",
+   "Taïga",
+   "Tempéré"
+  ],
+  "terralith:orchid_swamp": [
+   "Eau douce",
+   "Marais",
+   "Monde de surface"
+  ],
+  "terralith:painted_mountains": [
+   "Aride",
+   "Froid",
+   "Magique",
+   "Monde de surface",
+   "Montagne",
+   "Sableux",
+   "Sommet",
+   "Terres arides"
+  ],
+  "terralith:red_oasis": [
+   "Aride",
+   "Désert",
+   "Monde de surface",
+   "Prairie",
+   "Sableux",
+   "Savane",
+   "Terres arides"
+  ],
+  "terralith:rocky_jungle": [
+   "Jungle",
+   "Monde de surface"
+  ],
+  "terralith:rocky_mountains": [
+   "Enneigé",
+   "Froid",
+   "Glacial",
+   "Monde de surface",
+   "Montagne",
+   "Sommet"
+  ],
+  "terralith:rocky_shrubland": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Maquis",
+   "Monde de surface",
+   "Toundra"
+  ],
+  "terralith:sakura_grove": [
+   "Fleurs de cerisier",
+   "Floral",
+   "Forêt",
+   "Monde de surface",
+   "Tempéré"
+  ],
+  "terralith:sakura_valley": [
+   "Collines",
+   "Fleurs de cerisier",
+   "Floral",
+   "Forêt",
+   "Monde de surface",
+   "Montagne",
+   "Tempéré"
+  ],
+  "terralith:sandstone_valley": [
+   "Aride",
+   "Désert",
+   "Monde de surface",
+   "Sableux"
+  ],
+  "terralith:savanna_badlands": [
+   "Aride",
+   "Monde de surface",
+   "Plateau",
+   "Prairie",
+   "Sableux",
+   "Savane",
+   "Terres arides"
+  ],
+  "terralith:savanna_slopes": [
+   "Aride",
+   "Collines",
+   "Monde de surface",
+   "Montagne",
+   "Prairie",
+   "Savane"
+  ],
+  "terralith:scarlet_mountains": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Magique",
+   "Monde de surface",
+   "Montagne",
+   "Sommet"
+  ],
+  "terralith:shield": [
+   "Froid",
+   "Monde de surface",
+   "Taïga"
+  ],
+  "terralith:shield_clearing": [
+   "Froid",
+   "Monde de surface"
+  ],
+  "terralith:shrubland": [
+   "Aride",
+   "Maquis",
+   "Monde de surface",
+   "Plaines",
+   "Prairie",
+   "Savane",
+   "Tempéré"
+  ],
+  "terralith:siberian_grove": [
+   "Collines",
+   "Enneigé",
+   "Forêt enneigée",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Montagne",
+   "Taïga",
+   "Taïga enneigée"
+  ],
+  "terralith:siberian_taiga": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Taïga"
+  ],
+  "terralith:skylands_autumn": [
+   "Ciel",
+   "Magique"
+  ],
+  "terralith:skylands_spring": [
+   "Ciel",
+   "Magique"
+  ],
+  "terralith:skylands_summer": [
+   "Ciel",
+   "Magique"
+  ],
+  "terralith:skylands_winter": [
+   "Ciel",
+   "Enneigé",
+   "Froid",
+   "Glacial",
+   "Magique"
+  ],
+  "terralith:snowy_badlands": [
+   "Aride",
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Sableux",
+   "Terres arides",
+   "Toundra"
+  ],
+  "terralith:snowy_cherry_grove": [
+   "Enneigé",
+   "Forêt",
+   "Forêt enneigée",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Tempéré"
+  ],
+  "terralith:snowy_maple_forest": [
+   "Collines",
+   "Enneigé",
+   "Forêt enneigée",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Montagne",
+   "Taïga",
+   "Taïga enneigée"
+  ],
+  "terralith:snowy_shield": [
+   "Collines",
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Montagne",
+   "Taïga",
+   "Taïga enneigée"
+  ],
+  "terralith:steppe": [
+   "Monde de surface",
+   "Plaines",
+   "Prairie",
+   "Tempéré"
+  ],
+  "terralith:stony_spires": [
+   "Collines",
+   "Monde de surface",
+   "Montagne",
+   "Stalactites"
+  ],
+  "terralith:temperate_highlands": [
+   "Collines",
+   "Forêt",
+   "Monde de surface",
+   "Montagne",
+   "Tempéré"
+  ],
+  "terralith:tropical_jungle": [
+   "Collines",
+   "Jungle",
+   "Monde de surface",
+   "Montagne"
+  ],
+  "terralith:valley_clearing": [
+   "Monde de surface",
+   "Plaines",
+   "Prairie",
+   "Tempéré"
+  ],
+  "terralith:volcanic_crater": [
+   "Collines",
+   "Monde de surface",
+   "Montagne",
+   "Volcanique"
+  ],
+  "terralith:volcanic_peaks": [
+   "Froid",
+   "Monde de surface",
+   "Montagne",
+   "Sommet",
+   "Volcanique"
+  ],
+  "terralith:warm_river": [
+   "Eau douce",
+   "Monde de surface",
+   "Rivière"
+  ],
+  "terralith:warped_mesa": [
+   "Aride",
+   "Magique",
+   "Monde de surface",
+   "Sableux",
+   "Terres arides",
+   "Île"
+  ],
+  "terralith:white_cliffs": [
+   "Côte",
+   "Froid",
+   "Monde de surface"
+  ],
+  "terralith:white_mesa": [
+   "Aride",
+   "Monde de surface",
+   "Plateau",
+   "Sableux",
+   "Terres arides"
+  ],
+  "terralith:windswept_spires": [
+   "Collines",
+   "Froid",
+   "Monde de surface",
+   "Montagne",
+   "Sommet"
+  ],
+  "terralith:wintry_forest": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Taïga",
+   "Taïga enneigée"
+  ],
+  "terralith:wintry_lowlands": [
+   "Enneigé",
+   "Froid",
+   "Glaciaire",
+   "Glacial",
+   "Monde de surface",
+   "Taïga",
+   "Taïga enneigée"
+  ],
+  "terralith:yellowstone": [
+   "Froid",
+   "Monde de surface",
+   "Taïga",
+   "Thermal",
+   "Toundra"
+  ],
+  "terralith:yosemite_cliffs": [
+   "Froid",
+   "Monde de surface",
+   "Montagne",
+   "Plateau"
+  ],
+  "terralith:yosemite_lowlands": [
+   "Collines",
+   "Forêt",
+   "Froid",
+   "Monde de surface",
+   "Montagne",
+   "Taïga",
+   "Tempéré"
   ],
   "wythers:ancient_copper_beech_forest": [
    "Effrayant",
@@ -8122,13 +10862,17 @@
    "emoji": "🟩",
    "order": 0
   },
+  "Terralith": {
+   "emoji": "🔵",
+   "order": 1
+  },
   "Oh The Biomes We've Gone": {
    "emoji": "🌿",
-   "order": 1
+   "order": 2
   },
   "Wythers' Overhauled Overworld": {
    "emoji": "🟣",
-   "order": 2
+   "order": 3
   }
  },
  "menu_themes": [
