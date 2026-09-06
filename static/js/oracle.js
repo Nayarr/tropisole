@@ -326,7 +326,7 @@ function renderCard(r, i) {
   const modColor = {
     "Vanilla Minecraft": "#74b9ff", "Terralith": "#55efc4",
     "Wythers\' Overhauled Overworld": "#fd79a8", "Oh The Biomes We\'ve Gone": "#6ab04c",
-    "BetterNether": "#ff7675", "Cobblemon": "#C9A24B",
+    "BetterNether": "#ff7675", "Cobblemon": "#C9A24B", "Habitats": "#e8a33d",
   }[r.mod] || "#8a8a8a";
 
   const reductPct = totalBase > 0 ? ((totalBase - totalFilt) / totalBase * 100).toFixed(1) : '0.0';

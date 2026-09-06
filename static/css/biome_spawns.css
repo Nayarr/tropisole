@@ -973,3 +973,8 @@
       box-shadow: 0 4px 24px rgba(0,0,0,.6);
       pointer-events: none;
     }
+
+/* Origine du spawn (1.8) : habitat, horde, alpha */
+.cond-tag.habitat { border-color: #e8a33d44; background: #e8a33d18; color: #e8a33d; }
+.cond-tag.herd    { border-color: #74b9ff44; background: #74b9ff15; color: #74b9ff; }
+.cond-tag.alpha   { border-color: #ffc43944; background: #ffc43918; color: #ffc439; }

@@ -1,5 +1,17 @@
 {
  "biome_map": {
+  "Abandoned Fortress": [
+   {
+    "biome": "Abandoned Fortress",
+    "mod": "Habitats"
+   }
+  ],
+  "Abandoned Village House": [
+   {
+    "biome": "Abandoned Village House",
+    "mod": "Habitats"
+   }
+  ],
   "Abysses sombres": [
    {
     "biome": "Deep Caves",
@@ -28,6 +40,12 @@
    {
     "biome": "Deep Dark Incursion",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Ancient Wellspring": [
+   {
+    "biome": "Ancient Wellspring",
+    "mod": "Habitats"
    }
   ],
   "Aride": [
@@ -356,6 +374,12 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Badlands Shaded Rock": [
+   {
+    "biome": "Badlands Shaded Rock",
+    "mod": "Habitats"
+   }
+  ],
   "Bambou": [
    {
     "biome": "Bamboo Jungle",
@@ -406,6 +430,24 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Berry Patch": [
+   {
+    "biome": "Berry Patch",
+    "mod": "Habitats"
+   }
+  ],
+  "Birch Wildfire Scar": [
+   {
+    "biome": "Birch Wildfire Scar",
+    "mod": "Habitats"
+   }
+  ],
+  "Birch Wildlife Scar": [
+   {
+    "biome": "Birch Wildlife Scar",
+    "mod": "Habitats"
+   }
+  ],
   "Boueux": [
    {
     "biome": "Underground Jungle",
@@ -418,6 +460,18 @@
    {
     "biome": "Dripleaf Swamp",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Bug Mound": [
+   {
+    "biome": "Bug Mound",
+    "mod": "Habitats"
+   }
+  ],
+  "Carved Ice Spikes": [
+   {
+    "biome": "Carved Ice Spikes",
+    "mod": "Habitats"
    }
   ],
   "Champignon": [
@@ -472,6 +526,12 @@
    {
     "biome": "Phantasmal Forest",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Chorus Briar": [
+   {
+    "biome": "Chorus Briar",
+    "mod": "Habitats"
    }
   ],
   "Ciel": [
@@ -746,6 +806,12 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Crimson Fungal Dwelling": [
+   {
+    "biome": "Crimson Fungal Dwelling",
+    "mod": "Habitats"
+   }
+  ],
   "Côte": [
    {
     "biome": "Basalt Barrera",
@@ -858,6 +924,36 @@
    {
     "biome": "Warm Stony Shore",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Deep Roots": [
+   {
+    "biome": "Deep Roots",
+    "mod": "Habitats"
+   }
+  ],
+  "Deep Sea Spire": [
+   {
+    "biome": "Deep Sea Spire",
+    "mod": "Habitats"
+   }
+  ],
+  "Desert Oasis": [
+   {
+    "biome": "Desert Oasis",
+    "mod": "Habitats"
+   }
+  ],
+  "Desert Shaded Rock": [
+   {
+    "biome": "Desert Shaded Rock",
+    "mod": "Habitats"
+   }
+  ],
+  "Drifting Icebergs": [
+   {
+    "biome": "Drifting Icebergs",
+    "mod": "Habitats"
    }
   ],
   "Désert": [
@@ -990,6 +1086,12 @@
    {
     "biome": "Soul Sand Valley",
     "mod": "Vanilla Minecraft"
+   }
+  ],
+  "Earthen Hives": [
+   {
+    "biome": "Earthen Hives",
+    "mod": "Habitats"
    }
   ],
   "Eau douce": [
@@ -1478,6 +1580,18 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Exposed Geode": [
+   {
+    "biome": "Exposed Geode",
+    "mod": "Habitats"
+   }
+  ],
+  "Fae Mounds": [
+   {
+    "biome": "Fae Mounds",
+    "mod": "Habitats"
+   }
+  ],
   "Fin": [
    {
     "biome": "End Barrens",
@@ -1626,6 +1740,12 @@
    {
     "biome": "Spring Flower Forest",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Flowerbed Clearing": [
+   {
+    "biome": "Flowerbed Clearing",
+    "mod": "Habitats"
    }
   ],
   "Forêt": [
@@ -1938,6 +2058,12 @@
    {
     "biome": "Snowy Fen",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Freshwater Pond": [
+   {
+    "biome": "Freshwater Pond",
+    "mod": "Habitats"
    }
   ],
   "Froid": [
@@ -2468,6 +2594,12 @@
    {
     "biome": "Windswept Jungle",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Fungal Dwelling": [
+   {
+    "biome": "Fungal Dwelling",
+    "mod": "Habitats"
    }
   ],
   "Glaciaire": [
@@ -3172,6 +3304,30 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Lost Cave Ruins": [
+   {
+    "biome": "Lost Cave Ruins",
+    "mod": "Habitats"
+   }
+  ],
+  "Lush Canopy": [
+   {
+    "biome": "Lush Canopy",
+    "mod": "Habitats"
+   }
+  ],
+  "Lush Cenote": [
+   {
+    "biome": "Lush Cenote",
+    "mod": "Habitats"
+   }
+  ],
+  "Lush Peat Bog": [
+   {
+    "biome": "Lush Peat Bog",
+    "mod": "Habitats"
+   }
+  ],
   "Luxuriant": [
    {
     "biome": "Fungal Caves",
@@ -3582,6 +3738,12 @@
    {
     "biome": "Waterlily Swamp",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Meteorite Impact": [
+   {
+    "biome": "Meteorite Impact",
+    "mod": "Habitats"
    }
   ],
   "Monde de surface": [
@@ -5482,6 +5644,12 @@
     "mod": "Vanilla Minecraft"
    }
   ],
+  "Natural Lightning Rod": [
+   {
+    "biome": "Natural Lightning Rod",
+    "mod": "Habitats"
+   }
+  ],
   "Nether": [
    {
     "biome": "Basalt Deltas",
@@ -5542,6 +5710,18 @@
    {
     "biome": "Soul Sand Valley",
     "mod": "Vanilla Minecraft"
+   }
+  ],
+  "Oak Wildfire Scar": [
+   {
+    "biome": "Oak Wildfire Scar",
+    "mod": "Habitats"
+   }
+  ],
+  "Oak Wildlife Scar": [
+   {
+    "biome": "Oak Wildlife Scar",
+    "mod": "Habitats"
    }
   ],
   "Ocean tempere": [
@@ -5686,6 +5866,18 @@
    {
     "biome": "Warm Stony Shore",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Parched Peat Bog": [
+   {
+    "biome": "Parched Peat Bog",
+    "mod": "Habitats"
+   }
+  ],
+  "Pinkflowerbed Clearing": [
+   {
+    "biome": "Pinkflowerbed Clearing",
+    "mod": "Habitats"
    }
   ],
   "Plage": [
@@ -6260,6 +6452,24 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Quartz Spikes": [
+   {
+    "biome": "Quartz Spikes",
+    "mod": "Habitats"
+   }
+  ],
+  "Reclaimed Desert Monument": [
+   {
+    "biome": "Reclaimed Desert Monument",
+    "mod": "Habitats"
+   }
+  ],
+  "Reclaimed Lush Monument": [
+   {
+    "biome": "Reclaimed Lush Monument",
+    "mod": "Habitats"
+   }
+  ],
   "Rivière": [
    {
     "biome": "Warm River",
@@ -6324,6 +6534,24 @@
    {
     "biome": "Tropical Forest River",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Rocky Outcrop": [
+   {
+    "biome": "Rocky Outcrop",
+    "mod": "Habitats"
+   }
+  ],
+  "Rocky Tide Pool": [
+   {
+    "biome": "Rocky Tide Pool",
+    "mod": "Habitats"
+   }
+  ],
+  "Root Nursery": [
+   {
+    "biome": "Root Nursery",
+    "mod": "Habitats"
    }
   ],
   "Sableux": [
@@ -6536,6 +6764,18 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Sandpit Clearing": [
+   {
+    "biome": "Sandpit Clearing",
+    "mod": "Habitats"
+   }
+  ],
+  "Sandy Tide Pool": [
+   {
+    "biome": "Sandy Tide Pool",
+    "mod": "Habitats"
+   }
+  ],
   "Savane": [
    {
     "biome": "Araucaria Savanna",
@@ -6682,6 +6922,30 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Skeletal Fall": [
+   {
+    "biome": "Skeletal Fall",
+    "mod": "Habitats"
+   }
+  ],
+  "Snowy Burrow": [
+   {
+    "biome": "Snowy Burrow",
+    "mod": "Habitats"
+   }
+  ],
+  "Snowy Grotto": [
+   {
+    "biome": "Snowy Grotto",
+    "mod": "Habitats"
+   }
+  ],
+  "Snowy Thermal Vents": [
+   {
+    "biome": "Snowy Thermal Vents",
+    "mod": "Habitats"
+   }
+  ],
   "Sommet": [
    {
     "biome": "Howling Peaks",
@@ -6788,6 +7052,18 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Spruce Wildfire Scar": [
+   {
+    "biome": "Spruce Wildfire Scar",
+    "mod": "Habitats"
+   }
+  ],
+  "Spruce Wildlife Scar": [
+   {
+    "biome": "Spruce Wildlife Scar",
+    "mod": "Habitats"
+   }
+  ],
   "Stalactites": [
    {
     "biome": "Fractured Savanna",
@@ -6820,6 +7096,24 @@
    {
     "biome": "Mossy Dripstone Caves",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Strange Fungal Dwelling": [
+   {
+    "biome": "Strange Fungal Dwelling",
+    "mod": "Habitats"
+   }
+  ],
+  "Sunflowerbed Clearing": [
+   {
+    "biome": "Sunflowerbed Clearing",
+    "mod": "Habitats"
+   }
+  ],
+  "Sunscorched Clearing": [
+   {
+    "biome": "Sunscorched Clearing",
+    "mod": "Habitats"
    }
   ],
   "Taïga": [
@@ -7654,6 +7948,12 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Thermal Crevices": [
+   {
+    "biome": "Thermal Crevices",
+    "mod": "Habitats"
+   }
+  ],
   "Toundra": [
    {
     "biome": "Cold Shrubland",
@@ -7708,6 +8008,18 @@
     "mod": "Wythers' Overhauled Overworld"
    }
   ],
+  "Treasure Hoard": [
+   {
+    "biome": "Treasure Hoard",
+    "mod": "Habitats"
+   }
+  ],
+  "Volcanic Plume": [
+   {
+    "biome": "Volcanic Plume",
+    "mod": "Habitats"
+   }
+  ],
   "Volcanique": [
    {
     "biome": "Mantle Caves",
@@ -7740,6 +8052,18 @@
    {
     "biome": "Volcano",
     "mod": "Wythers' Overhauled Overworld"
+   }
+  ],
+  "Warped Fungal Dwelling": [
+   {
+    "biome": "Warped Fungal Dwelling",
+    "mod": "Habitats"
+   }
+  ],
+  "Zen Garden": [
+   {
+    "biome": "Zen Garden",
+    "mod": "Habitats"
    }
   ],
   "Île": [
@@ -7831,7 +8155,8 @@
   "Vanilla Minecraft": "#74b9ff",
   "Terralith": "#55efc4",
   "Oh The Biomes We've Gone": "#6ab04c",
-  "Wythers' Overhauled Overworld": "#fd79a8"
+  "Wythers' Overhauled Overworld": "#fd79a8",
+  "Habitats": "#e8a33d"
  },
  "cobblemon_tag_hierarchy": {
   "#cobblemon:is_overworld": [
@@ -8124,7 +8449,61 @@
   "Fin": "#cobblemon:is_end",
   "Éther": "#aether:is_aether",
   "Bumblezone": "#the_bumblezone:the_bumblezone",
-  "Ocean tempere": "#cobblemon:is_temperate_ocean"
+  "Ocean tempere": "#cobblemon:is_temperate_ocean",
+  "Abandoned Fortress": "#habitat:abandoned_fortress",
+  "Abandoned Village House": "#habitat:abandoned_village_house",
+  "Ancient Wellspring": "#habitat:ancient_wellspring",
+  "Badlands Shaded Rock": "#habitat:badlands_shaded_rock",
+  "Berry Patch": "#habitat:berry_patch",
+  "Birch Wildfire Scar": "#habitat:birch_wildfire_scar",
+  "Birch Wildlife Scar": "#habitat:birch_wildlife_scar",
+  "Bug Mound": "#habitat:bug_mound",
+  "Carved Ice Spikes": "#habitat:carved_ice_spikes",
+  "Chorus Briar": "#habitat:chorus_briar",
+  "Crimson Fungal Dwelling": "#habitat:crimson_fungal_dwelling",
+  "Deep Roots": "#habitat:deep_roots",
+  "Deep Sea Spire": "#habitat:deep_sea_spire",
+  "Desert Oasis": "#habitat:desert_oasis",
+  "Desert Shaded Rock": "#habitat:desert_shaded_rock",
+  "Drifting Icebergs": "#habitat:drifting_icebergs",
+  "Earthen Hives": "#habitat:earthen_hives",
+  "Exposed Geode": "#habitat:exposed_geode",
+  "Fae Mounds": "#habitat:fae_mounds",
+  "Flowerbed Clearing": "#habitat:flowerbed_clearing",
+  "Freshwater Pond": "#habitat:freshwater_pond",
+  "Fungal Dwelling": "#habitat:fungal_dwelling",
+  "Lost Cave Ruins": "#habitat:lost_cave_ruins",
+  "Lush Canopy": "#habitat:lush_canopy",
+  "Lush Cenote": "#habitat:lush_cenote",
+  "Lush Peat Bog": "#habitat:lush_peat_bog",
+  "Meteorite Impact": "#habitat:meteorite_impact",
+  "Natural Lightning Rod": "#habitat:natural_lightning_rod",
+  "Oak Wildfire Scar": "#habitat:oak_wildfire_scar",
+  "Oak Wildlife Scar": "#habitat:oak_wildlife_scar",
+  "Parched Peat Bog": "#habitat:parched_peat_bog",
+  "Pinkflowerbed Clearing": "#habitat:pinkflowerbed_clearing",
+  "Quartz Spikes": "#habitat:quartz_spikes",
+  "Reclaimed Desert Monument": "#habitat:reclaimed_desert_monument",
+  "Reclaimed Lush Monument": "#habitat:reclaimed_lush_monument",
+  "Rocky Outcrop": "#habitat:rocky_outcrop",
+  "Rocky Tide Pool": "#habitat:rocky_tide_pool",
+  "Root Nursery": "#habitat:root_nursery",
+  "Sandpit Clearing": "#habitat:sandpit_clearing",
+  "Sandy Tide Pool": "#habitat:sandy_tide_pool",
+  "Skeletal Fall": "#habitat:skeletal_fall",
+  "Snowy Burrow": "#habitat:snowy_burrow",
+  "Snowy Grotto": "#habitat:snowy_grotto",
+  "Snowy Thermal Vents": "#habitat:snowy_thermal_vents",
+  "Spruce Wildfire Scar": "#habitat:spruce_wildfire_scar",
+  "Spruce Wildlife Scar": "#habitat:spruce_wildlife_scar",
+  "Strange Fungal Dwelling": "#habitat:strange_fungal_dwelling",
+  "Sunflowerbed Clearing": "#habitat:sunflowerbed_clearing",
+  "Sunscorched Clearing": "#habitat:sunscorched_clearing",
+  "Thermal Crevices": "#habitat:thermal_crevices",
+  "Treasure Hoard": "#habitat:treasure_hoard",
+  "Volcanic Plume": "#habitat:volcanic_plume",
+  "Warped Fungal Dwelling": "#habitat:warped_fungal_dwelling",
+  "Zen Garden": "#habitat:zen_garden"
  },
  "raw_id_to_fr_tag": {
   "biomeswevegone:allium_shrubland": [
@@ -10873,6 +11252,10 @@
   "Wythers' Overhauled Overworld": {
    "emoji": "🟣",
    "order": 3
+  },
+  "Habitats": {
+   "emoji": "🏕️",
+   "order": 4
   }
  },
  "menu_themes": [
@@ -11042,6 +11425,67 @@
     "Hiver aérien"
    ],
    "label_en": "End & Dimensions"
+  },
+  {
+   "icon": "🏕️",
+   "label": "Habitats",
+   "label_en": "Habitats",
+   "tags": [
+    "Abandoned Fortress",
+    "Abandoned Village House",
+    "Ancient Wellspring",
+    "Badlands Shaded Rock",
+    "Berry Patch",
+    "Birch Wildfire Scar",
+    "Birch Wildlife Scar",
+    "Bug Mound",
+    "Carved Ice Spikes",
+    "Chorus Briar",
+    "Crimson Fungal Dwelling",
+    "Deep Roots",
+    "Deep Sea Spire",
+    "Desert Oasis",
+    "Desert Shaded Rock",
+    "Drifting Icebergs",
+    "Earthen Hives",
+    "Exposed Geode",
+    "Fae Mounds",
+    "Flowerbed Clearing",
+    "Freshwater Pond",
+    "Fungal Dwelling",
+    "Lost Cave Ruins",
+    "Lush Canopy",
+    "Lush Cenote",
+    "Lush Peat Bog",
+    "Meteorite Impact",
+    "Natural Lightning Rod",
+    "Oak Wildfire Scar",
+    "Oak Wildlife Scar",
+    "Parched Peat Bog",
+    "Pinkflowerbed Clearing",
+    "Quartz Spikes",
+    "Reclaimed Desert Monument",
+    "Reclaimed Lush Monument",
+    "Rocky Outcrop",
+    "Rocky Tide Pool",
+    "Root Nursery",
+    "Sandpit Clearing",
+    "Sandy Tide Pool",
+    "Skeletal Fall",
+    "Snowy Burrow",
+    "Snowy Grotto",
+    "Snowy Thermal Vents",
+    "Spruce Wildfire Scar",
+    "Spruce Wildlife Scar",
+    "Strange Fungal Dwelling",
+    "Sunflowerbed Clearing",
+    "Sunscorched Clearing",
+    "Thermal Crevices",
+    "Treasure Hoard",
+    "Volcanic Plume",
+    "Warped Fungal Dwelling",
+    "Zen Garden"
+   ]
   }
  ],
  "tag_icons": {
@@ -11136,7 +11580,61 @@
   "Automne aérien": "🍂",
   "Printemps aérien": "🌷",
   "Hiver aérien": "⛄",
-  "Ocean tempere": "🌊"
+  "Ocean tempere": "🌊",
+  "Abandoned Fortress": "🏕️",
+  "Abandoned Village House": "🏕️",
+  "Ancient Wellspring": "🏕️",
+  "Badlands Shaded Rock": "🏕️",
+  "Berry Patch": "🏕️",
+  "Birch Wildfire Scar": "🏕️",
+  "Birch Wildlife Scar": "🏕️",
+  "Bug Mound": "🏕️",
+  "Carved Ice Spikes": "🏕️",
+  "Chorus Briar": "🏕️",
+  "Crimson Fungal Dwelling": "🏕️",
+  "Deep Roots": "🏕️",
+  "Deep Sea Spire": "🏕️",
+  "Desert Oasis": "🏕️",
+  "Desert Shaded Rock": "🏕️",
+  "Drifting Icebergs": "🏕️",
+  "Earthen Hives": "🏕️",
+  "Exposed Geode": "🏕️",
+  "Fae Mounds": "🏕️",
+  "Flowerbed Clearing": "🏕️",
+  "Freshwater Pond": "🏕️",
+  "Fungal Dwelling": "🏕️",
+  "Lost Cave Ruins": "🏕️",
+  "Lush Canopy": "🏕️",
+  "Lush Cenote": "🏕️",
+  "Lush Peat Bog": "🏕️",
+  "Meteorite Impact": "🏕️",
+  "Natural Lightning Rod": "🏕️",
+  "Oak Wildfire Scar": "🏕️",
+  "Oak Wildlife Scar": "🏕️",
+  "Parched Peat Bog": "🏕️",
+  "Pinkflowerbed Clearing": "🏕️",
+  "Quartz Spikes": "🏕️",
+  "Reclaimed Desert Monument": "🏕️",
+  "Reclaimed Lush Monument": "🏕️",
+  "Rocky Outcrop": "🏕️",
+  "Rocky Tide Pool": "🏕️",
+  "Root Nursery": "🏕️",
+  "Sandpit Clearing": "🏕️",
+  "Sandy Tide Pool": "🏕️",
+  "Skeletal Fall": "🏕️",
+  "Snowy Burrow": "🏕️",
+  "Snowy Grotto": "🏕️",
+  "Snowy Thermal Vents": "🏕️",
+  "Spruce Wildfire Scar": "🏕️",
+  "Spruce Wildlife Scar": "🏕️",
+  "Strange Fungal Dwelling": "🏕️",
+  "Sunflowerbed Clearing": "🏕️",
+  "Sunscorched Clearing": "🏕️",
+  "Thermal Crevices": "🏕️",
+  "Treasure Hoard": "🏕️",
+  "Volcanic Plume": "🏕️",
+  "Warped Fungal Dwelling": "🏕️",
+  "Zen Garden": "🏕️"
  },
  "tag_en": {
   "Aride": "Arid",
@@ -11230,6 +11728,60 @@
   "Printemps aérien": "Sky Spring",
   "Hiver aérien": "Sky Winter",
   "Gouffre cristallin": "Crystalline Chasm",
-  "Ocean tempere": "Temperate Ocean"
+  "Ocean tempere": "Temperate Ocean",
+  "Abandoned Fortress": "Abandoned Fortress",
+  "Abandoned Village House": "Abandoned Village House",
+  "Ancient Wellspring": "Ancient Wellspring",
+  "Badlands Shaded Rock": "Badlands Shaded Rock",
+  "Berry Patch": "Berry Patch",
+  "Birch Wildfire Scar": "Birch Wildfire Scar",
+  "Birch Wildlife Scar": "Birch Wildlife Scar",
+  "Bug Mound": "Bug Mound",
+  "Carved Ice Spikes": "Carved Ice Spikes",
+  "Chorus Briar": "Chorus Briar",
+  "Crimson Fungal Dwelling": "Crimson Fungal Dwelling",
+  "Deep Roots": "Deep Roots",
+  "Deep Sea Spire": "Deep Sea Spire",
+  "Desert Oasis": "Desert Oasis",
+  "Desert Shaded Rock": "Desert Shaded Rock",
+  "Drifting Icebergs": "Drifting Icebergs",
+  "Earthen Hives": "Earthen Hives",
+  "Exposed Geode": "Exposed Geode",
+  "Fae Mounds": "Fae Mounds",
+  "Flowerbed Clearing": "Flowerbed Clearing",
+  "Freshwater Pond": "Freshwater Pond",
+  "Fungal Dwelling": "Fungal Dwelling",
+  "Lost Cave Ruins": "Lost Cave Ruins",
+  "Lush Canopy": "Lush Canopy",
+  "Lush Cenote": "Lush Cenote",
+  "Lush Peat Bog": "Lush Peat Bog",
+  "Meteorite Impact": "Meteorite Impact",
+  "Natural Lightning Rod": "Natural Lightning Rod",
+  "Oak Wildfire Scar": "Oak Wildfire Scar",
+  "Oak Wildlife Scar": "Oak Wildlife Scar",
+  "Parched Peat Bog": "Parched Peat Bog",
+  "Pinkflowerbed Clearing": "Pinkflowerbed Clearing",
+  "Quartz Spikes": "Quartz Spikes",
+  "Reclaimed Desert Monument": "Reclaimed Desert Monument",
+  "Reclaimed Lush Monument": "Reclaimed Lush Monument",
+  "Rocky Outcrop": "Rocky Outcrop",
+  "Rocky Tide Pool": "Rocky Tide Pool",
+  "Root Nursery": "Root Nursery",
+  "Sandpit Clearing": "Sandpit Clearing",
+  "Sandy Tide Pool": "Sandy Tide Pool",
+  "Skeletal Fall": "Skeletal Fall",
+  "Snowy Burrow": "Snowy Burrow",
+  "Snowy Grotto": "Snowy Grotto",
+  "Snowy Thermal Vents": "Snowy Thermal Vents",
+  "Spruce Wildfire Scar": "Spruce Wildfire Scar",
+  "Spruce Wildlife Scar": "Spruce Wildlife Scar",
+  "Strange Fungal Dwelling": "Strange Fungal Dwelling",
+  "Sunflowerbed Clearing": "Sunflowerbed Clearing",
+  "Sunscorched Clearing": "Sunscorched Clearing",
+  "Thermal Crevices": "Thermal Crevices",
+  "Treasure Hoard": "Treasure Hoard",
+  "Volcanic Plume": "Volcanic Plume",
+  "Warped Fungal Dwelling": "Warped Fungal Dwelling",
+  "Zen Garden": "Zen Garden"
  }
 }

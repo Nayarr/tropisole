@@ -314,13 +314,14 @@ def get_db():
     conn.row_factory = sqlite3.Row
     return conn
 
-BUCKET_ORDER = {"filler": 1, "common": 2, "uncommon": 3, "rare": 4, "ultra-rare": 5}
+BUCKET_ORDER = {"filler": 1, "common": 2, "uncommon": 3, "rare": 4, "ultra-rare": 5, "boss": 6}
 BUCKET_FR = {
     "filler": "Fillers",
     "common": "Commun",
     "uncommon": "Peu commun",
     "rare": "Rare",
     "ultra-rare": "Ultra-rare",
+    "boss": "Boss (alpha)",
     None: "—"
 }
 TIME_FR = {
@@ -340,7 +341,7 @@ WEATHER_FR = {
 # sont traduits ; le reste de l'UI demeure en français.
 BUCKET_EN = {
     "filler": "Fillers", "common": "Common", "uncommon": "Uncommon",
-    "rare": "Rare", "ultra-rare": "Ultra-rare", None: "—",
+    "rare": "Rare", "ultra-rare": "Ultra-rare", "boss": "Boss (alpha)", None: "—",
 }
 TIME_EN = {"day": "Day", "night": "Night", "dusk": "Dusk", None: "—"}
 WEATHER_EN = {"rain": "Rain", "clear": "Clear", None: "—"}
@@ -502,6 +503,33 @@ MOON_PHASE_FR = {
     5: "Lune gibbeuse croissante", 6: "Premier quartier", 7: "Lune croissante",
 }
 
+def _moon_phase_names(valeur):
+    """Libellés FR des phases de lune décrites par `valeur`.
+
+    Cobblemon 1.8 accepte trois écritures : un entier ("0"), une plage ("1-3")
+    et une liste ("0,4") — voire une combinaison des deux dernières.
+    """
+    noms = []
+    for part in str(valeur).split(","):
+        part = part.strip()
+        if not part:
+            continue
+        bornes = part.split("-")
+        try:
+            if len(bornes) == 2:
+                phases = range(int(bornes[0]), int(bornes[1]) + 1)
+            else:
+                phases = [int(part)]
+        except ValueError:
+            noms.append("Phase %s" % part)
+            continue
+        for ph in phases:
+            nom = MOON_PHASE_FR.get(ph, "Phase %d" % ph)
+            if nom not in noms:
+                noms.append(nom)
+    return noms
+
+
 # Formes régionales reconnues → label FR + couleur badge
 FORME_REGIONALE = {
     "alolan":   {"label": "Forme d'Alola",   "short": "Alola",   "color": "#00b4d8"},
@@ -601,19 +629,11 @@ def _make_condition_tags(cond, structures_raw, spawn_dict):
 
     # ── Lune ─────────────────────────────────────────────────────────────────
     moon = cond.get("moonPhase")
-    if moon is not None:
-        moon_name = MOON_PHASE_FR.get(int(moon), f"Phase {moon}")
-        tags.append({"icon": "🌙", "label": f"Lune : {moon_name}", "type": "moon"})
-    # Aussi depuis la colonne `lune`
-    lune_col = spawn_dict.get("lune")
-    if lune_col and moon is None:
-        phases = [p.strip() for p in str(lune_col).split(",") if p.strip()]
-        if len(phases) == 1:
-            moon_name = MOON_PHASE_FR.get(int(phases[0]), f"Phase {phases[0]}")
-            tags.append({"icon": "🌙", "label": f"Lune : {moon_name}", "type": "moon"})
-        else:
-            names = [MOON_PHASE_FR.get(int(p), f"Phase {p}") for p in phases]
-            tags.append({"icon": "🌙", "label": f"Lune : {', '.join(names)}", "type": "moon"})
+    source_lune = moon if moon is not None else spawn_dict.get("lune")
+    if source_lune is not None and source_lune != "":
+        noms = _moon_phase_names(source_lune)
+        if noms:
+            tags.append({"icon": "🌙", "label": "Lune : " + ", ".join(noms), "type": "moon"})
 
     # ── Zone X ───────────────────────────────────────────────────────────────
     min_x = cond.get("minX")
@@ -729,6 +749,24 @@ def enrich_spawn_conditions(spawn_dict):
     spawn_dict["bait"] = cond.get("bait")
     spawn_dict["is_slime_chunk"] = cond.get("isSlimeChunk", False)
     spawn_dict["condition_tags"] = _make_condition_tags(cond, spawn_dict.get("structures"), spawn_dict)
+    # Origine du spawn : habitat (Habitat Block) ou horde. Le monde ouvert ne
+    # porte pas de tag, c'est le cas par défaut.
+    kind = spawn_dict.get("spawn_kind")
+    if kind == "habitat":
+        libelle = spawn_dict.get("biomes") or "Habitat"
+        spawn_dict["condition_tags"].insert(
+            0, {"icon": "🏕️", "label": "Habitat : %s" % libelle, "type": "habitat"})
+    elif kind == "herd":
+        if spawn_dict.get("bucket") == "boss" or spawn_dict.get("herd_role") == "leader":
+            taille = spawn_dict.get("herd_size")
+            spawn_dict["condition_tags"].insert(
+                0, {"icon": "⭐", "label": "Alpha — horde de %s" % (taille or "?"),
+                    "type": "alpha"})
+        else:
+            taille = spawn_dict.get("herd_size")
+            spawn_dict["condition_tags"].insert(
+                0, {"icon": "👥", "label": "Horde (jusqu'à %s)" % (taille or "?"),
+                    "type": "herd"})
     spawn_dict["anticondition_tags"] = _make_anticondition_tags(anticond, spawn_dict.get("structures_exclu"))
     return spawn_dict
 
@@ -1108,6 +1146,7 @@ def spawns_by_biome():
         SELECT numero, pokemon, pokemon_en, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, time, weather, contexte, lumiere_min, lumiere_max,
                peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
+               spawn_kind, habitat, herd_role, herd_size, phases,
                presets
         FROM pokemon_spawns
         WHERE {where_parts}
@@ -1212,6 +1251,7 @@ def spawns_by_real_biome():
         SELECT numero, pokemon, pokemon_en, forme, bucket, poids, niveau_min, niveau_max, biomes, biomes_exclus,
                biomes_exclus_tags, biomes_tags, time, weather, contexte, lumiere_min, lumiere_max,
                peut_voir_ciel, conditions, anticonditions, lune, structures, structures_exclu,
+               spawn_kind, habitat, herd_role, herd_size, phases,
                presets
         FROM pokemon_spawns
         WHERE {where_parts}
@@ -1539,14 +1579,18 @@ import math as _math
 # « filler » n'est pas dans la config : il est traité comme uncommon.
 # Du plus commun au plus rare — sert au tri par rareté du classement.
 BUCKET_RARITY_ORDER = {
-    'common': 0, 'uncommon': 1, 'rare': 2, 'ultra-rare': 3, 'filler': 4,
+    'common': 0, 'uncommon': 1, 'rare': 2, 'ultra-rare': 3, 'boss': 4, 'filler': 5,
 }
 
 ORACLE_BUCKET_SHARE = {
-    'common': 94.3, 'uncommon': 5.0, 'rare': 0.5, 'ultra-rare': 0.2,
-    'filler': 5.0,
+    # Monde ouvert — inclut les hordes et les alphas (bucket « boss »).
+    'world':   {'common': 94.0, 'uncommon': 5.0, 'rare': 0.5,   'ultra-rare': 0.2,   'boss': 0.3, 'filler': 5.0},
+    # Pêche et habitats partagent la même table, bien plus généreuse pour le rare.
+    'fishing': {'common': 83.25, 'uncommon': 11.25, 'rare': 4.125, 'ultra-rare': 1.375, 'boss': 0.3, 'filler': 11.25},
+    'habitat': {'common': 83.25, 'uncommon': 11.25, 'rare': 4.125, 'ultra-rare': 1.375, 'boss': 0.3, 'filler': 11.25},
 }
-ORACLE_BUCKETS = sorted(ORACLE_BUCKET_SHARE)
+
+ORACLE_BUCKETS = sorted(ORACLE_BUCKET_SHARE['world'])
 
 EV_LABELS_ORACLE = {
     'hp': 'PV', 'atk': 'Attaque', 'def': 'Defense',
@@ -1577,14 +1621,14 @@ def _oracle_load_spawns():
         SELECT numero, pokemon, biomes_tags, biomes_exclus_tags,
                contexte, time, weather, conditions, peut_voir_ciel,
                structures, lune, presets, bucket, lumiere_min, lumiere_max,
-               anticonditions, poids
+               anticonditions, poids, spawn_kind
         FROM pokemon_spawns WHERE est_actif = 1
     """).fetchall()
     conn.close()
     COLS = ['numero','pokemon','biomes_tags','biomes_exclus_tags',
             'contexte','time','weather','conditions','peut_voir_ciel',
             'structures','lune','presets','bucket','lumiere_min','lumiere_max',
-            'anticonditions','poids']
+            'anticonditions','poids','spawn_kind']
     spawns = []
     for r in rows:
         s = dict(zip(COLS, r))
@@ -1933,10 +1977,21 @@ def _oracle_beam_refine(subset, base_combo, chain, skip_hmax=False, ctx=None, ch
     # ultra-rare 0.2 %) PUIS un spawn au poids parmi ceux de ce bucket.
     # On calcule donc P(le spawn tiré est la cible), en ne comptant que les
     # buckets qui ont encore au moins un spawn actif.
+    # L'univers détermine la table de probabilité des buckets : un habitat et la
+    # pêche sont bien plus généreux pour les raretés que le monde ouvert.
+    if all(s.get('spawn_kind') == 'habitat' for s in subset):
+        _univers = 'habitat'
+    elif all(s['contexte'] == 'fishing' for s in subset):
+        _univers = 'fishing'
+    else:
+        _univers = 'world'
+    _table = ORACLE_BUCKET_SHARE[_univers]
+    base_combo = dict(base_combo, univers=_univers)
+
     _w = _np.array([float(s['poids'] or 0.0) for s in subset])
     _bmask = _np.array([[1.0 if s['bucket'] == b else 0.0 for b in ORACLE_BUCKETS]
                         for s in subset])
-    _share = _np.array([ORACLE_BUCKET_SHARE[b] for b in ORACLE_BUCKETS])
+    _share = _np.array([_table[b] for b in ORACLE_BUCKETS])
 
     def _wpct(mask, tmask):
         wm = _w * mask
@@ -2499,7 +2554,7 @@ def api_oracle_stream():
         chain_names = [num_to_name.get(n, '#' + str(n)) for n in sorted(chain)]
 
         ALLOWED_MODS = {'Vanilla Minecraft', 'Terralith', "Wythers' Overhauled Overworld",
-                        "Oh The Biomes We've Gone"}
+                        "Oh The Biomes We've Gone", 'Habitats'}
 
         # Structures ubiquitaires → traités comme biomes virtuels
         # (stronghold sous tout l'overworld, bastion/fortress dans tout le nether, etc.)
